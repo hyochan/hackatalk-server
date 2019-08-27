@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: node_modules/.bin/nodemon server.js
+    expose:
+      - "80"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 80:4000

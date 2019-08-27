@@ -1,0 +1,32 @@
+{
+  "baseUrl": "types",
+  "typeRoots": ["types"],
+  "compilerOptions": {
+    "target":"es6",
+    "moduleResolution":"node",
+    "module":"commonjs",
+    "declaration":false,
+    "noLib":false,
+    "emitDecoratorMetadata":true,
+    "experimentalDecorators":true,
+    "sourceMap":true,
+    "pretty":true,
+    "allowUnreachableCode":true,
+    "allowUnusedLabels":true,
+    "noImplicitAny":false,
+    "noImplicitReturns":false,
+    "noImplicitUseStrict":false,
+    "outDir":"dist/",
+    "baseUrl":"src/",
+    "listFiles":false,
+    "noEmitHelpers":true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "tests/**/*"
+  ]
+}
