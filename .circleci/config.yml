@@ -8,9 +8,9 @@ jobs:
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
         environment:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test_db
-          MYSQL_USER: hyochan
-          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: whichwitch
+          MYSQL_USER: witch
+          MYSQL_PASSWORD: whichwitch!
     working_directory: ~/app
     steps:
       - checkout
@@ -86,7 +86,7 @@ jobs:
       - run:
           name: Upload code coverage
           command: |
-            yarn codecov -t 7d9b071b-2356-4e51-a477-c787793581d9
+            yarn codecov -t 2b096ad2-7ba8-4b1b-a319-b3e712037ca5
 
 workflows:
   version: 2
