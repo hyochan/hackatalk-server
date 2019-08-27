@@ -81,7 +81,7 @@ jobs:
           name: Jest test
           working_directory: .
           command: |
-            yarn test --coverage
+            yarn run test --coverage --max-workers=2 --silent
 
       - run:
           name: Upload code coverage
