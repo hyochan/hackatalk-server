@@ -1,0 +1,17 @@
+scalar DateTime
+
+type Notification {
+  id: ID!
+  token: String!
+  device: String
+  os: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input NotificationCreateInput {
+  userId: ID!
+  token: String!
+  device: String
+  os: String
+}

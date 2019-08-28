@@ -1,0 +1,19 @@
+scalar Date
+scalar DateTime
+
+type Review {
+  id: ID!
+  title: String
+  content: String
+  rating: Float!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input ReviewCreateInput {
+  serviceId: ID!
+  userId: String!
+  title: String
+  content: String
+  rating: Float!
+}

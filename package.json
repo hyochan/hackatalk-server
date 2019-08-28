@@ -1,9 +1,9 @@
 {
   "name": "whichwitch-server",
   "version": "0.0.1",
-  "description": "Graphql Yoga Typescript Example",
+  "description": "WhichWitch Server",
   "main": "src/server.ts",
-  "repository": "https://github.com/dooboolab/ts-graphql-yoga-example",
+  "repository": "https://github.com/dooboolab/whichwitch-server",
   "author": "dooboolab",
   "license": "MIT",
   "scripts": {
@@ -13,7 +13,6 @@
     "lint": "eslint src/**/**/*.ts && eslint tests/**/**/*.ts",
     "tsc": "tsc",
     "test": "NODE_ENV=test jest",
-    "test:coverage": "jest -w 1 --coverage",
     "test:watch": "jest --watch",
     "codegen": "graphql-codegen",
     "generate": "graphql-codegen --config codegen.yml",
@@ -22,6 +21,7 @@
   "dependencies": {
     "apollo-server": "^2.9.0",
     "apollo-server-express": "^2.9.0",
+    "cors": "^2.8.5",
     "graphql": "^14.5.3",
     "graphql-import": "^0.7.1",
     "http": "^0.0.0",

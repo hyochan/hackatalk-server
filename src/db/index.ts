@@ -1,4 +1,4 @@
-import { Sequelize, Options, Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 const env = process.env.NODE_ENV || 'development';
 const config = require('../../config/config')[env];
 

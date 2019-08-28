@@ -1,0 +1,55 @@
+# import Notification from "notification.graphql"
+
+scalar Date
+scalar DateTime
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type User {
+  id: ID!
+  email: String
+  # password: String
+  name: String
+  nickname: String
+  photo: String
+  birthday: Date
+  gender: Gender
+  phone: String
+  social: String
+  verified: Boolean
+  notifications: [Notification]
+  reviews: [Review]
+  created: DateTime!
+  updated: DateTime!
+  deleted: DateTime
+}
+
+input UserCreateInput {
+  email: String
+  password: String
+  name: String
+  nickname: String
+  birthday: Date
+  gender: Gender
+  phone: String
+}
+
+input SocialUserCreateInput {
+  social: String!
+  email: String
+  password: String
+  photo: String
+  name: String
+  nickname: String
+  birthday: Date
+  gender: Gender
+  phone: String
+}
