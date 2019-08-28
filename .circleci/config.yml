@@ -8,7 +8,7 @@ jobs:
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
         environment:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: whichwitch
+          MYSQL_DATABASE: test_db
           MYSQL_USER: witch
           MYSQL_PASSWORD: whichwitch!
     working_directory: ~/app
