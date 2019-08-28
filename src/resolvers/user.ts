@@ -5,6 +5,7 @@ import { checkPassword, encryptPassword } from '../utils/encryption';
 
 import { AuthenticationError } from 'apollo-server-express';
 import { Role } from '../types';
+import { withFilter } from 'apollo-server';
 
 const USER_ADDED = 'USER_ADDED';
 const USER_UPDATED = 'USER_UPDATED';
@@ -174,6 +175,14 @@ const resolver: Resolvers = {
   Subscription: {
     userAdded: {
       subscribe: (_, args, { pubsub }) => pubsub.asyncIterator(USER_ADDED),
+    },
+    userUpdated: {
+      subscribe: withFilter(
+        (_, args, { pubsub }) => pubsub.asyncIterator(USER_UPDATED),
+        (payload, variables) => {
+          return payload.userUpdated.id === variables.id;
+        },
+      ),
     },
   },
   User: {
