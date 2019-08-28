@@ -1,11 +1,13 @@
 import * as jwt from 'jsonwebtoken';
 
 import { Resolvers, UserResolvers } from '../generated/graphql';
+import { checkPassword, encryptPassword } from '../utils/encryption';
 
 import { AuthenticationError } from 'apollo-server-express';
 import { Role } from '../types';
 
 const USER_ADDED = 'USER_ADDED';
+const USER_UPDATED = 'USER_UPDATED';
 
 const resolver: Resolvers = {
   Query: {
@@ -112,35 +114,58 @@ const resolver: Resolvers = {
       }
     },
     signUp: async (_, args, { appSecret, models, pubsub }) => {
-      if (!args.user.email) {
-        throw new Error('No email address is given.');
-      } else if (args.user.email) {
-        const emailUser: any = await models.User.findOne({
+      const emailUser: any = await models.User.findOne({
+        where: {
+          email: args.user.email,
+        },
+        raw: true,
+      });
+
+      if (emailUser) {
+        throw new Error('Email for current user is already signed up.');
+      }
+      args.user.password = await encryptPassword(args.user.password);
+      const user = await models.User.create(args.user, { raw: true });
+      const token: string = jwt.sign(
+        {
+          userId: user.id,
+          role: Role.User,
+        },
+        appSecret,
+      );
+
+      pubsub.publish(USER_ADDED, {
+        userAdded: user,
+      });
+      return { token, user };
+    },
+    updateProfile: async (_, args, { appSecret, getUser, models, pubsub }) => {
+      try {
+        const auth = await getUser();
+        if (auth.id !== args.user.id) {
+          throw new AuthenticationError(
+            'User can update his or her own profile',
+          );
+        }
+        models.User.update(
+          args,
+          {
+            where: {
+              id: args.user.id,
+            },
+          },
+          { raw: true },
+        );
+
+        const user = await models.User.findOne({
           where: {
-            email: args.user.email,
+            id: args.user.id,
           },
           raw: true,
         });
 
-        if (emailUser) {
-          throw new Error('Email for current user is already signed up.');
-        }
-      }
-
-      try {
-        const user = await models.User.create(args.user, { raw: true });
-        const token: string = jwt.sign(
-          {
-            userId: user.id,
-            role: Role.User,
-          },
-          appSecret,
-        );
-
-        pubsub.publish(USER_ADDED, {
-          userAdded: user,
-        });
-        return { token, user };
+        pubsub.publish(USER_UPDATED, { user });
+        return user;
       } catch (err) {
         throw new Error(err);
       }

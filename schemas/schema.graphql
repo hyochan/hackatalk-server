@@ -14,9 +14,11 @@ type Mutation {
   signInGoogle(socialUser: SocialUserCreateInput!): AuthPayload!
   signInFacebook(socialUser: SocialUserCreateInput!): AuthPayload!
   signUp(user: UserCreateInput!): AuthPayload!
-  addPushToken(notification: NotificationCreateInput!): Notification!
+  addPushToken(notification: NotificationCreateInput!): Notification
+  updateProfile(user: UserUpdateInput!): User
 }
 
 type Subscription {
   userAdded: User
+  userUpdated: User
 }
