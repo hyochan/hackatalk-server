@@ -14,7 +14,11 @@ describe('Resolver - User', () => {
 
   const mutation = `
     mutation {
-      signup(email: "${email}", password: "${password}", name: "${name}") {
+      signUp(user: {
+        email: "${email}"
+        password: "${password}"
+        name: "${name}"
+      }) {
         token,
         user {
           email
@@ -28,13 +32,13 @@ describe('Resolver - User', () => {
     server = await startServer();
   });
 
-  it('should signup user', async () => {
+  it('should signUp user', async () => {
     const response: any = await request(testHost, mutation);
 
-    expect(response).toHaveProperty('signup');
-    expect(response.signup).toHaveProperty('token');
-    expect(response.signup).toHaveProperty('user');
-    expect(response.signup.user.email).toEqual(email);
+    expect(response).toHaveProperty('signUp');
+    expect(response.signUp).toHaveProperty('token');
+    expect(response.signUp).toHaveProperty('user');
+    expect(response.signUp.user.email).toEqual(email);
   });
 
   afterAll(async () => {
