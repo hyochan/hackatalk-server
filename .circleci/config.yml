@@ -15,7 +15,7 @@ jobs:
     steps:
       - checkout
       - run:
-      # Our primary container isn't MYSQL so run a sleep command until it's ready.
+          # Our primary container isn't MYSQL so run a sleep command until it's ready.
           name: Waiting for MySQL to be ready
           command: |
             for i in `seq 1 10`;
@@ -81,7 +81,7 @@ jobs:
           name: Jest test
           working_directory: .
           command: |
-            yarn run test --coverage --max-workers=2 --silent
+            yarn test --coverage --max-workers=2 --silent
 
       - run:
           name: Upload code coverage

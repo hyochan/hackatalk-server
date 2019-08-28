@@ -1,0 +1,22 @@
+# import User from "user.graphql"
+# import Notification from "notification.graphql"
+# import Review from "review.graphql"
+
+type Query {
+  users: [User!]!
+  user(id: ID!): User
+  reviews: [Review!]!
+  review(id: ID!): Review
+}
+
+type Mutation {
+  # User
+  signInGoogle(socialUser: SocialUserCreateInput!): AuthPayload!
+  signInFacebook(socialUser: SocialUserCreateInput!): AuthPayload!
+  signUp(user: UserCreateInput!): AuthPayload!
+  addPushToken(notification: NotificationCreateInput!): Notification!
+}
+
+type Subscription {
+  userAdded: User
+}

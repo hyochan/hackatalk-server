@@ -1,6 +1,9 @@
-import Message from './message';
-import User from './user';
+import Notification from './Notification';
+import Review from './Review';
+import User from './User';
 
 export default {
-  Message, User,
+  Notification,
+  User,
+  Review,
 };
