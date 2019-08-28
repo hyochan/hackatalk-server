@@ -547,6 +547,11 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/bcrypt-nodejs@^0.0.30":
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/@types/bcrypt-nodejs/-/bcrypt-nodejs-0.0.30.tgz#4cdd96b49293b3932122e4b7e29543e35e6bae58"
+  integrity sha1-TN2WtJKTs5MhIuS34pVD415rrlg=
+
 "@types/bluebird@*", "@types/bluebird@^3.5.27":
   version "3.5.27"
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.27.tgz#61eb4d75dc6bfbce51cf49ee9bbebe941b2cb5d0"
@@ -1419,6 +1424,11 @@ base@^0.11.1:
     isobject "^3.0.1"
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
+
+bcrypt-nodejs@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/bcrypt-nodejs/-/bcrypt-nodejs-0.0.3.tgz#c60917f26dc235661566c681061c303c2b28842b"
+  integrity sha1-xgkX8m3CNWYVZsaBBhwwPCsohCs=
 
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"
@@ -2323,10 +2333,10 @@ escodegen@^1.9.1:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-standard@^14.0.1:
-  version "14.0.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-standard/-/eslint-config-standard-14.0.1.tgz#375c3636fb4bd453cb95321d873de12e4eef790b"
-  integrity sha512-1RWsAKTDTZgA8bIM6PSC9aTGDAUlKqNkYNJlTZ5xYD/HYkIM6GlcefFvgcJ8xi0SWG5203rttKYX28zW+rKNOg==
+eslint-config-standard@^14.1.0:
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-standard/-/eslint-config-standard-14.1.0.tgz#b23da2b76fe5a2eba668374f246454e7058f15d4"
+  integrity sha512-EF6XkrrGVbvv8hL/kYa/m6vnvmUT+K82pJJc4JJVMM6+Qgqh0pnwprSxdduDLB9p/7bIxD+YV5O0wfb8lmcPbA==
 
 eslint-import-resolver-node@^0.3.2:
   version "0.3.2"
@@ -5950,10 +5960,10 @@ sequelize-pool@^2.3.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-2.3.0.tgz#64f1fe8744228172c474f530604b6133be64993d"
   integrity sha512-Ibz08vnXvkZ8LJTiUOxRcj1Ckdn7qafNZ2t59jYHMX1VIebTAOYefWdRYFt6z6+hy52WGthAHAoLc9hvk3onqA==
 
-sequelize@^5.16.0:
-  version "5.16.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.16.0.tgz#6626f82cc41cdf02a5758f73783566e369d05cd8"
-  integrity sha512-1b2PNgxV3+HtaOCJ9gos4qQzvd8QEc5jz77MUxZg8+nqX4haSZWI7Rn0XzW1lPIRseKUXVHanyh/gqztsfJN+g==
+sequelize@^5.17.0:
+  version "5.17.0"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.17.0.tgz#dd939381d68ddb77e6651607be8051b60bad01fc"
+  integrity sha512-M5/6ek+9YpUAEImqrIMlguEIE22Cf6rX35P/72S1q3nwYhDxb96shM5iHjk7+A3tZEFiNHKf//cbIMwNaljNbA==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"

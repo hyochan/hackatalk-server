@@ -21,6 +21,7 @@
   "dependencies": {
     "apollo-server": "^2.9.0",
     "apollo-server-express": "^2.9.0",
+    "bcrypt-nodejs": "^0.0.3",
     "cors": "^2.8.5",
     "graphql": "^14.5.3",
     "graphql-import": "^0.7.1",
@@ -29,7 +30,7 @@
     "jsonwebtoken": "^8.5.1",
     "merge-graphql-schemas": "^1.7.0",
     "mysql2": "^1.6.5",
-    "sequelize": "^5.16.0"
+    "sequelize": "^5.17.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.6.1",
@@ -43,13 +44,14 @@
     "@types/node": "^12.7.2",
     "@types/sequelize": "^4.28.4",
     "@types/validator": "^10.11.3",
+    "@types/bcrypt-nodejs": "^0.0.30",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "codecov": "^3.5.0",
     "cross-env": "^5.2.0",
     "dotenv": "^8.1.0",
     "eslint": "^6.2.2",
-    "eslint-config-standard": "^14.0.1",
+    "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.2.1",

@@ -30,7 +30,8 @@ export type Mutation = {
   signInGoogle: AuthPayload,
   signInFacebook: AuthPayload,
   signUp: AuthPayload,
-  addPushToken: Notification,
+  addPushToken?: Maybe<Notification>,
+  updateProfile?: Maybe<User>,
 };
 
 
@@ -51,6 +52,11 @@ export type MutationSignUpArgs = {
 
 export type MutationAddPushTokenArgs = {
   notification: NotificationCreateInput
+};
+
+
+export type MutationUpdateProfileArgs = {
+  user: UserUpdateInput
 };
 
 export type Notification = {
@@ -113,6 +119,7 @@ export type SocialUserCreateInput = {
 export type Subscription = {
   __typename?: 'Subscription',
   userAdded?: Maybe<User>,
+  userUpdated?: Maybe<User>,
 };
 
 export type User = {
@@ -135,6 +142,17 @@ export type User = {
 };
 
 export type UserCreateInput = {
+  email?: Maybe<Scalars['String']>,
+  password?: Maybe<Scalars['String']>,
+  name?: Maybe<Scalars['String']>,
+  nickname?: Maybe<Scalars['String']>,
+  birthday?: Maybe<Scalars['Date']>,
+  gender?: Maybe<Gender>,
+  phone?: Maybe<Scalars['String']>,
+};
+
+export type UserUpdateInput = {
+  id?: Maybe<Scalars['ID']>,
   email?: Maybe<Scalars['String']>,
   password?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
@@ -230,6 +248,7 @@ export type ResolversTypes = {
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
   UserCreateInput: UserCreateInput,
   NotificationCreateInput: NotificationCreateInput,
+  UserUpdateInput: UserUpdateInput,
   Subscription: ResolverTypeWrapper<{}>,
 };
 
@@ -251,6 +270,7 @@ export type ResolversParentTypes = {
   AuthPayload: AuthPayload,
   UserCreateInput: UserCreateInput,
   NotificationCreateInput: NotificationCreateInput,
+  UserUpdateInput: UserUpdateInput,
   Subscription: {},
 };
 
@@ -271,7 +291,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   signInGoogle?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInGoogleArgs, 'socialUser'>>,
   signInFacebook?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInFacebookArgs, 'socialUser'>>,
   signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>,
-  addPushToken?: Resolver<ResolversTypes['Notification'], ParentType, ContextType, RequireFields<MutationAddPushTokenArgs, 'notification'>>,
+  addPushToken?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<MutationAddPushTokenArgs, 'notification'>>,
+  updateProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'user'>>,
 };
 
 export type NotificationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification']> = {
@@ -301,6 +322,7 @@ export type ReviewResolvers<ContextType = any, ParentType extends ResolversParen
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
   userAdded?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "userAdded", ParentType, ContextType>,
+  userUpdated?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "userUpdated", ParentType, ContextType>,
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {

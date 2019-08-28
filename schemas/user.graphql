@@ -42,6 +42,17 @@ input UserCreateInput {
   phone: String
 }
 
+input UserUpdateInput {
+  id: ID
+  email: String
+  password: String
+  name: String
+  nickname: String
+  birthday: Date
+  gender: Gender
+  phone: String
+}
+
 input SocialUserCreateInput {
   social: String!
   email: String
