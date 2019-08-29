@@ -9,6 +9,8 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts",
     "prod": "cross-env NODE_ENV=production ts-node src/server.ts",
+    "pm2": "cross-env NODE_ENV=development pm2 start ts-node -- -P tsconfig.json ./src/server.ts",
+    "pm2:prod": "cross-env NODE_ENV=production pm2 start ts-node -- -P tsconfig.json ./src/server.ts",
     "watch": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts",
     "lint": "eslint src/**/**/*.ts && eslint tests/**/**/*.ts",
     "tsc": "tsc",
@@ -58,6 +60,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "nodemon": "^1.19.1",
+    "pm2": "^3.5.1",
     "ts-jest": "^24.0.2",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"

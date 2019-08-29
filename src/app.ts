@@ -9,7 +9,6 @@ import { fileLoader, mergeResolvers, mergeTypes } from 'merge-graphql-schemas';
 
 import { Http2Server } from 'http2';
 import { createServer as createHttpServer } from 'http';
-import { createServer as createHttpsServer } from 'https';
 import { importSchema } from 'graphql-import';
 import models from './models';
 
@@ -73,10 +72,7 @@ async function startServer(): Promise<Http2Server> {
     cert: fs.readFileSync('key/cert.pem'),
   };
 
-  const httpServer =
-    process.env.NODE_ENV === 'production'
-      ? createHttpsServer(options, app)
-      : createHttpServer(app);
+  const httpServer = createHttpServer(app);
   apollo.installSubscriptionHandlers(httpServer);
 
   const server = httpServer.listen({ port: PORT }, () => {
