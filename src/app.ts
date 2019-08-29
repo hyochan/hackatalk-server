@@ -1,5 +1,6 @@
 import * as cors from 'cors';
 import * as express from 'express';
+import * as fs from 'fs';
 import * as jwt from 'jsonwebtoken';
 import * as path from 'path';
 
@@ -7,13 +8,14 @@ import { ApolloServer, PubSub } from 'apollo-server-express';
 import { fileLoader, mergeResolvers, mergeTypes } from 'merge-graphql-schemas';
 
 import { Http2Server } from 'http2';
-import { createServer } from 'http';
+import { createServer as createHttpServer } from 'http';
+import { createServer as createHttpsServer } from 'https';
 import { importSchema } from 'graphql-import';
 import models from './models';
 
 require('dotenv').config();
 
-const { PORT = 4000, JWT_SECRET = 'undefined' } = process.env;
+const { PORT = 443, JWT_SECRET = 'undefined' } = process.env;
 
 const pubsub = new PubSub();
 const resolvers = mergeResolvers(
@@ -66,7 +68,15 @@ async function startServer(): Promise<Http2Server> {
   });
   apollo.applyMiddleware({ app });
 
-  const httpServer = createServer(app);
+  const options = {
+    key: fs.readFileSync('key/key.pem'),
+    cert: fs.readFileSync('key/cert.pem'),
+  };
+
+  const httpServer =
+    process.env.NODE_ENV === 'production'
+      ? createHttpsServer(options, app)
+      : createHttpServer(app);
   apollo.installSubscriptionHandlers(httpServer);
 
   const server = httpServer.listen({ port: PORT }, () => {
