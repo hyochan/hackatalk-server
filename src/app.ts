@@ -63,14 +63,9 @@ async function startServer(): Promise<Http2Server> {
   app.use(cors());
 
   app.get('/', (req, res) => {
-    res.send('It works!!!!');
+    res.send('It works!!!! x1');
   });
   apollo.applyMiddleware({ app });
-
-  const options = {
-    key: fs.readFileSync('key/key.pem'),
-    cert: fs.readFileSync('key/cert.pem'),
-  };
 
   const httpServer = createHttpServer(app);
   apollo.installSubscriptionHandlers(httpServer);
