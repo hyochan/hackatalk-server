@@ -81,7 +81,7 @@ async function startServer(): Promise<Http2Server> {
 
   const server = httpServer.listen({ port: PORT }, () => {
     process.stdout.write(
-      `🚀 Server ready at http://localhost:${PORT}${apollo.graphqlPath}`,
+      `🚀 Server ready at http://localhost:${PORT}${apollo.graphqlPath}\n`,
     );
   });
 
