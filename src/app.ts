@@ -67,11 +67,6 @@ async function startServer(): Promise<Http2Server> {
   });
   apollo.applyMiddleware({ app });
 
-  const options = {
-    key: fs.readFileSync('key/key.pem'),
-    cert: fs.readFileSync('key/cert.pem'),
-  };
-
   const httpServer = createHttpServer(app);
   apollo.installSubscriptionHandlers(httpServer);
 
