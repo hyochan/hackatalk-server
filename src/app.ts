@@ -79,14 +79,11 @@ async function startServer(): Promise<Http2Server> {
       : createHttpServer(app);
   apollo.installSubscriptionHandlers(httpServer);
 
-  const server = httpServer.listen(
-    { port: process.env.NODE_ENV === 'production' ? 443 : PORT },
-    () => {
-      process.stdout.write(
-        `🚀 Server ready at http://localhost:${PORT}${apollo.graphqlPath}`,
-      );
-    },
-  );
+  const server = httpServer.listen({ port: PORT }, () => {
+    process.stdout.write(
+      `🚀 Server ready at http://localhost:${PORT}${apollo.graphqlPath}`,
+    );
+  });
 
   return server;
 }
