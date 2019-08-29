@@ -13,8 +13,8 @@
 
 ### Test Apis
 
-- [dooboo.dev](https://dooboo.dev)
+- [test.dooboo.dev](https://test.dooboo.dev)
 
 ### Test Graphql Apis
 
-- [dooboo.dev](https://dooboo.dev/graphql)
+- [test.dooboo.dev/graphql](https://test.dooboo.dev/graphql)
