@@ -15,7 +15,7 @@ import models from './models';
 
 require('dotenv').config();
 
-const { PORT = 443, JWT_SECRET = 'undefined' } = process.env;
+const { PORT = 4000, JWT_SECRET = 'undefined' } = process.env;
 
 const pubsub = new PubSub();
 const resolvers = mergeResolvers(
@@ -79,11 +79,14 @@ async function startServer(): Promise<Http2Server> {
       : createHttpServer(app);
   apollo.installSubscriptionHandlers(httpServer);
 
-  const server = httpServer.listen({ port: PORT }, () => {
-    process.stdout.write(
-      `🚀 Server ready at http://localhost:${PORT}${apollo.graphqlPath}`,
-    );
-  });
+  const server = httpServer.listen(
+    { port: process.env.NODE_ENV === 'production' ? 443 : PORT },
+    () => {
+      process.stdout.write(
+        `🚀 Server ready at http://localhost:${PORT}${apollo.graphqlPath}`,
+      );
+    },
+  );
 
   return server;
 }
