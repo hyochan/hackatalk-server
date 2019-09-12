@@ -1,7 +1,7 @@
-# WhichWitch Server
+# HackaTalk Server
 
-[![CircleCI](https://circleci.com/gh/dooboolab/whichwitch-server.svg?style=shield)](https://circleci.com/gh/dooboolab/whichwitch-server)
-[![codecov](https://codecov.io/gh/dooboolab/whichwitch-server/branch/master/graph/badge.svg)](https://codecov.io/gh/dooboolab/whichwitch-server)
+[![CircleCI](https://circleci.com/gh/dooboolab/whichwitch-server.svg?style=shield)](https://circleci.com/gh/dooboolab/hackatalk-server)
+[![codecov](https://codecov.io/gh/dooboolab/hackatalk-server/branch/master/graph/badge.svg)](https://codecov.io/gh/dooboolab/hackatalk-server)
 
 > Specification
 
