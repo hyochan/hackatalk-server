@@ -13,7 +13,7 @@ export type Scalars = {
 };
 
 export type AuthPayload = {
-  __typename?: 'AuthPayload',
+   __typename?: 'AuthPayload',
   token: Scalars['String'],
   user: User,
 };
@@ -26,7 +26,7 @@ export enum Gender {
 }
 
 export type Mutation = {
-  __typename?: 'Mutation',
+   __typename?: 'Mutation',
   signInGoogle: AuthPayload,
   signInFacebook: AuthPayload,
   signUp: AuthPayload,
@@ -60,7 +60,7 @@ export type MutationUpdateProfileArgs = {
 };
 
 export type Notification = {
-  __typename?: 'Notification',
+   __typename?: 'Notification',
   id: Scalars['ID'],
   token: Scalars['String'],
   device?: Maybe<Scalars['String']>,
@@ -77,7 +77,7 @@ export type NotificationCreateInput = {
 };
 
 export type Query = {
-  __typename?: 'Query',
+   __typename?: 'Query',
   users: Array<User>,
   user?: Maybe<User>,
   reviews: Array<Review>,
@@ -95,7 +95,7 @@ export type QueryReviewArgs = {
 };
 
 export type Review = {
-  __typename?: 'Review',
+   __typename?: 'Review',
   id: Scalars['ID'],
   title?: Maybe<Scalars['String']>,
   content?: Maybe<Scalars['String']>,
@@ -117,13 +117,13 @@ export type SocialUserCreateInput = {
 };
 
 export type Subscription = {
-  __typename?: 'Subscription',
+   __typename?: 'Subscription',
   userAdded?: Maybe<User>,
   userUpdated?: Maybe<User>,
 };
 
 export type User = {
-  __typename?: 'User',
+   __typename?: 'User',
   id: Scalars['ID'],
   email?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
