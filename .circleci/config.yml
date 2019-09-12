@@ -9,8 +9,8 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: test_db
-          MYSQL_USER: hackatalk
-          MYSQL_PASSWORD: hackatalk!
+          MYSQL_USER: witch
+          MYSQL_PASSWORD: whichwitch!
     working_directory: ~/app
     steps:
       - checkout
