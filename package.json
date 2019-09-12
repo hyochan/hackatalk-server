@@ -1,11 +1,11 @@
 {
-  "name": "whichwitch-server",
+  "name": "hackatalk-server",
   "version": "0.0.1",
-  "description": "WhichWitch Server",
+  "description": "Hackatalk Server",
   "main": "src/server.ts",
-  "repository": "https://github.com/dooboolab/whichwitch-server",
+  "repository": "https://github.com/dooboolab/hackatalk-server",
   "author": "dooboolab",
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts",
     "prod": "cross-env NODE_ENV=production ts-node src/server.ts",
