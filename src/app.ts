@@ -14,6 +14,12 @@ import models from './models';
 
 require('dotenv').config();
 
+interface JwtUser {
+  userId: string;
+  role: number;
+  iat: number;
+}
+
 const { PORT = 4000, JWT_SECRET = 'undefined' } = process.env;
 
 const pubsub = new PubSub();
@@ -22,10 +28,10 @@ const resolvers = mergeResolvers(
 );
 
 const getUser = async (token: string, models) => {
-  const userId = jwt.verify(token, JWT_SECRET);
+  const user = jwt.verify(token, JWT_SECRET) as JwtUser;
   const currentUser = await models.User.findOne({
     where: {
-      id: userId,
+      id: user.userId,
     },
   });
   return currentUser;
@@ -63,7 +69,7 @@ async function startServer(): Promise<Http2Server> {
   app.use(cors());
 
   app.get('/', (req, res) => {
-    res.send('It works!!!! x1');
+    res.send('It works!!!! x2');
   });
   apollo.applyMiddleware({ app });
 
