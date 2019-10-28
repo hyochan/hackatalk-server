@@ -13,8 +13,8 @@
 
 ### Test Apis
 
-- [test.dooboo.dev](https://test.dooboo.dev)
+- [stage.hackatalk.dev](https://stage.hackatalk.dev)
 
 ### Test Graphql Apis
 
-- [test.dooboo.dev/graphql](https://test.dooboo.dev/graphql)
+- [stage.hackatalk.dev/graphql](https://stage.hackatalk.dev/graphql)
