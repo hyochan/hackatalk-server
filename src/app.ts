@@ -69,7 +69,7 @@ async function startServer(): Promise<Http2Server> {
   app.use(cors());
 
   app.get('/', (req, res) => {
-    res.send('It works!!!! x4');
+    res.send('It works!!!! x5');
   });
   apollo.applyMiddleware({ app });
 
