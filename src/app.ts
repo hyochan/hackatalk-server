@@ -55,9 +55,9 @@ async function startServer(): Promise<Http2Server> {
       models,
       pubsub,
       appSecret: JWT_SECRET,
-      introspection: process.env.NODE_ENV !== 'production',
-      playground: process.env.NODE_ENV !== 'production',
     }),
+    introspection: process.env.NODE_ENV !== 'production',
+    playground: process.env.NODE_ENV !== 'production',
     resolvers,
     subscriptions: {
       onConnect: () => {
@@ -71,7 +71,7 @@ async function startServer(): Promise<Http2Server> {
   app.use(cors());
 
   app.get('/', (req, res) => {
-    res.send('It works!!!! x7');
+    res.send('It works!!!! production x7');
   });
   apollo.applyMiddleware({ app });
 
