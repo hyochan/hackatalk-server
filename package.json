@@ -9,7 +9,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts",
     "prod": "cross-env NODE_ENV=production ts-node src/server.ts",
-    "pm2": "cross-env pm2 start ts-node -- -P tsconfig.json ./src/server.ts --node-args='--development' --watch",
+    "pm2": "cross-env NODE_ENV=development pm2 start ts-node -- -P tsconfig.json ./src/server.ts --node-args='--development' --watch",
     "pm2:prod": "cross-env pm2 start ts-node -- -P tsconfig.json ./src/server.ts --node-args='--production'",
     "watch": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts",
     "lint": "eslint src/**/**/*.ts && eslint tests/**/**/*.ts",
