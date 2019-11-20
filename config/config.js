@@ -4,13 +4,11 @@ const path = require('path');
 
 // prettier-ignore
 const envPath =
-  env === 'production'
-    ? path.resolve(__dirname, '../dotenv/prod.env')
-    : env === 'development'
-      ? path.resolve(__dirname, '../dotenv/dev.env')
-      : env === 'test'
-        ? path.resolve(__dirname, '../dotenv/test.env')
-        : path.resolve(__dirname, '../dotenv/.env');
+  env === 'development'
+    ? path.resolve(__dirname, '../dotenv/dev.env')
+    : env === 'test'
+      ? path.resolve(__dirname, '../dotenv/test.env')
+      : path.resolve(__dirname, '../dotenv/.env');
 
 dotenv.config({ path: envPath });
 
