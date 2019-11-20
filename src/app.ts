@@ -55,6 +55,8 @@ async function startServer(): Promise<Http2Server> {
       models,
       pubsub,
       appSecret: JWT_SECRET,
+      introspection: process.env.NODE_ENV !== 'production',
+      playground: process.env.NODE_ENV !== 'production',
     }),
     resolvers,
     subscriptions: {

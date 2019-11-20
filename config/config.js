@@ -36,9 +36,6 @@ module.exports = {
     define: {
       underscored: false,
     },
-    dialectOptions: {
-      ssl: {},
-    },
   },
   production: {
     ...similarOption,
