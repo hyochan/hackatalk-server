@@ -27,17 +27,26 @@ module.exports = {
     define: {
       underscored: false,
     },
+    dialectOptions: {
+      ssl: {},
+    },
   },
   test: {
     ...similarOption,
     define: {
       underscored: false,
     },
+    dialectOptions: {
+      ssl: {},
+    },
   },
   production: {
     ...similarOption,
     define: {
       underscored: false,
+    },
+    dialectOptions: {
+      ssl: {},
     },
     pool: { max: 5, min: 0, idle: 10000 },
   },
