@@ -1,14 +1,15 @@
 import { Http2Server } from 'http2';
+import { createApp } from '../src/app';
 import { request } from 'graphql-request';
 import sequelize from '../src/db';
-import { startServer } from '../src/app';
+import { startServer } from '../src/server';
 
 const port = 4000;
 const testHost = `http://localhost:${port}/graphql`;
 
 describe('Resolver - User', () => {
   let server: Http2Server;
-  const name = 'dooboo1';
+  const name = 'dooboo10';
   const email = `${name}@dooboo.com`;
   const password = 'password';
 
@@ -28,8 +29,10 @@ describe('Resolver - User', () => {
   `;
 
   beforeAll(async () => {
+    const app = createApp();
+
     await sequelize.sync();
-    server = await startServer();
+    server = await startServer(app);
   });
 
   it('should signUp user', async () => {

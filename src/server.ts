@@ -5,7 +5,6 @@ import { JWT_SECRET, verifyUser } from './models/Auth';
 import { fileLoader, mergeResolvers } from 'merge-graphql-schemas';
 
 import { Http2Server } from 'http2';
-import { createApp } from './app';
 import { createServer as createHttpServer } from 'http';
 import { getUserById } from './models/User';
 import { importSchema } from 'graphql-import';
@@ -83,8 +82,7 @@ const initializeApolloServer = (apollo, app) => {
   };
 };
 
-const startServer = async (): Promise<Http2Server> => {
-  const app = createApp();
+export const startServer = async (app): Promise<Http2Server> => {
   const httpServer = createHttpServer(app);
 
   const apollo = createApolloServer();
@@ -95,5 +93,3 @@ const startServer = async (): Promise<Http2Server> => {
     handleApolloServerInitilized();
   });
 };
-
-startServer();
