@@ -8,11 +8,6 @@ enum Gender {
   FEMALE
 }
 
-type AuthPayload {
-  token: String!
-  user: User!
-}
-
 type User {
   id: ID!
   email: String
@@ -22,14 +17,14 @@ type User {
   photo: String
   birthday: Date
   gender: Gender
-  phone: String
   social: String
+  phone: String
   verified: Boolean
   notifications: [Notification]
   reviews: [Review]
-  created: DateTime!
-  updated: DateTime!
-  deleted: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
 }
 
 input UserCreateInput {

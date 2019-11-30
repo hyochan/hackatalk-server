@@ -18,7 +18,41 @@ export type AuthPayload = {
   user: User,
 };
 
+export type Chat = {
+   __typename?: 'Chat',
+  id?: Maybe<Scalars['String']>,
+  chatroom: Chatroom,
+  sender: User,
+  type: Scalars['String'],
+  text?: Maybe<Scalars['String']>,
+  photoUrl?: Maybe<Scalars['String']>,
+  audioUrl?: Maybe<Scalars['String']>,
+  readCount?: Maybe<Scalars['Int']>,
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  deletedAt?: Maybe<Scalars['DateTime']>,
+};
 
+export type Chatroom = {
+   __typename?: 'Chatroom',
+  id?: Maybe<Scalars['String']>,
+  owner: User,
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  deletedAt?: Maybe<Scalars['DateTime']>,
+};
+
+
+
+export type Friend = {
+   __typename?: 'Friend',
+  id?: Maybe<Scalars['String']>,
+  user: User,
+  friend: User,
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  deletedAt?: Maybe<Scalars['DateTime']>,
+};
 
 export enum Gender {
   Male = 'MALE',
@@ -82,6 +116,9 @@ export type Query = {
   user?: Maybe<User>,
   reviews: Array<Review>,
   review?: Maybe<Review>,
+  chats: Array<Chat>,
+  chatrooms: Array<Chatroom>,
+  friends: Array<Friend>,
 };
 
 
@@ -131,14 +168,14 @@ export type User = {
   photo?: Maybe<Scalars['String']>,
   birthday?: Maybe<Scalars['Date']>,
   gender?: Maybe<Gender>,
-  phone?: Maybe<Scalars['String']>,
   social?: Maybe<Scalars['String']>,
+  phone?: Maybe<Scalars['String']>,
   verified?: Maybe<Scalars['Boolean']>,
   notifications?: Maybe<Array<Maybe<Notification>>>,
   reviews?: Maybe<Array<Maybe<Review>>>,
-  created: Scalars['DateTime'],
-  updated: Scalars['DateTime'],
-  deleted?: Maybe<Scalars['DateTime']>,
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  deletedAt?: Maybe<Scalars['DateTime']>,
 };
 
 export type UserCreateInput = {
@@ -161,6 +198,7 @@ export type UserUpdateInput = {
   gender?: Maybe<Gender>,
   phone?: Maybe<Scalars['String']>,
 };
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -243,6 +281,10 @@ export type ResolversTypes = {
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>,
   Review: ResolverTypeWrapper<Review>,
   Float: ResolverTypeWrapper<Scalars['Float']>,
+  Chat: ResolverTypeWrapper<Chat>,
+  Chatroom: ResolverTypeWrapper<Chatroom>,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
+  Friend: ResolverTypeWrapper<Friend>,
   Mutation: ResolverTypeWrapper<{}>,
   SocialUserCreateInput: SocialUserCreateInput,
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
@@ -265,6 +307,10 @@ export type ResolversParentTypes = {
   DateTime: Scalars['DateTime'],
   Review: Review,
   Float: Scalars['Float'],
+  Chat: Chat,
+  Chatroom: Chatroom,
+  Int: Scalars['Int'],
+  Friend: Friend,
   Mutation: {},
   SocialUserCreateInput: SocialUserCreateInput,
   AuthPayload: AuthPayload,
@@ -279,6 +325,28 @@ export type AuthPayloadResolvers<ContextType = any, ParentType extends Resolvers
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
 };
 
+export type ChatResolvers<ContextType = any, ParentType extends ResolversParentTypes['Chat'] = ResolversParentTypes['Chat']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  chatroom?: Resolver<ResolversTypes['Chatroom'], ParentType, ContextType>,
+  sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  photoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  audioUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  readCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+};
+
+export type ChatroomResolvers<ContextType = any, ParentType extends ResolversParentTypes['Chatroom'] = ResolversParentTypes['Chatroom']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  owner?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+};
+
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date'
 }
@@ -286,6 +354,15 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime'
 }
+
+export type FriendResolvers<ContextType = any, ParentType extends ResolversParentTypes['Friend'] = ResolversParentTypes['Friend']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  friend?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+};
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   signInGoogle?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInGoogleArgs, 'socialUser'>>,
@@ -309,6 +386,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
   reviews?: Resolver<Array<ResolversTypes['Review']>, ParentType, ContextType>,
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<QueryReviewArgs, 'id'>>,
+  chats?: Resolver<Array<ResolversTypes['Chat']>, ParentType, ContextType>,
+  chatrooms?: Resolver<Array<ResolversTypes['Chatroom']>, ParentType, ContextType>,
+  friends?: Resolver<Array<ResolversTypes['Friend']>, ParentType, ContextType>,
 };
 
 export type ReviewResolvers<ContextType = any, ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review']> = {
@@ -333,20 +413,23 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   photo?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   birthday?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
   gender?: Resolver<Maybe<ResolversTypes['Gender']>, ParentType, ContextType>,
-  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   social?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   verified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
   notifications?: Resolver<Maybe<Array<Maybe<ResolversTypes['Notification']>>>, ParentType, ContextType>,
   reviews?: Resolver<Maybe<Array<Maybe<ResolversTypes['Review']>>>, ParentType, ContextType>,
-  created?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
-  updated?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
-  deleted?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
 };
 
 export type Resolvers<ContextType = any> = {
   AuthPayload?: AuthPayloadResolvers<ContextType>,
+  Chat?: ChatResolvers<ContextType>,
+  Chatroom?: ChatroomResolvers<ContextType>,
   Date?: GraphQLScalarType,
   DateTime?: GraphQLScalarType,
+  Friend?: FriendResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,
   Notification?: NotificationResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
