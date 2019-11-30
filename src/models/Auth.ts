@@ -26,7 +26,7 @@ export const isSignedIn = async (User, user, queryOptions = {}) => {
     email,
   } = user;
 
-  const emailUser = getUserByEmail(User, email, queryOptions);
+  const emailUser = await getUserByEmail(User, email, queryOptions);
 
   if (emailUser) {
     return true;
@@ -68,7 +68,7 @@ export const getOrSignUp = async (
     social,
   } = socialUser;
 
-  const foundUser = User.findOrCreate({
+  const foundUser = await User.findOrCreate({
     where: { social: `${socialName}_${social}` },
     defaults: {
       social: `${socialName}_${social}`,
