@@ -1,0 +1,11 @@
+scalar DateTime
+
+type Membership {
+  id: String
+  chatroom: Chatroom!
+  user: User!
+  role: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}

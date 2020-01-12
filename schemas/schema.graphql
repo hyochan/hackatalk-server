@@ -1,12 +1,19 @@
 # import User from "user.graphql"
+# import Auth from "auth.graphql"
 # import Notification from "notification.graphql"
 # import Review from "review.graphql"
+# import Chatroom from "chatroom.graphql"
+# import Chat from "chat.graphql"
+# import Friend from "friend.graphql"
 
 type Query {
   users: [User!]!
   user(id: ID!): User
   reviews: [Review!]!
   review(id: ID!): Review
+  chats: [Chat!]!
+  chatrooms: [Chatroom!]!
+  friends: [Friend!]!
 }
 
 type Mutation {

@@ -1,10 +1,15 @@
 import { DataTypes, Model } from 'sequelize';
 
-import Notification from './Notification';
-import Review from './Review';
 import sequelize from '../db';
 
-const { STRING, BOOLEAN, DATE, UUID, UUIDV1, ENUM } = DataTypes;
+const {
+  STRING,
+  BOOLEAN,
+  DATE,
+  UUID,
+  UUIDV1,
+  ENUM,
+} = DataTypes;
 
 enum Gender {
   Male,
@@ -38,44 +43,76 @@ class User extends Model {
 
   public readonly deletedAt!: Date;
 }
-User.init(
-  {
-    id: {
-      type: UUID,
-      defaultValue: UUIDV1,
-      allowNull: false,
-      primaryKey: true,
-    },
-    email: {
-      type: STRING,
-    },
-    password: {
-      type: STRING,
-      allowNull: true,
-    },
-    name: STRING,
-    nickname: STRING,
-    photo: STRING,
-    birthday: DATE,
-    gender: ENUM('MALE', 'FEMALE'),
-    phone: STRING,
-    social: STRING,
-    verified: {
-      type: BOOLEAN,
-      defaultValue: false,
-    },
+User.init({
+  id: {
+    type: UUID,
+    defaultValue: UUIDV1,
+    allowNull: false,
+    primaryKey: true,
   },
-  {
-    sequelize,
-    modelName: 'user',
-    timestamps: true,
-    paranoid: true,
+  email: {
+    type: STRING,
   },
-);
+  password: {
+    type: STRING,
+    allowNull: true,
+  },
+  name: STRING,
+  nickname: STRING,
+  photo: STRING,
+  birthday: DATE,
+  gender: ENUM('MALE', 'FEMALE'),
+  phone: STRING,
+  social: STRING,
+  verified: {
+    type: BOOLEAN,
+    defaultValue: false,
+  },
+}, {
+  sequelize,
+  modelName: 'user',
+  timestamps: true,
+  paranoid: true,
+});
 
-User.hasMany(Notification);
-Notification.belongsTo(User);
-User.hasMany(Review);
-Review.belongsTo(User);
+export const udpateUser = async ({
+  User,
+},
+  id,
+  userData,
+) => {
+  return User.update(
+    userData, {
+      where: {
+        id,
+      },
+    },
+    { raw: true },
+  );
+};
+
+export const getUsers = async (User) => User.findAll();
+
+export const getUserById = async (User, id, options = {}) => {
+  return User.findOne({
+    where: {
+      id,
+    },
+    raw: true,
+    ...options,
+  });
+};
+
+export const getUserByEmail = (User, email, queryOptions) => User.findOne({
+  raw: true,
+  where: {
+    email,
+  },
+  ...queryOptions,
+});
+
+export const hasUser = (user) => {
+  return !user || (user && user[1] === false);
+};
 
 export default User;
