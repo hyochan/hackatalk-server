@@ -83,7 +83,7 @@ const initializeApolloServer = (apollo, app) => {
   };
 };
 
-const startServer = async (app): Promise<Http2Server> => {
+export const startServer = async (app): Promise<Http2Server> => {
   const httpServer = createHttpServer(app);
 
   const apollo = createApolloServer();
