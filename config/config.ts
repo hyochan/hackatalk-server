@@ -1,8 +1,8 @@
-const env = process.env.NODE_ENV;
-const dotenv = require('dotenv');
-const path = require('path');
+import dotenv from 'dotenv';
+import path from 'path';
 
-// prettier-ignore
+const env = process.env.NODE_ENV;
+
 const envPath =
   env === 'development'
     ? path.resolve(__dirname, '../dotenv/dev.env')

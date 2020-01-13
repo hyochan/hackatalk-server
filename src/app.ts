@@ -9,7 +9,7 @@ export const createApp = (): Express => {
 
   app.use(cors());
   app.get('/', (req, res) => {
-    res.send('It works!!!! production x7');
+    res.send('It works!!!! production x8');
   });
 
   return app;
