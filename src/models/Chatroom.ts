@@ -36,12 +36,4 @@ Chatroom.belongsTo(User, {
   as: 'owner',
 });
 
-export const getChatroomsByOwnerId = (Chatroom, ownerId) => {
-  return Chatroom.findAll({
-    where: {
-      ownerId,
-    },
-  });
-};
-
 export default Chatroom;

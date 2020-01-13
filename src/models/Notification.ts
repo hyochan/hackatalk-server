@@ -32,12 +32,4 @@ Notification.init({
 
 Notification.belongsTo(User);
 
-export const getNotificationsByUserId = (Notification, userId) => {
-  return Notification.findAll({
-    where: {
-      userId,
-    },
-  });
-};
-
 export default Notification;

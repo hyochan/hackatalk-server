@@ -1,5 +1,8 @@
 module.exports = {
-  extends: ['standard'],
+  extends: [
+    'standard',
+    'plugin:@typescript-eslint/recommended',
+  ],
   parser: '@typescript-eslint/parser',
   env: {
     browser: true,
@@ -13,6 +16,7 @@ module.exports = {
   rules: {
     'no-unused-vars': 0,
     // '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/ban-ts-ignore': 0,
     '@typescript-eslint/interface-name-prefix': 'warn',
     '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
     'no-console': 'error',

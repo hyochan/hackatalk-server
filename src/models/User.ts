@@ -16,7 +16,7 @@ enum Gender {
   Femaile,
 }
 
-class User extends Model {
+export class User extends Model {
   public id!: string;
 
   public email: string;
@@ -74,45 +74,5 @@ User.init({
   timestamps: true,
   paranoid: true,
 });
-
-export const udpateUser = async ({
-  User,
-},
-  id,
-  userData,
-) => {
-  return User.update(
-    userData, {
-      where: {
-        id,
-      },
-    },
-    { raw: true },
-  );
-};
-
-export const getUsers = async (User) => User.findAll();
-
-export const getUserById = async (User, id, options = {}) => {
-  return User.findOne({
-    where: {
-      id,
-    },
-    raw: true,
-    ...options,
-  });
-};
-
-export const getUserByEmail = (User, email, queryOptions) => User.findOne({
-  raw: true,
-  where: {
-    email,
-  },
-  ...queryOptions,
-});
-
-export const hasUser = (user) => {
-  return !user || (user && user[1] === false);
-};
 
 export default User;

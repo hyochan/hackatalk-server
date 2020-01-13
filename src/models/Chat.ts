@@ -73,12 +73,4 @@ Chat.belongsTo(User, {
   as: 'sender',
 });
 
-export const getChatsByChatroomId = (Chat, chatroomId) => {
-  return Chat.findAll({
-    where: {
-      chatroomId,
-    },
-  });
-};
-
 export default Chat;
