@@ -1,6 +1,6 @@
 import { Chatroom, Resolvers } from '../generated/graphql';
 
-import { AuthenticationError } from 'apollo-server';
+import { AuthenticationError } from 'apollo-server-core';
 
 const resolver: Resolvers = {
   Query: {

@@ -7,7 +7,7 @@ import {
 } from '../generated/graphql';
 import { PubSub, withFilter } from 'apollo-server';
 
-import { AuthenticationError } from 'apollo-server-express';
+import { AuthenticationError } from 'apollo-server-core';
 import {
   Role,
 } from '../models/Auth';
