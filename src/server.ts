@@ -1,8 +1,9 @@
-import { ApolloServer, PubSub } from 'apollo-server-express';
 import { JWT_SECRET, verifyUser } from './models/Auth';
 import models, { ModelType } from './models';
 
+import { ApolloServer } from 'apollo-server-express';
 import { Http2Server } from 'http2';
+import { PubSub } from 'apollo-server';
 import { User } from './models/User';
 import { allResolvers } from './resolvers';
 import { createApp } from './app';
@@ -12,6 +13,7 @@ import { importSchema } from 'graphql-import';
 
 const { PORT = 4000 } = process.env;
 
+// eslint-disable-next-line
 const getToken = (req: Express.Request & any): string => {
   const authHeader = req.get('Authorization');
 

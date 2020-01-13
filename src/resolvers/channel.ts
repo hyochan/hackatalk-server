@@ -1,24 +1,24 @@
-import { Chatroom, Resolvers } from '../generated/graphql';
+import { Channel, Resolvers } from '../generated/graphql';
 
 import { AuthenticationError } from 'apollo-server-core';
 
 const resolver: Resolvers = {
   Query: {
-    chatrooms: async (
+    channels: async (
       _,
       args, {
         getUser,
         models,
       },
-    ): Promise<Chatroom[]> => {
-      const { Chatroom: chatroomModel } = models;
+    ): Promise<Channel[]> => {
+      const { Channel: channelModel } = models;
       const user = await getUser();
 
       if (!user) throw new AuthenticationError('User is not signed in');
 
-      return chatroomModel.findAll({
+      return channelModel.findAll({
         where: {
-          ownerId: chatroomModel.id,
+          ownerId: channelModel.id,
         },
       });
     },

@@ -1,6 +1,6 @@
 scalar DateTime
 
-type Chatroom {
+type Channel {
   id: String
   owner: User!
   createdAt: DateTime!

@@ -18,23 +18,8 @@ export type AuthPayload = {
   user: User,
 };
 
-export type Chat = {
-   __typename?: 'Chat',
-  id?: Maybe<Scalars['String']>,
-  chatroom: Chatroom,
-  sender: User,
-  type: Scalars['String'],
-  text?: Maybe<Scalars['String']>,
-  photoUrl?: Maybe<Scalars['String']>,
-  audioUrl?: Maybe<Scalars['String']>,
-  readCount?: Maybe<Scalars['Int']>,
-  createdAt: Scalars['DateTime'],
-  updatedAt: Scalars['DateTime'],
-  deletedAt?: Maybe<Scalars['DateTime']>,
-};
-
-export type Chatroom = {
-   __typename?: 'Chatroom',
+export type Channel = {
+   __typename?: 'Channel',
   id?: Maybe<Scalars['String']>,
   owner: User,
   createdAt: Scalars['DateTime'],
@@ -62,9 +47,24 @@ export enum Gender {
 export type Membership = {
    __typename?: 'Membership',
   id?: Maybe<Scalars['String']>,
-  chatroom: Chatroom,
+  channel: Channel,
   user: User,
   role: Scalars['String'],
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  deletedAt?: Maybe<Scalars['DateTime']>,
+};
+
+export type Message = {
+   __typename?: 'Message',
+  id?: Maybe<Scalars['String']>,
+  channel: Channel,
+  sender: User,
+  type: Scalars['String'],
+  text?: Maybe<Scalars['String']>,
+  photoUrl?: Maybe<Scalars['String']>,
+  audioUrl?: Maybe<Scalars['String']>,
+  readCount?: Maybe<Scalars['Int']>,
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   deletedAt?: Maybe<Scalars['DateTime']>,
@@ -132,8 +132,8 @@ export type Query = {
    __typename?: 'Query',
   users: Array<User>,
   user?: Maybe<User>,
-  chats: Array<Chat>,
-  chatrooms: Array<Chatroom>,
+  messages: Array<Message>,
+  channels: Array<Channel>,
   friends: Array<Friend>,
 };
 
@@ -279,8 +279,8 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   Notification: ResolverTypeWrapper<Notification>,
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>,
-  Chat: ResolverTypeWrapper<Chat>,
-  Chatroom: ResolverTypeWrapper<Chatroom>,
+  Message: ResolverTypeWrapper<Message>,
+  Channel: ResolverTypeWrapper<Channel>,
   Int: ResolverTypeWrapper<Scalars['Int']>,
   Friend: ResolverTypeWrapper<Friend>,
   Mutation: ResolverTypeWrapper<{}>,
@@ -304,8 +304,8 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'],
   Notification: Notification,
   DateTime: Scalars['DateTime'],
-  Chat: Chat,
-  Chatroom: Chatroom,
+  Message: Message,
+  Channel: Channel,
   Int: Scalars['Int'],
   Friend: Friend,
   Mutation: {},
@@ -323,21 +323,7 @@ export type AuthPayloadResolvers<ContextType = any, ParentType extends Resolvers
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
 };
 
-export type ChatResolvers<ContextType = any, ParentType extends ResolversParentTypes['Chat'] = ResolversParentTypes['Chat']> = {
-  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  chatroom?: Resolver<ResolversTypes['Chatroom'], ParentType, ContextType>,
-  sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
-  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  photoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  audioUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  readCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
-  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
-  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
-};
-
-export type ChatroomResolvers<ContextType = any, ParentType extends ResolversParentTypes['Chatroom'] = ResolversParentTypes['Chatroom']> = {
+export type ChannelResolvers<ContextType = any, ParentType extends ResolversParentTypes['Channel'] = ResolversParentTypes['Channel']> = {
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   owner?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
@@ -364,9 +350,23 @@ export type FriendResolvers<ContextType = any, ParentType extends ResolversParen
 
 export type MembershipResolvers<ContextType = any, ParentType extends ResolversParentTypes['Membership'] = ResolversParentTypes['Membership']> = {
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  chatroom?: Resolver<ResolversTypes['Chatroom'], ParentType, ContextType>,
+  channel?: Resolver<ResolversTypes['Channel'], ParentType, ContextType>,
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
   role?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+};
+
+export type MessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  channel?: Resolver<ResolversTypes['Channel'], ParentType, ContextType>,
+  sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  photoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  audioUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  readCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
@@ -393,8 +393,8 @@ export type NotificationResolvers<ContextType = any, ParentType extends Resolver
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
-  chats?: Resolver<Array<ResolversTypes['Chat']>, ParentType, ContextType>,
-  chatrooms?: Resolver<Array<ResolversTypes['Chatroom']>, ParentType, ContextType>,
+  messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
+  channels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType>,
   friends?: Resolver<Array<ResolversTypes['Friend']>, ParentType, ContextType>,
 };
 
@@ -422,12 +422,12 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = {
   AuthPayload?: AuthPayloadResolvers<ContextType>,
-  Chat?: ChatResolvers<ContextType>,
-  Chatroom?: ChatroomResolvers<ContextType>,
+  Channel?: ChannelResolvers<ContextType>,
   Date?: GraphQLScalarType,
   DateTime?: GraphQLScalarType,
   Friend?: FriendResolvers<ContextType>,
   Membership?: MembershipResolvers<ContextType>,
+  Message?: MessageResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,
   Notification?: NotificationResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,

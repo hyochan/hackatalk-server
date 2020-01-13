@@ -1,16 +1,16 @@
 # import User from "user.graphql"
 # import Auth from "auth.graphql"
 # import Notification from "notification.graphql"
-# import Chatroom from "chatroom.graphql"
-# import Chat from "chat.graphql"
+# import Channel from "channel.graphql"
+# import Message from "message.graphql"
 # import Friend from "friend.graphql"
 # import Membership from "membership.graphql"
 
 type Query {
   users: [User!]!
   user(id: ID!): User
-  chats: [Chat!]!
-  chatrooms: [Chatroom!]!
+  messages: [Message!]!
+  channels: [Channel!]!
   friends: [Friend!]!
 }
 

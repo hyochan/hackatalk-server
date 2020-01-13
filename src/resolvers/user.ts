@@ -5,7 +5,6 @@ import {
   SocialUserCreateInput,
   User,
 } from '../generated/graphql';
-import { PubSub, withFilter } from 'apollo-server';
 
 import { AuthenticationError } from 'apollo-server-core';
 import {
@@ -13,6 +12,7 @@ import {
 } from '../models/Auth';
 import { encryptPassword } from '../utils/password';
 import jwt from 'jsonwebtoken';
+import { withFilter } from 'apollo-server';
 
 enum SocialSignInType {
   GOOGLE = 'google',
@@ -167,12 +167,12 @@ const resolver: Resolvers = {
     userAdded: {
       // eslint-disable-next-line
       subscribe: (_, args, { pubsub }): any =>
-        pubsub.asyncIterator(USER_ADDED),
+        pubsub.asyncIterator(USER_ADDED, { user: args }),
     },
     userUpdated: {
       subscribe: withFilter(
         (_, args, { pubsub }) => {
-          return (pubsub as PubSub).asyncIterator(USER_UPDATED);
+          return pubsub.asyncIterator(USER_UPDATED, { user: args.user });
         },
         (payload, user) => {
           const { userUpdated: updatedUser } = payload;

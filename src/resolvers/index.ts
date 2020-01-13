@@ -1,12 +1,12 @@
-import Chat from './chat';
-import Chatroom from './chatroom';
+import Channel from './channel';
+import Chat from './message';
 import Friend from './friend';
 import Notification from './notification';
 import User from './user';
 
 export const allResolvers = [
   Chat,
-  Chatroom,
+  Channel,
   Friend,
   Notification,
   User,
@@ -15,7 +15,7 @@ export const allResolvers = [
 export default {
   User,
   Friend,
-  Chatroom,
+  Channel,
   Chat,
   Notification,
 };

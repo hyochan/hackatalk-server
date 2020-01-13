@@ -2,7 +2,7 @@ scalar DateTime
 
 type Membership {
   id: String
-  chatroom: Chatroom!
+  channel: Channel!
   user: User!
   role: String!
   createdAt: DateTime!
