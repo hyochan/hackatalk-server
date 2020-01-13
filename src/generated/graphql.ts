@@ -59,8 +59,20 @@ export enum Gender {
   Female = 'FEMALE'
 }
 
+export type Membership = {
+   __typename?: 'Membership',
+  id?: Maybe<Scalars['String']>,
+  chatroom: Chatroom,
+  user: User,
+  role: Scalars['String'],
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  deletedAt?: Maybe<Scalars['DateTime']>,
+};
+
 export type Mutation = {
    __typename?: 'Mutation',
+  /** User */
   signInGoogle: AuthPayload,
   signInFacebook: AuthPayload,
   signInApple: AuthPayload,
@@ -151,6 +163,7 @@ export type User = {
    __typename?: 'User',
   id: Scalars['ID'],
   email?: Maybe<Scalars['String']>,
+  /** password: String */
   name?: Maybe<Scalars['String']>,
   nickname?: Maybe<Scalars['String']>,
   photo?: Maybe<Scalars['String']>,
@@ -277,6 +290,7 @@ export type ResolversTypes = {
   NotificationCreateInput: NotificationCreateInput,
   UserUpdateInput: UserUpdateInput,
   Subscription: ResolverTypeWrapper<{}>,
+  Membership: ResolverTypeWrapper<Membership>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -301,6 +315,7 @@ export type ResolversParentTypes = {
   NotificationCreateInput: NotificationCreateInput,
   UserUpdateInput: UserUpdateInput,
   Subscription: {},
+  Membership: Membership,
 };
 
 export type AuthPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = {
@@ -342,6 +357,16 @@ export type FriendResolvers<ContextType = any, ParentType extends ResolversParen
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
   friend?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+};
+
+export type MembershipResolvers<ContextType = any, ParentType extends ResolversParentTypes['Membership'] = ResolversParentTypes['Membership']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  chatroom?: Resolver<ResolversTypes['Chatroom'], ParentType, ContextType>,
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
@@ -402,6 +427,7 @@ export type Resolvers<ContextType = any> = {
   Date?: GraphQLScalarType,
   DateTime?: GraphQLScalarType,
   Friend?: FriendResolvers<ContextType>,
+  Membership?: MembershipResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,
   Notification?: NotificationResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,

@@ -1,19 +1,18 @@
 import { ApolloServer, PubSub } from 'apollo-server-express';
 import { JWT_SECRET, verifyUser } from './models/Auth';
-import { fileLoader, mergeResolvers } from 'merge-graphql-schemas';
 import models, { ModelType } from './models';
 
 import { Http2Server } from 'http2';
 import { User } from './models/User';
+import { allResolvers } from './resolvers';
 import { createApp } from './app';
 import { createServer as createHttpServer } from 'http';
 import express from 'express';
 import { importSchema } from 'graphql-import';
-import path from 'path';
 
 const { PORT = 4000 } = process.env;
 
-const getToken = (req: express.Request): string => {
+const getToken = (req: Express.Request & any): string => {
   const authHeader = req.get('Authorization');
 
   if (!authHeader) {
@@ -56,9 +55,7 @@ const createApolloServer = (): ApolloServer => new ApolloServer({
   }),
   introspection: process.env.NODE_ENV !== 'production',
   playground: process.env.NODE_ENV !== 'production',
-  resolvers: mergeResolvers(
-    fileLoader(path.join(__dirname, './resolvers')),
-  ),
+  resolvers: allResolvers,
   subscriptions: {
     onConnect: (): void => {
       process.stdout.write('Connected to websocket\n');
