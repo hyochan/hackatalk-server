@@ -1,4 +1,4 @@
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 export const { JWT_SECRET = 'undefined' } = process.env;
 

@@ -2,17 +2,15 @@
   "baseUrl": "types",
   "typeRoots": ["types"],
   "compilerOptions": {
-    "lib": [
-      "esnext",
-    ],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es2017",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution":"node",
-    "module":"commonjs",
     "declaration":false,
     "noLib":false,
-    "emitDecoratorMetadata":true,
-    "experimentalDecorators":true,
     "sourceMap":true,
     "pretty":true,
     "allowUnreachableCode":true,
@@ -23,7 +21,6 @@
     "outDir":"dist/",
     "baseUrl":"src/",
     "listFiles":false,
-    "noEmitHelpers":true,
     "skipLibCheck": true
   },
   "include": [
