@@ -2,7 +2,7 @@ import Chat from './chat';
 import Chatroom from './chatroom';
 import Friend from './friend';
 import Notification from './notification';
-import User from './User';
+import User from './user';
 
 export const allResolvers = [
   Chat,
