@@ -18,23 +18,8 @@ export type AuthPayload = {
   user: User,
 };
 
-export type Chat = {
-   __typename?: 'Chat',
-  id?: Maybe<Scalars['String']>,
-  chatroom: Chatroom,
-  sender: User,
-  type: Scalars['String'],
-  text?: Maybe<Scalars['String']>,
-  photoUrl?: Maybe<Scalars['String']>,
-  audioUrl?: Maybe<Scalars['String']>,
-  readCount?: Maybe<Scalars['Int']>,
-  createdAt: Scalars['DateTime'],
-  updatedAt: Scalars['DateTime'],
-  deletedAt?: Maybe<Scalars['DateTime']>,
-};
-
-export type Chatroom = {
-   __typename?: 'Chatroom',
+export type Channel = {
+   __typename?: 'Channel',
   id?: Maybe<Scalars['String']>,
   owner: User,
   createdAt: Scalars['DateTime'],
@@ -59,10 +44,38 @@ export enum Gender {
   Female = 'FEMALE'
 }
 
+export type Membership = {
+   __typename?: 'Membership',
+  id?: Maybe<Scalars['String']>,
+  channel: Channel,
+  user: User,
+  role: Scalars['String'],
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  deletedAt?: Maybe<Scalars['DateTime']>,
+};
+
+export type Message = {
+   __typename?: 'Message',
+  id?: Maybe<Scalars['String']>,
+  channel: Channel,
+  sender: User,
+  type: Scalars['String'],
+  text?: Maybe<Scalars['String']>,
+  photoUrl?: Maybe<Scalars['String']>,
+  audioUrl?: Maybe<Scalars['String']>,
+  readCount?: Maybe<Scalars['Int']>,
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  deletedAt?: Maybe<Scalars['DateTime']>,
+};
+
 export type Mutation = {
    __typename?: 'Mutation',
+  /** User */
   signInGoogle: AuthPayload,
   signInFacebook: AuthPayload,
+  signInApple: AuthPayload,
   signUp: AuthPayload,
   addPushToken?: Maybe<Notification>,
   updateProfile?: Maybe<User>,
@@ -75,6 +88,11 @@ export type MutationSignInGoogleArgs = {
 
 
 export type MutationSignInFacebookArgs = {
+  socialUser: SocialUserCreateInput
+};
+
+
+export type MutationSignInAppleArgs = {
   socialUser: SocialUserCreateInput
 };
 
@@ -114,10 +132,8 @@ export type Query = {
    __typename?: 'Query',
   users: Array<User>,
   user?: Maybe<User>,
-  reviews: Array<Review>,
-  review?: Maybe<Review>,
-  chats: Array<Chat>,
-  chatrooms: Array<Chatroom>,
+  messages: Array<Message>,
+  channels: Array<Channel>,
   friends: Array<Friend>,
 };
 
@@ -126,25 +142,9 @@ export type QueryUserArgs = {
   id: Scalars['ID']
 };
 
-
-export type QueryReviewArgs = {
-  id: Scalars['ID']
-};
-
-export type Review = {
-   __typename?: 'Review',
-  id: Scalars['ID'],
-  title?: Maybe<Scalars['String']>,
-  content?: Maybe<Scalars['String']>,
-  rating: Scalars['Float'],
-  createdAt?: Maybe<Scalars['DateTime']>,
-  updatedAt?: Maybe<Scalars['DateTime']>,
-};
-
 export type SocialUserCreateInput = {
   social: Scalars['String'],
   email?: Maybe<Scalars['String']>,
-  password?: Maybe<Scalars['String']>,
   photo?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
   nickname?: Maybe<Scalars['String']>,
@@ -163,6 +163,7 @@ export type User = {
    __typename?: 'User',
   id: Scalars['ID'],
   email?: Maybe<Scalars['String']>,
+  /** password: String */
   name?: Maybe<Scalars['String']>,
   nickname?: Maybe<Scalars['String']>,
   photo?: Maybe<Scalars['String']>,
@@ -172,15 +173,14 @@ export type User = {
   phone?: Maybe<Scalars['String']>,
   verified?: Maybe<Scalars['Boolean']>,
   notifications?: Maybe<Array<Maybe<Notification>>>,
-  reviews?: Maybe<Array<Maybe<Review>>>,
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   deletedAt?: Maybe<Scalars['DateTime']>,
 };
 
 export type UserCreateInput = {
-  email?: Maybe<Scalars['String']>,
-  password?: Maybe<Scalars['String']>,
+  email: Scalars['String'],
+  password: Scalars['String'],
   name?: Maybe<Scalars['String']>,
   nickname?: Maybe<Scalars['String']>,
   birthday?: Maybe<Scalars['Date']>,
@@ -191,7 +191,7 @@ export type UserCreateInput = {
 export type UserUpdateInput = {
   id?: Maybe<Scalars['ID']>,
   email?: Maybe<Scalars['String']>,
-  password?: Maybe<Scalars['String']>,
+  password: Scalars['String'],
   name?: Maybe<Scalars['String']>,
   nickname?: Maybe<Scalars['String']>,
   birthday?: Maybe<Scalars['Date']>,
@@ -279,10 +279,8 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   Notification: ResolverTypeWrapper<Notification>,
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>,
-  Review: ResolverTypeWrapper<Review>,
-  Float: ResolverTypeWrapper<Scalars['Float']>,
-  Chat: ResolverTypeWrapper<Chat>,
-  Chatroom: ResolverTypeWrapper<Chatroom>,
+  Message: ResolverTypeWrapper<Message>,
+  Channel: ResolverTypeWrapper<Channel>,
   Int: ResolverTypeWrapper<Scalars['Int']>,
   Friend: ResolverTypeWrapper<Friend>,
   Mutation: ResolverTypeWrapper<{}>,
@@ -292,6 +290,7 @@ export type ResolversTypes = {
   NotificationCreateInput: NotificationCreateInput,
   UserUpdateInput: UserUpdateInput,
   Subscription: ResolverTypeWrapper<{}>,
+  Membership: ResolverTypeWrapper<Membership>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -305,10 +304,8 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'],
   Notification: Notification,
   DateTime: Scalars['DateTime'],
-  Review: Review,
-  Float: Scalars['Float'],
-  Chat: Chat,
-  Chatroom: Chatroom,
+  Message: Message,
+  Channel: Channel,
   Int: Scalars['Int'],
   Friend: Friend,
   Mutation: {},
@@ -318,6 +315,7 @@ export type ResolversParentTypes = {
   NotificationCreateInput: NotificationCreateInput,
   UserUpdateInput: UserUpdateInput,
   Subscription: {},
+  Membership: Membership,
 };
 
 export type AuthPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = {
@@ -325,21 +323,7 @@ export type AuthPayloadResolvers<ContextType = any, ParentType extends Resolvers
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
 };
 
-export type ChatResolvers<ContextType = any, ParentType extends ResolversParentTypes['Chat'] = ResolversParentTypes['Chat']> = {
-  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  chatroom?: Resolver<ResolversTypes['Chatroom'], ParentType, ContextType>,
-  sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
-  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  photoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  audioUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  readCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
-  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
-  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
-};
-
-export type ChatroomResolvers<ContextType = any, ParentType extends ResolversParentTypes['Chatroom'] = ResolversParentTypes['Chatroom']> = {
+export type ChannelResolvers<ContextType = any, ParentType extends ResolversParentTypes['Channel'] = ResolversParentTypes['Channel']> = {
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   owner?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
@@ -364,9 +348,34 @@ export type FriendResolvers<ContextType = any, ParentType extends ResolversParen
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
 };
 
+export type MembershipResolvers<ContextType = any, ParentType extends ResolversParentTypes['Membership'] = ResolversParentTypes['Membership']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  channel?: Resolver<ResolversTypes['Channel'], ParentType, ContextType>,
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+};
+
+export type MessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  channel?: Resolver<ResolversTypes['Channel'], ParentType, ContextType>,
+  sender?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  photoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  audioUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  readCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   signInGoogle?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInGoogleArgs, 'socialUser'>>,
   signInFacebook?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInFacebookArgs, 'socialUser'>>,
+  signInApple?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInAppleArgs, 'socialUser'>>,
   signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>,
   addPushToken?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<MutationAddPushTokenArgs, 'notification'>>,
   updateProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'user'>>,
@@ -384,20 +393,9 @@ export type NotificationResolvers<ContextType = any, ParentType extends Resolver
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
-  reviews?: Resolver<Array<ResolversTypes['Review']>, ParentType, ContextType>,
-  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<QueryReviewArgs, 'id'>>,
-  chats?: Resolver<Array<ResolversTypes['Chat']>, ParentType, ContextType>,
-  chatrooms?: Resolver<Array<ResolversTypes['Chatroom']>, ParentType, ContextType>,
+  messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
+  channels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType>,
   friends?: Resolver<Array<ResolversTypes['Friend']>, ParentType, ContextType>,
-};
-
-export type ReviewResolvers<ContextType = any, ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  rating?: Resolver<ResolversTypes['Float'], ParentType, ContextType>,
-  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
-  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
 };
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
@@ -417,7 +415,6 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   verified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
   notifications?: Resolver<Maybe<Array<Maybe<ResolversTypes['Notification']>>>, ParentType, ContextType>,
-  reviews?: Resolver<Maybe<Array<Maybe<ResolversTypes['Review']>>>, ParentType, ContextType>,
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
@@ -425,15 +422,15 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type Resolvers<ContextType = any> = {
   AuthPayload?: AuthPayloadResolvers<ContextType>,
-  Chat?: ChatResolvers<ContextType>,
-  Chatroom?: ChatroomResolvers<ContextType>,
+  Channel?: ChannelResolvers<ContextType>,
   Date?: GraphQLScalarType,
   DateTime?: GraphQLScalarType,
   Friend?: FriendResolvers<ContextType>,
+  Membership?: MembershipResolvers<ContextType>,
+  Message?: MessageResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,
   Notification?: NotificationResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
-  Review?: ReviewResolvers<ContextType>,
   Subscription?: SubscriptionResolvers<ContextType>,
   User?: UserResolvers<ContextType>,
 };

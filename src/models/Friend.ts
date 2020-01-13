@@ -45,12 +45,4 @@ Friend.belongsTo(User, {
   as: 'user',
 });
 
-export const getFriendsByUserId = (Friend, userId) => {
-  return Friend.findAll({
-    where: {
-      userId,
-    },
-  });
-};
-
 export default Friend;

@@ -1,17 +1,24 @@
-import Chat from './Chat';
-import Chatroom from './Chatroom';
+import Channel from './Channel';
 import Friend from './Friend';
 import Membership from './Membership';
+import Message from './Message';
 import Notification from './Notification';
-import Review from './Review';
 import User from './User';
 
 export default {
   User,
   Friend,
-  Chatroom,
-  Chat,
+  Channel,
+  Message,
   Membership,
   Notification,
-  Review,
+};
+
+export interface ModelType {
+  User: User;
+  Friend: Friend;
+  Channel: Channel;
+  Message: Message;
+  Membership: Membership;
+  Notification: Notification;
 };

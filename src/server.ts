@@ -1,19 +1,20 @@
-import * as path from 'path';
-
-import { ApolloServer, PubSub } from 'apollo-server-express';
 import { JWT_SECRET, verifyUser } from './models/Auth';
-import { fileLoader, mergeResolvers } from 'merge-graphql-schemas';
+import models, { ModelType } from './models';
 
+import { ApolloServer } from 'apollo-server-express';
 import { Http2Server } from 'http2';
+import { PubSub } from 'apollo-server';
+import { User } from './models/User';
+import { allResolvers } from './resolvers';
 import { createApp } from './app';
 import { createServer as createHttpServer } from 'http';
-import { getUserById } from './models/User';
+import express from 'express';
 import { importSchema } from 'graphql-import';
-import models from './models';
 
 const { PORT = 4000 } = process.env;
 
-const getToken = (req) => {
+// eslint-disable-next-line
+const getToken = (req: Express.Request & any): string => {
   const authHeader = req.get('Authorization');
 
   if (!authHeader) {
@@ -23,11 +24,16 @@ const getToken = (req) => {
   return authHeader.replace('Bearer ', '');
 };
 
-const createApolloServer = () => new ApolloServer({
+const createApolloServer = (): ApolloServer => new ApolloServer({
   typeDefs: importSchema('schemas/schema.graphql'),
-  context: ({ req }) => ({
-    getUser: () => {
-      const { User } = models;
+  context: ({ req }): {
+    getUser: () => Promise<User>;
+    models: ModelType;
+    pubsub: PubSub;
+    appSecret: string;
+  } => ({
+    getUser: (): Promise<User> => {
+      const { User: userModel } = models;
       const token = getToken(req);
 
       if (!token) {
@@ -37,53 +43,39 @@ const createApolloServer = () => new ApolloServer({
       const user = verifyUser(token);
       const { userId } = user;
 
-      return getUserById(User, userId);
+      return userModel.findOne({
+        where: {
+          id: userId,
+        },
+        raw: true,
+      });
     },
-    isSignedInUser: () => {
-      const { User } = models;
-      const token = getToken(req);
-
-      if (!token) {
-        return false;
-      }
-
-      const user = verifyUser(token);
-      const { userId } = user;
-
-      if (getUserById(User, userId)) {
-        return true;
-      }
-
-      return false;
-    },
+    // @ts-ignore
     models,
     pubsub: new PubSub(),
     appSecret: JWT_SECRET,
   }),
   introspection: process.env.NODE_ENV !== 'production',
   playground: process.env.NODE_ENV !== 'production',
-  resolvers: mergeResolvers(
-    fileLoader(path.join(__dirname, './resolvers')),
-  ),
+  resolvers: allResolvers,
   subscriptions: {
-    onConnect: () => {
-      // console.log('Connected to websocket')
+    onConnect: (): void => {
       process.stdout.write('Connected to websocket\n');
     },
   },
 });
 
-const initializeApolloServer = (apollo, app) => {
+const initializeApolloServer = (apollo: ApolloServer, app: express.Application): () => void => {
   apollo.applyMiddleware({ app });
 
-  return () => {
+  return (): void => {
     process.stdout.write(
       `🚀 Server ready at http://localhost:${PORT}${apollo.graphqlPath}\n`,
     );
   };
 };
 
-export const startServer = async (app): Promise<Http2Server> => {
+export const startServer = async (app: express.Application): Promise<Http2Server> => {
   const httpServer = createHttpServer(app);
 
   const apollo = createApolloServer();

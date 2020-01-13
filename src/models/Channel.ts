@@ -7,14 +7,14 @@ import {
 import User from './User';
 import sequelize from '../db';
 
-class Chatroom extends Model {
+class Channel extends Model {
   public id!: string;
   public ownerId!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 }
-Chatroom.init({
+Channel.init({
   id: {
     type: UUID,
     defaultValue: UUIDV4,
@@ -27,21 +27,13 @@ Chatroom.init({
   },
 }, {
   sequelize,
-  modelName: 'chatroom',
+  modelName: 'channel',
   timestamps: true,
   paranoid: true,
 });
 
-Chatroom.belongsTo(User, {
+Channel.belongsTo(User, {
   as: 'owner',
 });
 
-export const getChatroomsByOwnerId = (Chatroom, ownerId) => {
-  return Chatroom.findAll({
-    where: {
-      ownerId,
-    },
-  });
-};
-
-export default Chatroom;
+export default Channel;

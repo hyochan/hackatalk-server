@@ -6,14 +6,14 @@ import {
   UUIDV4,
 } from 'sequelize';
 
-import Chatroom from './Chatroom';
+import Channel from './Channel';
 import User from './User';
 import sequelize from '../db';
 
-class Chat extends Model {
+class Message extends Model {
   public id!: string;
 
-  public chatroomId!: string;
+  public channelId!: string;
 
   public senderId!: string;
 
@@ -33,14 +33,14 @@ class Chat extends Model {
 
   public readonly deletedAt!: Date;
 }
-Chat.init({
+Message.init({
   id: {
     type: UUID,
     defaultValue: UUIDV4,
     allowNull: false,
     primaryKey: true,
   },
-  chatroomId: {
+  channelId: {
     type: UUID,
     allowNull: false,
   },
@@ -61,24 +61,16 @@ Chat.init({
   },
 }, {
   sequelize,
-  modelName: 'chat',
+  modelName: 'message',
   timestamps: true,
   paranoid: true,
 });
 
-Chat.belongsTo(Chatroom, {
-  as: 'chatroom',
+Message.belongsTo(Channel, {
+  as: 'channel',
 });
-Chat.belongsTo(User, {
+Message.belongsTo(User, {
   as: 'sender',
 });
 
-export const getChatsByChatroomId = (Chat, chatroomId) => {
-  return Chat.findAll({
-    where: {
-      chatroomId,
-    },
-  });
-};
-
-export default Chat;
+export default Message;

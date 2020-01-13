@@ -21,15 +21,14 @@ type User {
   phone: String
   verified: Boolean
   notifications: [Notification]
-  reviews: [Review]
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
 }
 
 input UserCreateInput {
-  email: String
-  password: String
+  email: String!
+  password: String!
   name: String
   nickname: String
   birthday: Date
@@ -40,7 +39,7 @@ input UserCreateInput {
 input UserUpdateInput {
   id: ID
   email: String
-  password: String
+  password: String!
   name: String
   nickname: String
   birthday: Date
@@ -51,7 +50,6 @@ input UserUpdateInput {
 input SocialUserCreateInput {
   social: String!
   email: String
-  password: String
   photo: String
   name: String
   nickname: String

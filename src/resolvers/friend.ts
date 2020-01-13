@@ -1,22 +1,26 @@
-import { AuthenticationError } from 'apollo-server';
-import { Resolvers } from '../generated/graphql';
-import { getFriendsByUserId } from '../models/Friend';
+import { Friend, Resolvers } from '../generated/graphql';
+
+import { AuthenticationError } from 'apollo-server-core';
 
 const resolver: Resolvers = {
   Query: {
     friends: async (
       _,
       args, {
-        isSignedInUser,
+        getUser,
         models,
       },
-    ) => {
-      const { Friend } = models;
-      const signedIn = await isSignedInUser();
+    ): Promise<Friend[]> => {
+      const { Friend: friendModel } = models;
+      const { userId } = await getUser();
 
-      if (!signedIn) throw new AuthenticationError('User is not signed in');
+      if (!userId) throw new AuthenticationError('User is not signed in');
 
-      return getFriendsByUserId(Friend, 1);
+      return friendModel.findAll({
+        where: {
+          id: userId,
+        },
+      });
     },
   },
 };

@@ -2,7 +2,11 @@
   "baseUrl": "types",
   "typeRoots": ["types"],
   "compilerOptions": {
-    "target":"es6",
+    "lib": [
+      "esnext",
+    ],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "moduleResolution":"node",
     "module":"commonjs",
     "declaration":false,

@@ -5,13 +5,13 @@ import {
   UUIDV4,
 } from 'sequelize';
 
-import Chatroom from './Chatroom';
+import Channel from './Channel';
 import User from './User';
 import sequelize from '../db';
 
 class Membership extends Model {
   public id!: string;
-  public chatroomId!: string;
+  public channelId!: string;
   public userId!: string;
   public type: string;
   public readonly createdAt!: Date;
@@ -25,7 +25,7 @@ Membership.init({
     allowNull: false,
     primaryKey: true,
   },
-  chatroomId: {
+  channelId: {
     type: UUID,
     allowNull: false,
   },
@@ -43,8 +43,8 @@ Membership.init({
   paranoid: true,
 });
 
-Membership.belongsTo(Chatroom, {
-  as: 'chatroom',
+Membership.belongsTo(Channel, {
+  as: 'channel',
 });
 
 Membership.belongsTo(User, {

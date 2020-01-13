@@ -1,9 +1,4 @@
-import { Resolvers } from '../generated/graphql';
-
-const createNotification = async (Notification, notification) => Notification.create(
-  notification,
-  { raw: true },
-);
+import { Notification, Resolvers } from '../generated/graphql';
 
 const resolver: Resolvers = {
   Mutation: {
@@ -13,11 +8,14 @@ const resolver: Resolvers = {
       }, {
         models,
       },
-    ) => {
-      const { Notification } = models;
+    ): Promise<Notification> => {
+      const { Notification: notificationModel } = models;
 
       try {
-        return createNotification(Notification, notification);
+        return notificationModel.create(
+          notification,
+          { raw: true },
+        );
       } catch (err) {
         throw new Error(err);
       }

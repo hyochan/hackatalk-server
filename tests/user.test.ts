@@ -13,7 +13,7 @@ describe('Resolver - User', () => {
   const email = `${name}@dooboo.com`;
   const password = 'password';
 
-  const mutation = `
+  const mutation = /* GraphQL */`
     mutation {
       signUp(user: {
         email: "${email}"
@@ -36,7 +36,7 @@ describe('Resolver - User', () => {
   });
 
   it('should signUp user', async () => {
-    const response: any = await request(testHost, mutation);
+    const response = await request(testHost, mutation);
 
     expect(response).toHaveProperty('signUp');
     expect(response.signUp).toHaveProperty('token');

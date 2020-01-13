@@ -1,8 +1,8 @@
 scalar DateTime
 
-type Chat {
+type Message {
   id: String
-  chatroom: Chatroom!
+  channel: Channel!
   sender: User!
   type: String!
   text: String
