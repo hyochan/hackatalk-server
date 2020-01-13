@@ -2,7 +2,6 @@ import {
   AuthPayload,
   Notification,
   Resolvers,
-  Review,
   SocialUserCreateInput,
   User,
 } from '../generated/graphql';
@@ -189,16 +188,6 @@ const resolver: Resolvers = {
       const { Notification: notificationModel } = models;
 
       return notificationModel.findAll({
-        where: {
-          userId: id,
-        },
-      });
-    },
-    reviews: (user, args, { models }): Promise<Review[]> => {
-      const { id } = user;
-      const { Review: reviewModel } = models;
-
-      return reviewModel.findAll({
         where: {
           userId: id,
         },
