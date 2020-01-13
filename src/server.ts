@@ -3,7 +3,7 @@ import models, { ModelType } from './models';
 
 import { ApolloServer } from 'apollo-server-express';
 import { Http2Server } from 'http2';
-import { PubSub } from 'apollo-server';
+import { PubSub } from 'graphql-subscriptions';
 import { User } from './models/User';
 import { allResolvers } from './resolvers';
 import { createApp } from './app';
@@ -12,6 +12,7 @@ import express from 'express';
 import { importSchema } from 'graphql-import';
 
 const { PORT = 4000 } = process.env;
+const pubsub = new PubSub();
 
 // eslint-disable-next-line
 const getToken = (req: Express.Request & any): string => {
@@ -52,7 +53,7 @@ const createApolloServer = (): ApolloServer => new ApolloServer({
     },
     // @ts-ignore
     models,
-    pubsub: new PubSub(),
+    pubsub,
     appSecret: JWT_SECRET,
   }),
   introspection: process.env.NODE_ENV !== 'production',

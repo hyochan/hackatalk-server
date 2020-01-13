@@ -129,6 +129,7 @@ const resolver: Resolvers = {
       pubsub.publish(USER_ADDED, {
         userAdded: user,
       });
+
       return { token, user };
     },
     updateProfile: async (_, args, { getUser, models, pubsub }): Promise<User> => {
@@ -166,8 +167,7 @@ const resolver: Resolvers = {
   Subscription: {
     userAdded: {
       // eslint-disable-next-line
-      subscribe: (_, args, { pubsub }): any =>
-        pubsub.asyncIterator(USER_ADDED, { user: args }),
+      subscribe: (_, args, { pubsub }) => pubsub.asyncIterator(USER_ADDED),
     },
     userUpdated: {
       subscribe: withFilter(
