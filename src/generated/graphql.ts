@@ -73,7 +73,6 @@ export type Message = {
 
 export type Mutation = {
    __typename?: 'Mutation',
-  /** User */
   signInGoogle: AuthPayload,
   signInFacebook: AuthPayload,
   signInApple: AuthPayload,
@@ -114,7 +113,7 @@ export type MutationUpdateProfileArgs = {
 
 export type Notification = {
    __typename?: 'Notification',
-  id?: Maybe<Scalars['ID']>,
+  id: Scalars['ID'],
   token?: Maybe<Scalars['String']>,
   device?: Maybe<Scalars['String']>,
   os?: Maybe<Scalars['String']>,
@@ -164,7 +163,6 @@ export type User = {
    __typename?: 'User',
   id?: Maybe<Scalars['ID']>,
   email?: Maybe<Scalars['String']>,
-  /** password: String */
   name?: Maybe<Scalars['String']>,
   nickname?: Maybe<Scalars['String']>,
   photo?: Maybe<Scalars['String']>,
@@ -383,7 +381,7 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
 };
 
 export type NotificationResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification']> = {
-  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>,
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   device?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   os?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,

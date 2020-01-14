@@ -2,6 +2,7 @@ import { Op, Sequelize } from 'sequelize';
 const env = process.env.NODE_ENV || 'development';
 const config = require('../../config/config')[env];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const operatorsAliases = {
   $eq: Op.eq,
   $ne: Op.ne,

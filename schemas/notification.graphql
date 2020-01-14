@@ -1,7 +1,7 @@
 scalar DateTime
 
 type Notification {
-  id: ID
+  id: ID!
   token: String
   device: String
   os: String

@@ -51,7 +51,6 @@ const createApolloServer = (): ApolloServer => new ApolloServer({
         raw: true,
       });
     },
-    // @ts-ignore
     models,
     pubsub,
     appSecret: JWT_SECRET,
