@@ -1,4 +1,5 @@
 import {
+  BuildOptions,
   Model,
   STRING,
   UUID,
@@ -51,4 +52,8 @@ Membership.belongsTo(User, {
   as: 'user',
 });
 
-export default Membership;
+export type MembershipModelStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): Membership;
+}
+
+export default Membership as MembershipModelStatic;

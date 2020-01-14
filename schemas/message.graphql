@@ -2,8 +2,8 @@ scalar DateTime
 
 type Message {
   id: String
-  channel: Channel!
-  sender: User!
+  channel: Channel
+  sender: User
   type: String!
   text: String
   photoUrl: String

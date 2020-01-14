@@ -1,9 +1,9 @@
-import Channel from './Channel';
-import Friend from './Friend';
-import Membership from './Membership';
-import Message from './Message';
-import Notification from './Notification';
-import User from './User';
+import Channel, { ChannelModelStatic } from './Channel';
+import Friend, { FriendModelStatic } from './Friend';
+import Membership, { MembershipModelStatic } from './Membership';
+import Message, { MessageModelStatic } from './Message';
+import Notification, { NotificationModelStatic } from './Notification';
+import User, { UserModelStatic } from './User';
 
 export default {
   User,
@@ -15,10 +15,10 @@ export default {
 };
 
 export interface ModelType {
-  User: User;
-  Friend: Friend;
-  Channel: Channel;
-  Message: Message;
-  Membership: Membership;
-  Notification: Notification;
+  User: UserModelStatic;
+  Friend: FriendModelStatic;
+  Channel: ChannelModelStatic;
+  Message: MessageModelStatic;
+  Membership: MembershipModelStatic;
+  Notification: NotificationModelStatic;
 };

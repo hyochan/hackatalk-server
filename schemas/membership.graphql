@@ -2,8 +2,8 @@ scalar DateTime
 
 type Membership {
   id: String
-  channel: Channel!
-  user: User!
+  channel: Channel
+  user: User
   role: String!
   createdAt: DateTime!
   updatedAt: DateTime!

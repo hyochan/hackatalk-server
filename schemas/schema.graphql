@@ -15,7 +15,6 @@ type Query {
 }
 
 type Mutation {
-  # User
   signInGoogle(socialUser: SocialUserCreateInput!): AuthPayload!
   signInFacebook(socialUser: SocialUserCreateInput!): AuthPayload!
   signInApple(socialUser: SocialUserCreateInput!): AuthPayload!

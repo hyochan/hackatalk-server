@@ -7,6 +7,7 @@ import {
 } from '../generated/graphql';
 
 import { AuthenticationError } from 'apollo-server-core';
+import { ModelType } from '../models';
 import {
   Role,
 } from '../models/Auth';
@@ -26,7 +27,7 @@ const USER_UPDATED = 'USER_UPDATED';
 const signInWithSocialAccount = async (
   type: SocialSignInType,
   socialUser: SocialUserCreateInput,
-  models,
+  models: ModelType,
   appSecret: string,
 ): Promise<AuthPayload> => {
   if (socialUser.email) {
@@ -53,9 +54,8 @@ const signInWithSocialAccount = async (
       birthday: socialUser.birthday,
       gender: socialUser.gender,
       phone: socialUser.phone,
-      verified: socialUser.email || false,
+      verified: false,
     },
-    raw: true,
   });
 
   if (!user || (user && user[1] === false)) {
@@ -105,7 +105,9 @@ const resolver: Resolvers = {
       signInWithSocialAccount(SocialSignInType.APPLE, socialUser, models, appSecret),
 
     signUp: async (_, args, { appSecret, models, pubsub }): Promise<AuthPayload> => {
-      const emailUser = await models.User.findOne({
+      const { User: userModel } = models;
+
+      const emailUser = await userModel.findOne({
         where: {
           email: args.user.email,
         },
@@ -117,7 +119,7 @@ const resolver: Resolvers = {
       }
 
       args.user.password = await encryptPassword(args.user.password);
-      const user = await models.User.create(args.user, { raw: true });
+      const user = await userModel.create(args.user, { raw: true });
       const token: string = jwt.sign(
         {
           userId: user.id,
@@ -147,7 +149,6 @@ const resolver: Resolvers = {
               id: args.user.id,
             },
           },
-          { raw: true },
         );
 
         const user = await models.User.findOne({
@@ -183,8 +184,8 @@ const resolver: Resolvers = {
     },
   },
   User: {
-    notifications: (user, args, { models }): Promise<Notification[]> => {
-      const { id } = user;
+    notifications: (parent, args, { models }): Promise<Notification[]> => {
+      const { id } = parent;
       const { Notification: notificationModel } = models;
 
       return notificationModel.findAll({

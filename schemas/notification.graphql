@@ -2,11 +2,11 @@ scalar DateTime
 
 type Notification {
   id: ID!
-  token: String!
+  token: String
   device: String
   os: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 input NotificationCreateInput {

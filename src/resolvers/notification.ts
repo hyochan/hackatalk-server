@@ -12,10 +12,11 @@ const resolver: Resolvers = {
       const { Notification: notificationModel } = models;
 
       try {
-        return notificationModel.create(
+        const created = await notificationModel.create(
           notification,
-          { raw: true },
         );
+
+        return created;
       } catch (err) {
         throw new Error(err);
       }

@@ -2,7 +2,7 @@ scalar DateTime
 
 type Channel {
   id: String
-  owner: User!
+  type: String
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime

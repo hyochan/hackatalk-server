@@ -1,4 +1,5 @@
 import {
+  BuildOptions,
   Model,
   UUID,
   UUIDV4,
@@ -45,4 +46,8 @@ Friend.belongsTo(User, {
   as: 'user',
 });
 
-export default Friend;
+export type FriendModelStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): Friend;
+}
+
+export default Friend as FriendModelStatic;

@@ -4,14 +4,13 @@ scalar Date
 scalar DateTime
 
 enum Gender {
-  MALE
+  MALE,
   FEMALE
 }
 
 type User {
-  id: ID!
+  id: ID
   email: String
-  # password: String
   name: String
   nickname: String
   photo: String
@@ -21,8 +20,8 @@ type User {
   phone: String
   verified: Boolean
   notifications: [Notification]
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime
+  updatedAt: DateTime
   deletedAt: DateTime
 }
 
