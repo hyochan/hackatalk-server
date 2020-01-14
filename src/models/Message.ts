@@ -1,4 +1,5 @@
 import {
+  BuildOptions,
   INTEGER,
   Model,
   STRING,
@@ -73,4 +74,8 @@ Message.belongsTo(User, {
   as: 'sender',
 });
 
-export default Message;
+export type MessageModelStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): Message;
+}
+
+export default Message as MessageModelStatic;

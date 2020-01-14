@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { BuildOptions, DataTypes, Model } from 'sequelize';
 
 import sequelize from '../db';
 
@@ -75,4 +75,8 @@ User.init({
   paranoid: true,
 });
 
-export default User;
+export type UserModelStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): User;
+}
+
+export default User as UserModelStatic;

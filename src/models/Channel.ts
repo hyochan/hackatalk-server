@@ -1,4 +1,5 @@
 import {
+  BuildOptions,
   Model,
   UUID,
   UUIDV4,
@@ -36,4 +37,8 @@ Channel.belongsTo(User, {
   as: 'owner',
 });
 
-export default Channel;
+export type ChannelModelStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): Channel;
+}
+
+export default Channel as ChannelModelStatic;

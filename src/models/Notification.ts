@@ -1,4 +1,5 @@
 import {
+  BuildOptions,
   Model,
   STRING,
   UUID,
@@ -32,4 +33,8 @@ Notification.init({
 
 Notification.belongsTo(User);
 
-export default Notification;
+export type NotificationModelStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): Notification;
+}
+
+export default Notification as NotificationModelStatic;
