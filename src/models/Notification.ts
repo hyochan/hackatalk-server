@@ -9,7 +9,12 @@ import {
 import User from './User';
 import sequelize from '../db';
 
-class Notification extends Model {}
+class Notification extends Model {
+  public id!: string;
+  public token: string;
+  public device: string;
+  public os: string;
+}
 Notification.init({
   id: {
     type: UUID,
@@ -31,7 +36,9 @@ Notification.init({
   paranoid: true,
 });
 
-Notification.belongsTo(User);
+Notification.belongsTo(User, {
+  as: 'user',
+});
 
 export type NotificationModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Notification;

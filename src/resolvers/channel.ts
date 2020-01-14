@@ -16,11 +16,19 @@ const resolver: Resolvers = {
 
       if (!user) throw new AuthenticationError('User is not signed in');
 
-      return channelModel.findAll({
+      const channels = await channelModel.findAll({
         where: {
-          ownerId: channelModel.id,
+          ownerId: user.id,
         },
+        include: [
+          {
+            model: models.User,
+            as: 'owner',
+          },
+        ],
       });
+
+      return channels;
     },
   },
 };

@@ -12,8 +12,8 @@ const {
 } = DataTypes;
 
 enum Gender {
-  Male,
-  Femaile,
+  Male = 'MALE',
+  Female = 'FEMALE'
 }
 
 export class User extends Model {
@@ -35,7 +35,7 @@ export class User extends Model {
 
   public social: string;
 
-  public verified: string;
+  public verified: boolean;
 
   public readonly createdAt!: Date;
 

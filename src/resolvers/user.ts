@@ -53,7 +53,7 @@ const signInWithSocialAccount = async (
       birthday: socialUser.birthday,
       gender: socialUser.gender,
       phone: socialUser.phone,
-      verified: socialUser.email || false,
+      verified: false,
     },
     raw: true,
   });
@@ -147,7 +147,6 @@ const resolver: Resolvers = {
               id: args.user.id,
             },
           },
-          { raw: true },
         );
 
         const user = await models.User.findOne({

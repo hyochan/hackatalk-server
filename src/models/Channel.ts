@@ -1,6 +1,7 @@
 import {
   BuildOptions,
   Model,
+  STRING,
   UUID,
   UUIDV4,
 } from 'sequelize';
@@ -10,7 +11,7 @@ import sequelize from '../db';
 
 class Channel extends Model {
   public id!: string;
-  public ownerId!: string;
+  public type!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
@@ -22,9 +23,8 @@ Channel.init({
     allowNull: false,
     primaryKey: true,
   },
-  ownerId: {
-    type: UUID,
-    allowNull: false,
+  type: {
+    type: STRING,
   },
 }, {
   sequelize,

@@ -12,13 +12,13 @@ const resolver: Resolvers = {
       },
     ): Promise<Friend[]> => {
       const { Friend: friendModel } = models;
-      const { userId } = await getUser();
+      const user = await getUser();
 
-      if (!userId) throw new AuthenticationError('User is not signed in');
+      if (!user) throw new AuthenticationError('User is not signed in');
 
       return friendModel.findAll({
         where: {
-          id: userId,
+          id: user.id,
         },
       });
     },
