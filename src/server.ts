@@ -1,4 +1,4 @@
-import { JWT_SECRET, verifyUser } from './models/Auth';
+import { JWT_SECRET, verifyUser } from './utils/auth';
 import models, { ModelType } from './models';
 
 import { ApolloServer } from 'apollo-server-express';

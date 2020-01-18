@@ -5,13 +5,10 @@ import {
   SocialUserCreateInput,
   User,
 } from '../generated/graphql';
+import { Role, encryptPassword } from '../utils/auth';
 
 import { AuthenticationError } from 'apollo-server-core';
 import { ModelType } from '../models';
-import {
-  Role,
-} from '../models/Auth';
-import { encryptPassword } from '../utils/password';
 import jwt from 'jsonwebtoken';
 import { withFilter } from 'apollo-server';
 
