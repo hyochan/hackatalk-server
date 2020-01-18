@@ -13,41 +13,24 @@ import sequelize from '../db';
 
 class Message extends Model {
   public id!: string;
-
   public channelId!: string;
-
   public senderId!: string;
-
   public type!: string;
-
   public text: string;
-
   public photoUrl: string;
-
   public audioUrl: string;
-
   public readCount!: number;
-
   public readonly createdAt!: Date;
-
   public readonly updatedAt!: Date;
-
   public readonly deletedAt!: Date;
 }
+
 Message.init({
   id: {
     type: UUID,
     defaultValue: UUIDV4,
     allowNull: false,
     primaryKey: true,
-  },
-  channelId: {
-    type: UUID,
-    allowNull: false,
-  },
-  senderId: {
-    type: UUID,
-    allowNull: false,
   },
   type: {
     type: STRING,

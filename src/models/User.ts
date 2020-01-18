@@ -16,6 +16,13 @@ enum Gender {
   Female = 'FEMALE'
 }
 
+enum AuthType {
+  Email = 'EMAIL',
+  Facebook = 'FACEBOOK',
+  Google = 'GOOGLE',
+  Apple = 'APPLE',
+}
+
 export class User extends Model {
   public id!: string;
   public email: string;
@@ -25,7 +32,8 @@ export class User extends Model {
   public photo: string;
   public birthday: Date;
   public gender: Gender;
-  public social: string;
+  public socialId: string;
+  public authType: AuthType;
   public verified: boolean;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -52,7 +60,8 @@ User.init({
   birthday: DATE,
   gender: ENUM('MALE', 'FEMALE'),
   phone: STRING,
-  social: STRING,
+  socialId: STRING,
+  authType: STRING,
   verified: {
     type: BOOLEAN,
     defaultValue: false,

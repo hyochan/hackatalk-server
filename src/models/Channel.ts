@@ -16,6 +16,7 @@ class Channel extends Model {
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 }
+
 Channel.init({
   id: {
     type: UUID,

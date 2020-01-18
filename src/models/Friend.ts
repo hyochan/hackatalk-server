@@ -16,6 +16,7 @@ class Friend extends Model {
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 }
+
 Friend.init({
   id: {
     type: UUID,
