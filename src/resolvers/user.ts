@@ -5,24 +5,18 @@ import {
   SocialUserCreateInput,
   User,
 } from '../generated/graphql';
-import { Role, encryptPassword } from '../utils/auth';
+import { Role, encryptPassword, validatePassword } from '../utils/auth';
 
+import { AuthType } from '../models/User';
 import { AuthenticationError } from 'apollo-server-core';
 import { ModelType } from '../models';
 import jwt from 'jsonwebtoken';
 import { withFilter } from 'apollo-server';
 
-enum SocialSignInType {
-  GOOGLE = 'google',
-  FACEBOOK = 'facebook',
-  APPLE = 'apple',
-};
-
-const USER_ADDED = 'USER_ADDED';
+const USER_SIGNED_IN = 'USER_SIGNED_IN';
 const USER_UPDATED = 'USER_UPDATED';
 
 const signInWithSocialAccount = async (
-  type: SocialSignInType,
   socialUser: SocialUserCreateInput,
   models: ModelType,
   appSecret: string,
@@ -31,7 +25,7 @@ const signInWithSocialAccount = async (
     const emailUser = await models.User.findOne({
       where: {
         email: socialUser.email,
-        social: { $notLike: 'facebook%' },
+        socialId: { $ne: socialUser.socialId },
       },
       raw: true,
     });
@@ -42,9 +36,10 @@ const signInWithSocialAccount = async (
   }
 
   const user = await models.User.findOrCreate({
-    where: { social: `${type}_${socialUser.social}` },
+    where: { socialId: `${socialUser.socialId}` },
     defaults: {
-      social: `${type}_${socialUser.social}`,
+      socialId: socialUser.socialId,
+      authType: socialUser.authType,
       email: socialUser.email,
       nickname: socialUser.name,
       name: socialUser.name,
@@ -90,18 +85,45 @@ const resolver: Resolvers = {
 
       return User.findOne({ where: args });
     },
+    signInEmail: async (_, args, { models, appSecret, pubsub }): Promise<AuthPayload> => {
+      const { User: userModel } = models;
+
+      const user = await userModel.findOne({
+        where: {
+          email: args.email,
+        },
+        raw: true,
+      });
+
+      if (!user) throw new AuthenticationError('User does not exsists');
+
+      const validate = await validatePassword(args.password, user.password);
+
+      if (!validate) throw new AuthenticationError('Password is not correct');
+
+      const token: string = jwt.sign(
+        {
+          userId: user.id,
+          role: Role.User,
+        },
+        appSecret,
+      );
+
+      pubsub.publish(USER_SIGNED_IN, { user });
+      return { token, user };
+    },
   },
   Mutation: {
     signInGoogle: async (_, { socialUser }, { appSecret, models }): Promise<AuthPayload> =>
-      signInWithSocialAccount(SocialSignInType.GOOGLE, socialUser, models, appSecret),
+      signInWithSocialAccount(socialUser, models, appSecret),
 
     signInFacebook: async (_, { socialUser }, { appSecret, models }): Promise<AuthPayload> =>
-      signInWithSocialAccount(SocialSignInType.FACEBOOK, socialUser, models, appSecret),
+      signInWithSocialAccount(socialUser, models, appSecret),
 
     signInApple: async (_, { socialUser }, { appSecret, models }): Promise<AuthPayload> =>
-      signInWithSocialAccount(SocialSignInType.APPLE, socialUser, models, appSecret),
+      signInWithSocialAccount(socialUser, models, appSecret),
 
-    signUp: async (_, args, { appSecret, models, pubsub }): Promise<AuthPayload> => {
+    signUp: async (_, args, { appSecret, models }): Promise<AuthPayload> => {
       const { User: userModel } = models;
 
       const emailUser = await userModel.findOne({
@@ -116,7 +138,13 @@ const resolver: Resolvers = {
       }
 
       args.user.password = await encryptPassword(args.user.password);
-      const user = await userModel.create(args.user, { raw: true });
+      const user = await userModel.create(
+        {
+          ...args.user,
+          authType: AuthType.Email,
+        },
+        { raw: true },
+      );
       const token: string = jwt.sign(
         {
           userId: user.id,
@@ -125,13 +153,11 @@ const resolver: Resolvers = {
         appSecret,
       );
 
-      pubsub.publish(USER_ADDED, {
-        userAdded: user,
-      });
-
       return { token, user };
     },
     updateProfile: async (_, args, { getUser, models, pubsub }): Promise<User> => {
+      const { User: userModel } = models;
+
       try {
         const auth = await getUser();
         if (auth.id !== args.user.id) {
@@ -139,7 +165,7 @@ const resolver: Resolvers = {
             'User can update his or her own profile',
           );
         }
-        models.User.update(
+        userModel.update(
           args,
           {
             where: {
@@ -148,7 +174,7 @@ const resolver: Resolvers = {
           },
         );
 
-        const user = await models.User.findOne({
+        const user = await userModel.findOne({
           where: {
             id: args.user.id,
           },
@@ -163,10 +189,10 @@ const resolver: Resolvers = {
     },
   },
   Subscription: {
-    userAdded: {
+    userSignedIn: {
       // issue: https://github.com/apollographql/graphql-subscriptions/issues/192
       // eslint-disable-next-line
-      subscribe: (_, args, { pubsub }) => pubsub.asyncIterator(USER_ADDED),
+      subscribe: (_, args, { pubsub }) => pubsub.asyncIterator(USER_SIGNED_IN),
     },
     userUpdated: {
       subscribe: withFilter(

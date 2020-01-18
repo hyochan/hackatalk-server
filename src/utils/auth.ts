@@ -32,11 +32,8 @@ export const encryptPassword = async (password: string): Promise<string> =>
 
     bcrypt.hash(password, SALT, null, (err, hash) => {
       if (err) {
-        reject(err);
-
-        return;
+        return reject(err);
       }
-
       resolve(hash);
     });
   });
@@ -47,11 +44,8 @@ export const validatePassword = async (
 ): Promise<boolean> => new Promise<boolean>((resolve, reject) => {
   bcrypt.compare(password, hashedPassword, (err, res) => {
     if (err) {
-      reject(err);
-
-      return;
+      return reject(err);
     }
-
     resolve(res);
   });
 });

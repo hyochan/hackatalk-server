@@ -8,15 +8,23 @@ enum Gender {
   FEMALE
 }
 
+enum AuthType {
+  EMAIL,
+  FACEBOOK,
+  GOOGLE,
+  APPLE
+}
+
 type User {
-  id: ID
+  id: ID!
   email: String
   name: String
   nickname: String
   photo: String
   birthday: Date
   gender: Gender
-  social: String
+  socialId: String
+  authType: AuthType
   phone: String
   verified: Boolean
   notifications: [Notification]
@@ -36,7 +44,7 @@ input UserCreateInput {
 }
 
 input UserUpdateInput {
-  id: ID
+  id: ID!
   email: String
   password: String!
   name: String
@@ -47,7 +55,8 @@ input UserUpdateInput {
 }
 
 input SocialUserCreateInput {
-  social: String!
+  socialId: String!
+  authType: AuthType!
   email: String
   photo: String
   name: String

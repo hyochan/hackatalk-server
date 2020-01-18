@@ -11,12 +11,12 @@ const {
   ENUM,
 } = DataTypes;
 
-enum Gender {
+export enum Gender {
   Male = 'MALE',
   Female = 'FEMALE'
 }
 
-enum AuthType {
+export enum AuthType {
   Email = 'EMAIL',
   Facebook = 'FACEBOOK',
   Google = 'GOOGLE',
@@ -61,7 +61,7 @@ User.init({
   gender: ENUM('MALE', 'FEMALE'),
   phone: STRING,
   socialId: STRING,
-  authType: STRING,
+  authType: ENUM('EMAIL', 'FACEBOOK', 'GOOGLE', 'APPLE'),
   verified: {
     type: BOOLEAN,
     defaultValue: false,

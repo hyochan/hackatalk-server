@@ -9,6 +9,7 @@
 type Query {
   users: [User!]!
   user(id: ID!): User
+  signInEmail(email: String! password: String!): AuthPayload!
   messages: [Message!]!
   channels: [Channel!]!
   friends: [Friend!]!
@@ -24,6 +25,6 @@ type Mutation {
 }
 
 type Subscription {
-  userAdded: User
+  userSignedIn: User
   userUpdated: User
 }
