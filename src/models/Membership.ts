@@ -1,7 +1,7 @@
 import {
   BuildOptions,
+  ENUM,
   Model,
-  STRING,
   UUID,
   UUIDV4,
 } from 'sequelize';
@@ -9,6 +9,11 @@ import {
 import Channel from './Channel';
 import User from './User';
 import sequelize from '../db';
+
+export enum MemberType {
+  Owner = 'Owner',
+  Member = 'Member'
+}
 
 class Membership extends Model {
   public id!: string;
@@ -35,7 +40,7 @@ Membership.init({
     allowNull: false,
   },
   type: {
-    type: STRING,
+    type: ENUM('OWNER', 'MEMBER'),
   },
 }, {
   sequelize,

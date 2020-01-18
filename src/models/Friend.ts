@@ -24,16 +24,9 @@ Friend.init({
     allowNull: false,
     primaryKey: true,
   },
-  userId: {
-    type: UUID,
-    allowNull: false,
-  },
-  friendId: {
-    type: UUID,
-    allowNull: false,
-  },
 }, {
   sequelize,
+  indexes: [{ unique: true, fields: ['friendId', 'userId'] }],
   modelName: 'friend',
   timestamps: true,
   paranoid: true,

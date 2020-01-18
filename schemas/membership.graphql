@@ -1,10 +1,15 @@
 scalar DateTime
 
+enum MemberType {
+  OWNER,
+  MEMBER
+}
+
 type Membership {
-  id: String
-  channel: Channel
-  user: User
-  role: String!
+  id: ID!
+  channel: Channel!
+  user: User!
+  type: MemberType!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime

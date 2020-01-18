@@ -1,12 +1,11 @@
 import {
   BuildOptions,
+  ENUM,
   Model,
-  STRING,
   UUID,
   UUIDV4,
 } from 'sequelize';
 
-import User from './User';
 import sequelize from '../db';
 
 class Channel extends Model {
@@ -25,17 +24,13 @@ Channel.init({
     primaryKey: true,
   },
   type: {
-    type: STRING,
+    type: ENUM('PRIVATE', 'PUBLIC'),
   },
 }, {
   sequelize,
   modelName: 'channel',
   timestamps: true,
   paranoid: true,
-});
-
-Channel.belongsTo(User, {
-  as: 'owner',
 });
 
 export type ChannelModelStatic = typeof Model & {

@@ -1,13 +1,12 @@
 scalar DateTime
 
 type Message {
-  id: String
-  channel: Channel
-  sender: User
+  id: String!
+  channel: Channel!
+  sender: User!
   type: String!
   text: String
-  photoUrl: String
-  audioUrl: String
+  filePath: String
   readCount: Int
   createdAt: DateTime!
   updatedAt: DateTime!

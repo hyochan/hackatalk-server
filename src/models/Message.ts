@@ -37,8 +37,7 @@ Message.init({
     allowNull: false,
   },
   text: STRING,
-  photoUrl: STRING,
-  audioUrl: STRING,
+  filePath: STRING,
   readCount: {
     type: INTEGER,
     allowNull: false,

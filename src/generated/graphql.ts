@@ -54,14 +54,19 @@ export enum Gender {
 
 export type Membership = {
    __typename?: 'Membership',
-  id?: Maybe<Scalars['String']>,
-  channel?: Maybe<Channel>,
-  user?: Maybe<User>,
-  role: Scalars['String'],
+  id: Scalars['ID'],
+  channel: Channel,
+  user: User,
+  type: MemberType,
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   deletedAt?: Maybe<Scalars['DateTime']>,
 };
+
+export enum MemberType {
+  Owner = 'OWNER',
+  Member = 'MEMBER'
+}
 
 export type Message = {
    __typename?: 'Message',
@@ -170,7 +175,6 @@ export type SocialUserCreateInput = {
 
 export type Subscription = {
    __typename?: 'Subscription',
-  userAdded?: Maybe<User>,
   userSignedIn?: Maybe<User>,
   userUpdated?: Maybe<User>,
 };
@@ -308,6 +312,7 @@ export type ResolversTypes = {
   UserUpdateInput: UserUpdateInput,
   Subscription: ResolverTypeWrapper<{}>,
   Membership: ResolverTypeWrapper<Membership>,
+  MemberType: MemberType,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -334,6 +339,7 @@ export type ResolversParentTypes = {
   UserUpdateInput: UserUpdateInput,
   Subscription: {},
   Membership: Membership,
+  MemberType: MemberType,
 };
 
 export type AuthPayloadResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = {
@@ -367,10 +373,10 @@ export type FriendResolvers<ContextType = MyContext, ParentType extends Resolver
 };
 
 export type MembershipResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Membership'] = ResolversParentTypes['Membership']> = {
-  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  channel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType>,
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
-  role?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  channel?: Resolver<ResolversTypes['Channel'], ParentType, ContextType>,
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
+  type?: Resolver<ResolversTypes['MemberType'], ParentType, ContextType>,
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
@@ -418,7 +424,6 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
 };
 
 export type SubscriptionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-  userAdded?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "userAdded", ParentType, ContextType>,
   userSignedIn?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "userSignedIn", ParentType, ContextType>,
   userUpdated?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "userUpdated", ParentType, ContextType>,
 };
