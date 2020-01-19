@@ -29,7 +29,7 @@ export class User extends Model {
   public password: string;
   public name: string;
   public nickname: string;
-  public photo: string;
+  public photoURL: string;
   public birthday: Date;
   public gender: Gender;
   public socialId: string;
@@ -56,7 +56,7 @@ User.init({
   },
   name: STRING,
   nickname: STRING,
-  photo: STRING,
+  photoURL: STRING,
   birthday: DATE,
   gender: ENUM('MALE', 'FEMALE'),
   phone: STRING,

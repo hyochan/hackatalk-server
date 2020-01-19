@@ -1,4 +1,5 @@
 # import Notification from "notification.graphql"
+# import Channel from "channel.graphql"
 
 scalar Date
 scalar DateTime
@@ -20,7 +21,7 @@ type User {
   email: String
   name: String
   nickname: String
-  photo: String
+  photoURL: String
   birthday: Date
   gender: Gender
   socialId: String
@@ -28,6 +29,7 @@ type User {
   phone: String
   verified: Boolean
   notifications: [Notification]
+  channels: [Channel]
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
@@ -58,7 +60,7 @@ input SocialUserCreateInput {
   socialId: String!
   authType: AuthType!
   email: String
-  photo: String
+  photoURL: String
   name: String
   nickname: String
   birthday: Date

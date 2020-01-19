@@ -1,4 +1,5 @@
 import {
+  BOOLEAN,
   BuildOptions,
   ENUM,
   Model,
@@ -20,6 +21,7 @@ class Membership extends Model {
   public channelId!: string;
   public userId!: string;
   public type: string;
+  public alert: boolean;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
@@ -31,31 +33,25 @@ Membership.init({
     allowNull: false,
     primaryKey: true,
   },
-  channelId: {
-    type: UUID,
-    allowNull: false,
-  },
-  userId: {
-    type: UUID,
-    allowNull: false,
-  },
   type: {
     type: ENUM('OWNER', 'MEMBER'),
   },
+  userAlert: {
+    type: BOOLEAN,
+  },
+  userMode: {
+    type: ENUM('DEFAULT', 'HIDDEN', 'BLOCK'),
+  },
 }, {
   sequelize,
+  indexes: [{ unique: true, fields: ['channelId', 'userId'] }],
   modelName: 'membership',
   timestamps: true,
   paranoid: true,
 });
 
-Membership.belongsTo(Channel, {
-  as: 'channel',
-});
-
-Membership.belongsTo(User, {
-  as: 'user',
-});
+Membership.belongsTo(Channel, { as: 'channel' });
+Membership.belongsTo(User, { as: 'user' });
 
 export type MembershipModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Membership;

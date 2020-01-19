@@ -14,6 +14,8 @@ class Notification extends Model {
   public token: string;
   public device: string;
   public os: string;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 Notification.init({
   id: {
@@ -33,12 +35,9 @@ Notification.init({
   sequelize,
   modelName: 'notification',
   timestamps: true,
-  paranoid: true,
 });
 
-Notification.belongsTo(User, {
-  as: 'user',
-});
+Notification.belongsTo(User, { as: 'user' });
 
 export type NotificationModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Notification;

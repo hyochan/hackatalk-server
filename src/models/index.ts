@@ -3,6 +3,7 @@ import Friend, { FriendModelStatic } from './Friend';
 import Membership, { MembershipModelStatic } from './Membership';
 import Message, { MessageModelStatic } from './Message';
 import Notification, { NotificationModelStatic } from './Notification';
+import Reply, { ReplyModelStatic } from './Reply';
 import User, { UserModelStatic } from './User';
 
 export default {
@@ -12,6 +13,7 @@ export default {
   Message,
   Membership,
   Notification,
+  Reply,
 };
 
 export interface ModelType {
@@ -19,6 +21,7 @@ export interface ModelType {
   Friend: FriendModelStatic;
   Channel: ChannelModelStatic;
   Message: MessageModelStatic;
+  Reply: ReplyModelStatic;
   Membership: MembershipModelStatic;
   Notification: NotificationModelStatic;
 };

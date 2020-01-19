@@ -1,14 +1,16 @@
+# import Reply from "reply.graphql"
+
 scalar DateTime
 
 type Message {
   id: String!
-  channel: Channel!
-  sender: User!
-  type: String!
+  channel: Channel
+  sender: User
+  type: String
   text: String
   filePath: String
-  readCount: Int
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  replies: [Reply]
+  createdAt: DateTime
+  updatedAt: DateTime
   deletedAt: DateTime
 }

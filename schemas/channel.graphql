@@ -1,8 +1,13 @@
+# import Membership from "membership.graphql"
+# import Message from "message.graphql"
+
 scalar DateTime
 
 type Channel {
-  id: String
+  id: ID!
   type: String
+  messages: [Message]
+  membership: Membership
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime

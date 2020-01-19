@@ -5,12 +5,20 @@ enum MemberType {
   MEMBER
 }
 
+enum UserModeType {
+  DEFAULT,
+  HIDDEN,
+  BLOCK
+}
+
 type Membership {
   id: ID!
-  channel: Channel!
-  user: User!
-  type: MemberType!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  channel: Channel
+  user: User
+  type: MemberType
+  userAlert: Boolean
+  userMode: UserModeType
+  createdAt: DateTime
+  updatedAt: DateTime
   deletedAt: DateTime
 }

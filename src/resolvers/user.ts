@@ -1,5 +1,6 @@
 import {
   AuthPayload,
+  Channel,
   Notification,
   Resolvers,
   SocialUserCreateInput,
@@ -112,6 +113,9 @@ const resolver: Resolvers = {
       pubsub.publish(USER_SIGNED_IN, { user });
       return { token, user };
     },
+    findPassword: async (_, args, { models, appSecret, pubsub }): Promise<boolean> => {
+      return true;
+    },
   },
   Mutation: {
     signInGoogle: async (_, { socialUser }, { appSecret, models }): Promise<AuthPayload> =>
@@ -208,11 +212,30 @@ const resolver: Resolvers = {
     },
   },
   User: {
-    notifications: (parent, args, { models }): Promise<Notification[]> => {
-      const { id } = parent;
-      const { Notification: notificationModel } = models;
+    channels: async (_, args, { models }): Promise<Channel[]> => {
+      const { id } = _;
 
-      return notificationModel.findAll({
+      const channels = await models.Channel.findAll({
+        where: {
+          $or: [{
+            ownerId: { $eq: id },
+            userId: { $eq: id },
+          }],
+        },
+        include: [
+          {
+            model: models.User,
+            as: 'owner',
+          },
+        ],
+      });
+
+      return channels;
+    },
+    notifications: (_, args, { models }): Promise<Notification[]> => {
+      const { id } = _;
+
+      return models.Notification.findAll({
         where: {
           userId: id,
         },
