@@ -30,9 +30,6 @@ module.exports = {
   },
   development: {
     ...similarOption,
-    dialectOptions: {
-      ssl: {},
-    },
   },
   test: {
     ...similarOption,
