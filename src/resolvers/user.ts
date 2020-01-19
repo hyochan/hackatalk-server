@@ -130,7 +130,9 @@ const resolver: Resolvers = {
         subject: '[HackaTalk] Change your password!',
         html: `
 By clicking on
-<a href="${process.env.REDIRECT_URL}/reset_password/${qs.escape(email)}/${qs.escape(hashedEmail)}">RESET PASSWORD</a>,
+<a href=
+"${process.env.REDIRECT_URL}/reset_password/${qs.escape(email)}/${qs.escape(hashedEmail)}"
+>RESET PASSWORD</a>,
 your password will reset to <strong>dooboolab2017</strong>.
         `,
       };
