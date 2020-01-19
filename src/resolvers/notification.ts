@@ -2,20 +2,11 @@ import { Notification, Resolvers } from '../generated/graphql';
 
 const resolver: Resolvers = {
   Mutation: {
-    addPushToken: async (
-      _, {
-        notification,
-      }, {
-        models,
-      },
-    ): Promise<Notification> => {
+    addNotificationToken: async (_, { notification }, { models }): Promise<Notification> => {
       const { Notification: notificationModel } = models;
 
       try {
-        const created = await notificationModel.create(
-          notification,
-        );
-
+        const created = await notificationModel.create(notification);
         return created;
       } catch (err) {
         throw new Error(err);

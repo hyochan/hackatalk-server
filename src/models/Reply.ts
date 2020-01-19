@@ -7,24 +7,18 @@ import {
   UUIDV4,
 } from 'sequelize';
 
-import Channel from './Channel';
+import Message from './Message';
 import User from './User';
 import sequelize from '../db';
 
-class Message extends Model {
+class Reply extends Model {
   public id!: string;
-  public channelId!: string;
-  public senderId!: string;
-  public type!: string;
-  public text: string;
-  public filePath: string;
-  public readCount!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 }
 
-Message.init({
+Reply.init({
   id: {
     type: UUID,
     defaultValue: UUIDV4,
@@ -39,16 +33,16 @@ Message.init({
   filePath: STRING,
 }, {
   sequelize,
-  modelName: 'message',
+  modelName: 'reply',
   timestamps: true,
   paranoid: true,
 });
 
-Message.belongsTo(Channel, { as: 'channel' });
-Message.belongsTo(User, { as: 'sender' });
+Reply.belongsTo(Message, { as: 'message' });
+Reply.belongsTo(User, { as: 'user' });
 
-export type MessageModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): Message;
+export type ReplyModelStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): Reply;
 }
 
-export default Message as MessageModelStatic;
+export default Reply as ReplyModelStatic;

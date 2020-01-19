@@ -7,6 +7,7 @@
   "author": "dooboolab",
   "license": "GPL-3.0-only",
   "scripts": {
+    "local": "cross-env NODE_ENV=local nodemon --exec ts-node src/server.ts",
     "start": "cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts",
     "prod": "cross-env NODE_ENV=production ts-node src/server.ts",
     "pm2": "cross-env NODE_ENV=development pm2 start ts-node -- -P tsconfig.json ./src/server.ts --node-args='--development' --watch",
@@ -21,6 +22,7 @@
     "codecov": "codecov"
   },
   "dependencies": {
+    "@sendgrid/mail": "^6.5.0",
     "apollo-server": "^2.9.16",
     "apollo-server-express": "^2.9.16",
     "bcrypt-nodejs": "^0.0.3",
@@ -31,6 +33,8 @@
     "jest": "^24.9.0",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.1.0",
+    "nodemailer": "^6.4.2",
+    "querystring": "^0.2.0",
     "sequelize": "^5.21.3"
   },
   "devDependencies": {

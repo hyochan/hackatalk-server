@@ -19,29 +19,26 @@ const similarOption = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   dialect: process.env.DB_TYPE,
+  define: {
+    underscored: false,
+  },
 };
 
 module.exports = {
+  local: {
+    ...similarOption,
+  },
   development: {
     ...similarOption,
-    define: {
-      underscored: false,
-    },
     dialectOptions: {
       ssl: {},
     },
   },
   test: {
     ...similarOption,
-    define: {
-      underscored: false,
-    },
   },
   production: {
     ...similarOption,
-    define: {
-      underscored: false,
-    },
     dialectOptions: {
       ssl: {},
     },
