@@ -12,9 +12,9 @@ const resolver: Resolvers = {
       },
     ): Promise<Message[]> => {
       const { Message: messageModel } = models;
-      const user = await getUser();
+      const auth = await getUser();
 
-      if (!user) throw new AuthenticationError('User is not signed in');
+      if (!auth) throw new AuthenticationError('User is not signed in');
 
       return messageModel.findAll({
         where: {

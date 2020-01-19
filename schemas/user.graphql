@@ -30,6 +30,7 @@ type User {
   verified: Boolean
   notifications: [Notification]
   channels: [Channel]
+  friends: [User]
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
