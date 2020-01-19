@@ -16,6 +16,7 @@ class Friend extends Model {
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 }
+
 Friend.init({
   id: {
     type: UUID,
@@ -23,28 +24,16 @@ Friend.init({
     allowNull: false,
     primaryKey: true,
   },
-  userId: {
-    type: UUID,
-    allowNull: false,
-  },
-  friendId: {
-    type: UUID,
-    allowNull: false,
-  },
 }, {
   sequelize,
+  indexes: [{ unique: true, fields: ['friendId', 'userId'] }],
   modelName: 'friend',
   timestamps: true,
   paranoid: true,
 });
 
-Friend.belongsTo(User, {
-  as: 'friend',
-});
-
-Friend.belongsTo(User, {
-  as: 'user',
-});
+Friend.belongsTo(User, { as: 'friend' });
+Friend.belongsTo(User, { as: 'user' });
 
 export type FriendModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Friend;

@@ -1,10 +1,10 @@
 scalar DateTime
 
 type Friend {
-  id: String
+  id: ID!
   user: User
   friend: User
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime
+  updatedAt: DateTime
   deletedAt: DateTime
 }

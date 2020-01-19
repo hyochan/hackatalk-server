@@ -1,12 +1,9 @@
-# import Reply from "reply.graphql"
 # import User from "user.graphql"
-# import Channel from "channel.graphql"
 
 scalar DateTime
 
-type Message {
+type Reply {
   id: String!
-  channel: Channel
   sender: User
   type: String
   text: String

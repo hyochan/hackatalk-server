@@ -1,11 +1,24 @@
 scalar DateTime
 
+enum MemberType {
+  OWNER,
+  MEMBER
+}
+
+enum UserModeType {
+  DEFAULT,
+  HIDDEN,
+  BLOCK
+}
+
 type Membership {
-  id: String
+  id: ID!
   channel: Channel
   user: User
-  role: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  type: MemberType
+  userAlert: Boolean
+  userMode: UserModeType
+  createdAt: DateTime
+  updatedAt: DateTime
   deletedAt: DateTime
 }
