@@ -73,6 +73,15 @@ User.init({
   paranoid: true,
 });
 
+export const resetPassword = (email: string, password: string): Promise<[number, User[]]> => {
+  return User.update(
+    { password },
+    {
+      where: { email },
+    },
+  );
+};
+
 export type UserModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): User;
 }

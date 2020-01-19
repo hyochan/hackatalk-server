@@ -6,12 +6,14 @@ import {
   SocialUserCreateInput,
   User,
 } from '../generated/graphql';
-import { Role, encryptPassword, validatePassword } from '../utils/auth';
+import { Role, encryptCredential, validateCredential, validateEmail } from '../utils/auth';
 
 import { AuthType } from '../models/User';
 import { AuthenticationError } from 'apollo-server-core';
 import { ModelType } from '../models';
+import SendGridMail from '@sendgrid/mail';
 import jwt from 'jsonwebtoken';
+import qs from 'querystring';
 import { withFilter } from 'apollo-server';
 
 const USER_SIGNED_IN = 'USER_SIGNED_IN';
@@ -98,7 +100,7 @@ const resolver: Resolvers = {
 
       if (!user) throw new AuthenticationError('User does not exsists');
 
-      const validate = await validatePassword(args.password, user.password);
+      const validate = await validateCredential(args.password, user.password);
 
       if (!validate) throw new AuthenticationError('Password is not correct');
 
@@ -113,8 +115,31 @@ const resolver: Resolvers = {
       pubsub.publish(USER_SIGNED_IN, { user });
       return { token, user };
     },
-    findPassword: async (_, args, { models, appSecret, pubsub }): Promise<boolean> => {
-      return true;
+    findPassword: async (_, args): Promise<boolean> => {
+      const email = args.email;
+
+      if (!email || !validateEmail(email)) {
+        throw new Error('Not a valid email address');
+      }
+
+      const hashedEmail = await encryptCredential(email);
+
+      const msg = {
+        to: email,
+        from: 'noreply@hackatalk.dev',
+        subject: '[HackaTalk] Change your password!',
+        html: `
+By clicking on
+<a href="${process.env.REDIRECT_URL}/reset_password/${qs.escape(email)}/${qs.escape(hashedEmail)}">RESET PASSWORD</a>,
+your password will reset to <strong>dooboolab2017</strong>.
+        `,
+      };
+      try {
+        await SendGridMail.send(msg);
+        return true;
+      } catch (err) {
+        throw new Error(`email sent failed\n${err.message}`);
+      }
     },
   },
   Mutation: {
@@ -141,7 +166,7 @@ const resolver: Resolvers = {
         throw new Error('Email for current user is already signed up.');
       }
 
-      args.user.password = await encryptPassword(args.user.password);
+      args.user.password = await encryptCredential(args.user.password);
       const user = await userModel.create(
         {
           ...args.user,
@@ -171,17 +196,11 @@ const resolver: Resolvers = {
         }
         userModel.update(
           args,
-          {
-            where: {
-              id: args.user.id,
-            },
-          },
+          { where: { id: args.user.id } },
         );
 
         const user = await userModel.findOne({
-          where: {
-            id: args.user.id,
-          },
+          where: { id: args.user.id },
           raw: true,
         });
 

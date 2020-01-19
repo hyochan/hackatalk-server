@@ -4,12 +4,15 @@ import models, { ModelType } from './models';
 import { ApolloServer } from 'apollo-server-express';
 import { Http2Server } from 'http2';
 import { PubSub } from 'graphql-subscriptions';
+import SendGridMail from '@sendgrid/mail';
 import { User } from './models/User';
 import { allResolvers } from './resolvers';
 import { createApp } from './app';
 import { createServer as createHttpServer } from 'http';
 import express from 'express';
 import { importSchema } from 'graphql-import';
+
+SendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const { PORT = 4000 } = process.env;
 const pubsub = new PubSub();
