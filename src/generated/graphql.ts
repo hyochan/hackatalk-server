@@ -155,6 +155,11 @@ export type Query = {
 };
 
 
+export type QueryUsersArgs = {
+  includeUser?: Maybe<Scalars['Boolean']>
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['ID']
 };
@@ -320,13 +325,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>,
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   User: ResolverTypeWrapper<User>,
   ID: ResolverTypeWrapper<Scalars['ID']>,
   String: ResolverTypeWrapper<Scalars['String']>,
   Date: ResolverTypeWrapper<Scalars['Date']>,
   Gender: Gender,
   AuthType: AuthType,
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   Notification: ResolverTypeWrapper<Notification>,
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>,
   Channel: ResolverTypeWrapper<Channel>,
@@ -348,13 +353,13 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {},
+  Boolean: Scalars['Boolean'],
   User: User,
   ID: Scalars['ID'],
   String: Scalars['String'],
   Date: Scalars['Date'],
   Gender: Gender,
   AuthType: AuthType,
-  Boolean: Scalars['Boolean'],
   Notification: Notification,
   DateTime: Scalars['DateTime'],
   Channel: Channel,
@@ -449,7 +454,7 @@ export type NotificationResolvers<ContextType = MyContext, ParentType extends Re
 };
 
 export type QueryResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>,
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, QueryUsersArgs>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
   signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<QuerySignInEmailArgs, 'email' | 'password'>>,
   findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryFindPasswordArgs, 'email'>>,
