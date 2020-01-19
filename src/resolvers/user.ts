@@ -24,8 +24,10 @@ const signInWithSocialAccount = async (
   models: ModelType,
   appSecret: string,
 ): Promise<AuthPayload> => {
+  const { User: userModel } = models;
+
   if (socialUser.email) {
-    const emailUser = await models.User.findOne({
+    const emailUser = await userModel.findOne({
       where: {
         email: socialUser.email,
         socialId: { $ne: socialUser.socialId },
@@ -38,7 +40,7 @@ const signInWithSocialAccount = async (
     }
   }
 
-  const user = await models.User.findOrCreate({
+  const user = await userModel.findOrCreate({
     where: { socialId: `${socialUser.socialId}` },
     defaults: {
       socialId: socialUser.socialId,
@@ -77,9 +79,17 @@ const resolver: Resolvers = {
       },
     ): Promise<User[]> => {
       const { User: userModel } = models;
-      const user = await getUser();
+      const auth = await getUser();
 
-      if (!user) throw new AuthenticationError('User is not signed in');
+      if (!auth) throw new AuthenticationError('User is not signed in');
+
+      if (args.includeUser) {
+        return userModel.findAll({
+          where: {
+            userId: { $ne: auth.id },
+          },
+        });
+      }
 
       return userModel.findAll();
     },
@@ -112,7 +122,7 @@ const resolver: Resolvers = {
         appSecret,
       );
 
-      pubsub.publish(USER_SIGNED_IN, { user });
+      pubsub.publish(USER_SIGNED_IN, { userSignedIn: user });
       return { token, user };
     },
     findPassword: async (_, args): Promise<boolean> => {
@@ -206,7 +216,7 @@ your password will reset to <strong>dooboolab2017</strong>.
           raw: true,
         });
 
-        pubsub.publish(USER_UPDATED, { user });
+        pubsub.publish(USER_UPDATED, { userUpdated: user });
         return user;
       } catch (err) {
         throw new Error(err);
@@ -224,10 +234,9 @@ your password will reset to <strong>dooboolab2017</strong>.
         (_, args, { pubsub }) => {
           return pubsub.asyncIterator(USER_UPDATED, { user: args.user });
         },
-        (payload, user) => {
+        (payload, { userId }) => {
           const { userUpdated: updatedUser } = payload;
-
-          return updatedUser.id === user.id;
+          return updatedUser.id === userId;
         },
       ),
     },
@@ -235,8 +244,9 @@ your password will reset to <strong>dooboolab2017</strong>.
   User: {
     channels: async (_, args, { models }): Promise<Channel[]> => {
       const { id } = _;
+      const { Channel: channelModel, User: userModel } = models;
 
-      const channels = await models.Channel.findAll({
+      const channels = await channelModel.findAll({
         where: {
           $or: [{
             ownerId: { $eq: id },
@@ -245,7 +255,7 @@ your password will reset to <strong>dooboolab2017</strong>.
         },
         include: [
           {
-            model: models.User,
+            model: userModel,
             as: 'owner',
           },
         ],
@@ -255,8 +265,9 @@ your password will reset to <strong>dooboolab2017</strong>.
     },
     notifications: (_, args, { models }): Promise<Notification[]> => {
       const { id } = _;
+      const { Notification: notificationModel } = models;
 
-      return models.Notification.findAll({
+      return notificationModel.findAll({
         where: {
           userId: id,
         },
