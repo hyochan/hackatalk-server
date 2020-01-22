@@ -18,7 +18,7 @@ const similarOption = {
   database: process.env.DB_DATABASE,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
-  dialect: process.env.DB_TYPE,
+  dialect: process.env.DB_CONNECTOR,
   define: {
     underscored: false,
   },
