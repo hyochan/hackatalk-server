@@ -100,22 +100,22 @@ export type Mutation = {
 
 
 export type MutationSignInGoogleArgs = {
-  socialUser: SocialUserCreateInput
+  socialUser: SocialUserInput
 };
 
 
 export type MutationSignInFacebookArgs = {
-  socialUser: SocialUserCreateInput
+  socialUser: SocialUserInput
 };
 
 
 export type MutationSignInAppleArgs = {
-  socialUser: SocialUserCreateInput
+  socialUser: SocialUserInput
 };
 
 
 export type MutationSignUpArgs = {
-  user: UserCreateInput
+  user: UserInput
 };
 
 
@@ -125,7 +125,7 @@ export type MutationAddNotificationTokenArgs = {
 
 
 export type MutationUpdateProfileArgs = {
-  user: UserUpdateInput
+  user: UserInput
 };
 
 
@@ -200,7 +200,7 @@ export type Reply = {
   deletedAt?: Maybe<Scalars['DateTime']>,
 };
 
-export type SocialUserCreateInput = {
+export type SocialUserInput = {
   socialId: Scalars['String'],
   authType: AuthType,
   email?: Maybe<Scalars['String']>,
@@ -245,7 +245,7 @@ export type User = {
   deletedAt?: Maybe<Scalars['DateTime']>,
 };
 
-export type UserCreateInput = {
+export type UserInput = {
   email: Scalars['String'],
   password: Scalars['String'],
   name?: Maybe<Scalars['String']>,
@@ -260,17 +260,6 @@ export enum UserModeType {
   Hidden = 'HIDDEN',
   Block = 'BLOCK'
 }
-
-export type UserUpdateInput = {
-  id: Scalars['ID'],
-  email?: Maybe<Scalars['String']>,
-  password: Scalars['String'],
-  name?: Maybe<Scalars['String']>,
-  nickname?: Maybe<Scalars['String']>,
-  birthday?: Maybe<Scalars['Date']>,
-  gender?: Maybe<Gender>,
-  phone?: Maybe<Scalars['String']>,
-};
 
 
 
@@ -362,10 +351,9 @@ export type ResolversTypes = {
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
   Friend: ResolverTypeWrapper<Friend>,
   Mutation: ResolverTypeWrapper<{}>,
-  SocialUserCreateInput: SocialUserCreateInput,
-  UserCreateInput: UserCreateInput,
+  SocialUserInput: SocialUserInput,
+  UserInput: UserInput,
   NotificationCreateInput: NotificationCreateInput,
-  UserUpdateInput: UserUpdateInput,
   Subscription: ResolverTypeWrapper<{}>,
 };
 
@@ -390,10 +378,9 @@ export type ResolversParentTypes = {
   AuthPayload: AuthPayload,
   Friend: Friend,
   Mutation: {},
-  SocialUserCreateInput: SocialUserCreateInput,
-  UserCreateInput: UserCreateInput,
+  SocialUserInput: SocialUserInput,
+  UserInput: UserInput,
   NotificationCreateInput: NotificationCreateInput,
-  UserUpdateInput: UserUpdateInput,
   Subscription: {},
 };
 
