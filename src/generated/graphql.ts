@@ -159,6 +159,7 @@ export type Query = {
    __typename?: 'Query',
   users: Array<User>,
   user?: Maybe<User>,
+  me?: Maybe<User>,
   signInEmail: AuthPayload,
   findPassword?: Maybe<Scalars['Boolean']>,
   messages: Array<Message>,
@@ -465,6 +466,7 @@ export type NotificationResolvers<ContextType = MyContext, ParentType extends Re
 export type QueryResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, QueryUsersArgs>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
+  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<QuerySignInEmailArgs, 'email' | 'password'>>,
   findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryFindPasswordArgs, 'email'>>,
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,

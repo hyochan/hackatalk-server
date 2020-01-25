@@ -9,6 +9,7 @@
 type Query {
   users(includeUser: Boolean): [User!]!
   user(id: ID!): User
+  me: User
   signInEmail(email: String! password: String!): AuthPayload!
   findPassword(email: String!): Boolean
   messages: [Message!]!

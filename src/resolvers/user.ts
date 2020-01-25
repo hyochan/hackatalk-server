@@ -71,13 +71,11 @@ const signInWithSocialAccount = async (
 
 const resolver: Resolvers = {
   Query: {
-    users: async (
-      _,
-      args, {
-        getUser,
-        models,
-      },
-    ): Promise<User[]> => {
+    me: async (_, args, { getUser }): Promise<User> => {
+      const auth = await getUser();
+      return auth;
+    },
+    users: async (_, args, { getUser, models }): Promise<User[]> => {
       const { User: userModel } = models;
       const auth = await getUser();
 
