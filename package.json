@@ -19,7 +19,11 @@
     "test:watch": "jest --watch",
     "codegen": "graphql-codegen",
     "generate": "graphql-codegen --config codegen.yml",
-    "codecov": "codecov"
+    "codecov": "codecov",
+    "migrate:dev": "dotenv -e ./dotenv/dev.env sequelize db:migrate --env development",
+    "migrate:test": "dotenv -e ./dotenv/test.env sequelize db:migrate --env test",
+    "migrate:prod": "npx dotenv -e ./dotenv/prod.env sequelize db:migrate --env prod",
+    "migrate": "yarn migrate:dev && yarn migrate:test && yarn migrate:prod"
   },
   "dependencies": {
     "@sendgrid/mail": "^6.5.0",
@@ -57,6 +61,7 @@
     "codecov": "^3.6.1",
     "cross-env": "^6.0.3",
     "dotenv": "^8.2.0",
+    "dotenv-cli": "^3.1.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.20.0",
@@ -65,6 +70,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "nodemon": "^2.0.2",
     "pm2": "^4.2.1",
+    "sequelize-cli": "^5.5.1",
     "ts-jest": "^24.3.0",
     "ts-node": "^8.6.2",
     "typescript": "3.7.5"

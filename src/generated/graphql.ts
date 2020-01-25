@@ -253,6 +253,7 @@ export type UserInput = {
   birthday?: Maybe<Scalars['Date']>,
   gender?: Maybe<Gender>,
   phone?: Maybe<Scalars['String']>,
+  status?: Maybe<Scalars['String']>,
 };
 
 export enum UserModeType {

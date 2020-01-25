@@ -1,5 +1,7 @@
-import dotenv from 'dotenv';
-import path from 'path';
+/* eslint-disable */
+const dotenv = require('dotenv');
+const path = require('path');
+/* eslint-enable */
 
 const env = process.env.NODE_ENV;
 
