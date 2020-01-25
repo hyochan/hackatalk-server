@@ -11,6 +11,13 @@ export const createApp = (): Express => {
   const app = express();
 
   app.use(cors());
+  app.use(express.static('public'));
+  app.get('/.well-known/acme-challenge/uzhez1JlZi99vlZ07resS0OgYiWOC98PQuV2ZixBp2I',
+    async (req, res) => {
+      return res.send(
+        'uzhez1JlZi99vlZ07resS0OgYiWOC98PQuV2ZixBp2I.urlFAQNtUO24xHjsLG72mMU-xptyO3NTqLp9K7yv9qI',
+      );
+    });
   app.get('/reset_password/:email/:hashed', async (req, res) => {
     const email = qs.unescape(req.params.email);
     const hashed = qs.unescape(req.params.hashed);
