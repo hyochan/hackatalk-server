@@ -30,7 +30,7 @@ export const createApp = (): Express => {
     }
   });
   app.get('/', (req, res) => {
-    res.send('It works!!!! production x16');
+    res.send('It works!!!! production x1');
   });
 
   return app;
