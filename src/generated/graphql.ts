@@ -88,6 +88,7 @@ export type Message = {
 
 export type Mutation = {
    __typename?: 'Mutation',
+  signInEmail: AuthPayload,
   signInGoogle: AuthPayload,
   signInFacebook: AuthPayload,
   signInApple: AuthPayload,
@@ -96,6 +97,12 @@ export type Mutation = {
   updateProfile?: Maybe<User>,
   addFriend?: Maybe<User>,
   deleteFriend?: Maybe<User>,
+};
+
+
+export type MutationSignInEmailArgs = {
+  email: Scalars['String'],
+  password: Scalars['String']
 };
 
 
@@ -160,7 +167,6 @@ export type Query = {
   users: Array<User>,
   user?: Maybe<User>,
   me?: Maybe<User>,
-  signInEmail: AuthPayload,
   findPassword?: Maybe<Scalars['Boolean']>,
   messages: Array<Message>,
   channels: Array<Channel>,
@@ -175,12 +181,6 @@ export type QueryUsersArgs = {
 
 export type QueryUserArgs = {
   id: Scalars['ID']
-};
-
-
-export type QuerySignInEmailArgs = {
-  email: Scalars['String'],
-  password: Scalars['String']
 };
 
 
@@ -350,9 +350,9 @@ export type ResolversTypes = {
   Membership: ResolverTypeWrapper<Membership>,
   MemberType: MemberType,
   UserModeType: UserModeType,
-  AuthPayload: ResolverTypeWrapper<AuthPayload>,
   Friend: ResolverTypeWrapper<Friend>,
   Mutation: ResolverTypeWrapper<{}>,
+  AuthPayload: ResolverTypeWrapper<AuthPayload>,
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
   NotificationCreateInput: NotificationCreateInput,
@@ -377,9 +377,9 @@ export type ResolversParentTypes = {
   Membership: Membership,
   MemberType: MemberType,
   UserModeType: UserModeType,
-  AuthPayload: AuthPayload,
   Friend: Friend,
   Mutation: {},
+  AuthPayload: AuthPayload,
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
   NotificationCreateInput: NotificationCreateInput,
@@ -444,6 +444,7 @@ export type MessageResolvers<ContextType = MyContext, ParentType extends Resolve
 };
 
 export type MutationResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInEmailArgs, 'email' | 'password'>>,
   signInGoogle?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInGoogleArgs, 'socialUser'>>,
   signInFacebook?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInFacebookArgs, 'socialUser'>>,
   signInApple?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInAppleArgs, 'socialUser'>>,
@@ -467,7 +468,6 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, QueryUsersArgs>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
-  signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<QuerySignInEmailArgs, 'email' | 'password'>>,
   findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryFindPasswordArgs, 'email'>>,
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
   channels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType>,
