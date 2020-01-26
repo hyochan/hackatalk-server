@@ -44,7 +44,7 @@ input UserInput {
   birthday: Date
   gender: Gender
   phone: String
-  status: String
+  statusMessage: String
 }
 
 input SocialUserInput {

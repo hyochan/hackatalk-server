@@ -36,7 +36,7 @@ export class User extends Model {
   public socialId: string;
   public authType: AuthType;
   public verified: boolean;
-  public status: string;
+  public statusMessage: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
@@ -68,7 +68,7 @@ User.init({
     type: BOOLEAN,
     defaultValue: false,
   },
-  status: TEXT,
+  statusMessage: TEXT,
 }, {
   sequelize,
   modelName: 'user',
