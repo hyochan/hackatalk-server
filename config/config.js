@@ -5,16 +5,15 @@ const path = require('path');
 
 const env = process.env.NODE_ENV;
 
-const envPath =
-  env === 'development'
-    ? path.resolve(__dirname, '../dotenv/dev.env')
-    : env === 'test'
-      ? path.resolve(__dirname, '../dotenv/test.env')
-      : path.resolve(__dirname, '../dotenv/.env');
+const envPath = env === 'development'
+  ? path.resolve(__dirname, '../dotenv/dev.env')
+  : env === 'test'
+    ? path.resolve(__dirname, '../dotenv/test.env')
+    : path.resolve(__dirname, '../dotenv/.env');
 
 dotenv.config({ path: envPath });
 
-const similarOption = {
+let config = {
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
@@ -26,21 +25,14 @@ const similarOption = {
   },
 };
 
-module.exports = {
-  local: {
-    ...similarOption,
-  },
-  development: {
-    ...similarOption,
-  },
-  test: {
-    ...similarOption,
-  },
-  production: {
-    ...similarOption,
+if (process.env.NODE_ENV === 'production') {
+  config = {
+    ...config,
     dialectOptions: {
       ssl: {},
     },
     pool: { max: 5, min: 0, idle: 10000 },
-  },
-};
+  };
+}
+
+module.exports = config;

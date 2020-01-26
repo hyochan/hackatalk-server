@@ -96,33 +96,6 @@ const resolver: Resolvers = {
 
       return User.findOne({ where: args });
     },
-    signInEmail: async (_, args, { models, appSecret, pubsub }): Promise<AuthPayload> => {
-      const { User: userModel } = models;
-
-      const user = await userModel.findOne({
-        where: {
-          email: args.email,
-        },
-        raw: true,
-      });
-
-      if (!user) throw new AuthenticationError('User does not exsists');
-
-      const validate = await validateCredential(args.password, user.password);
-
-      if (!validate) throw new AuthenticationError('Password is not correct');
-
-      const token: string = jwt.sign(
-        {
-          userId: user.id,
-          role: Role.User,
-        },
-        appSecret,
-      );
-
-      pubsub.publish(USER_SIGNED_IN, { userSignedIn: user });
-      return { token, user };
-    },
     findPassword: async (_, args): Promise<boolean> => {
       const email = args.email;
 
@@ -153,6 +126,33 @@ your password will reset to <strong>dooboolab2017</strong>.
     },
   },
   Mutation: {
+    signInEmail: async (_, args, { models, appSecret, pubsub }): Promise<AuthPayload> => {
+      const { User: userModel } = models;
+
+      const user = await userModel.findOne({
+        where: {
+          email: args.email,
+        },
+        raw: true,
+      });
+
+      if (!user) throw new AuthenticationError('User does not exsists');
+
+      const validate = await validateCredential(args.password, user.password);
+
+      if (!validate) throw new AuthenticationError('Password is not correct');
+
+      const token: string = jwt.sign(
+        {
+          userId: user.id,
+          role: Role.User,
+        },
+        appSecret,
+      );
+
+      pubsub.publish(USER_SIGNED_IN, { userSignedIn: user });
+      return { token, user };
+    },
     signInGoogle: async (_, { socialUser }, { appSecret, models }): Promise<AuthPayload> =>
       signInWithSocialAccount(socialUser, models, appSecret),
 

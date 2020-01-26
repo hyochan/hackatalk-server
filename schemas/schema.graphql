@@ -10,7 +10,6 @@ type Query {
   users(includeUser: Boolean): [User!]!
   user(id: ID!): User
   me: User
-  signInEmail(email: String! password: String!): AuthPayload!
   findPassword(email: String!): Boolean
   messages: [Message!]!
   channels: [Channel!]!
@@ -18,6 +17,7 @@ type Query {
 }
 
 type Mutation {
+  signInEmail(email: String! password: String!): AuthPayload!
   signInGoogle(socialUser: SocialUserInput!): AuthPayload!
   signInFacebook(socialUser: SocialUserInput!): AuthPayload!
   signInApple(socialUser: SocialUserInput!): AuthPayload!

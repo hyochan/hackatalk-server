@@ -1,11 +1,13 @@
 import { BuildOptions, DataTypes, Model } from 'sequelize';
 
+import moment from 'moment';
 import sequelize from '../db';
 
 const {
   STRING,
   BOOLEAN,
   DATE,
+  DATEONLY,
   UUID,
   UUIDV1,
   ENUM,
@@ -36,6 +38,9 @@ export class User extends Model {
   public socialId: string;
   public authType: AuthType;
   public verified: boolean;
+  public statusMessage: string;
+  public isOnline: boolean;
+  public lastSignedIn: Date;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
@@ -58,7 +63,12 @@ User.init({
   name: STRING,
   nickname: STRING,
   photoURL: STRING,
-  birthday: DATE,
+  birthday: {
+    type: DATEONLY,
+    get: function(): string {
+      return moment.utc(this.getDataValue('regDate')).format('YYYY-MM-DD');
+    },
+  },
   gender: ENUM('MALE', 'FEMALE'),
   phone: STRING,
   socialId: STRING,
@@ -67,7 +77,9 @@ User.init({
     type: BOOLEAN,
     defaultValue: false,
   },
-  status: TEXT,
+  statusMessage: TEXT,
+  isOnline: BOOLEAN,
+  lastSignedIn: DATE,
 }, {
   sequelize,
   modelName: 'user',
