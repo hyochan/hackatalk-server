@@ -9,6 +9,7 @@
 type Query {
   users(includeUser: Boolean): [User!]!
   user(id: ID!): User
+  me: User
   signInEmail(email: String! password: String!): AuthPayload!
   findPassword(email: String!): Boolean
   messages: [Message!]!
@@ -17,12 +18,12 @@ type Query {
 }
 
 type Mutation {
-  signInGoogle(socialUser: SocialUserCreateInput!): AuthPayload!
-  signInFacebook(socialUser: SocialUserCreateInput!): AuthPayload!
-  signInApple(socialUser: SocialUserCreateInput!): AuthPayload!
-  signUp(user: UserCreateInput!): AuthPayload!
+  signInGoogle(socialUser: SocialUserInput!): AuthPayload!
+  signInFacebook(socialUser: SocialUserInput!): AuthPayload!
+  signInApple(socialUser: SocialUserInput!): AuthPayload!
+  signUp(user: UserInput!): AuthPayload!
   addNotificationToken(notification: NotificationCreateInput!): Notification
-  updateProfile(user: UserUpdateInput!): User
+  updateProfile(user: UserInput!): User
   addFriend(friendId: ID!): User
   deleteFriend(friendId: ID!): User
 }
