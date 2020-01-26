@@ -36,6 +36,7 @@ export class User extends Model {
   public socialId: string;
   public authType: AuthType;
   public verified: boolean;
+  public status: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
