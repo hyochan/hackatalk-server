@@ -1,5 +1,7 @@
-import dotenv from 'dotenv';
-import path from 'path';
+/* eslint-disable */
+const dotenv = require('dotenv');
+const path = require('path');
+/* eslint-enable */
 
 const env = process.env.NODE_ENV;
 
@@ -18,7 +20,7 @@ const similarOption = {
   database: process.env.DB_DATABASE,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
-  dialect: process.env.DB_TYPE,
+  dialect: process.env.DB_CONNECTOR,
   define: {
     underscored: false,
   },
@@ -30,9 +32,6 @@ module.exports = {
   },
   development: {
     ...similarOption,
-    dialectOptions: {
-      ssl: {},
-    },
   },
   test: {
     ...similarOption,

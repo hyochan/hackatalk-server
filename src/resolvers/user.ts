@@ -3,7 +3,7 @@ import {
   Channel,
   Notification,
   Resolvers,
-  SocialUserCreateInput,
+  SocialUserInput,
   User,
 } from '../generated/graphql';
 import { Role, encryptCredential, validateCredential, validateEmail } from '../utils/auth';
@@ -20,7 +20,7 @@ const USER_SIGNED_IN = 'USER_SIGNED_IN';
 const USER_UPDATED = 'USER_UPDATED';
 
 const signInWithSocialAccount = async (
-  socialUser: SocialUserCreateInput,
+  socialUser: SocialUserInput,
   models: ModelType,
   appSecret: string,
 ): Promise<AuthPayload> => {
@@ -71,13 +71,11 @@ const signInWithSocialAccount = async (
 
 const resolver: Resolvers = {
   Query: {
-    users: async (
-      _,
-      args, {
-        getUser,
-        models,
-      },
-    ): Promise<User[]> => {
+    me: async (_, args, { getUser }): Promise<User> => {
+      const auth = await getUser();
+      return auth;
+    },
+    users: async (_, args, { getUser, models }): Promise<User[]> => {
       const { User: userModel } = models;
       const auth = await getUser();
 
@@ -197,26 +195,30 @@ your password will reset to <strong>dooboolab2017</strong>.
       return { token, user };
     },
     updateProfile: async (_, args, { getUser, models, pubsub }): Promise<User> => {
-      const { User: userModel } = models;
-
       try {
         const auth = await getUser();
-        if (auth.id !== args.user.id) {
+        if (!auth) {
           throw new AuthenticationError(
-            'User can update his or her own profile',
+            'User is not logged in',
           );
         }
-        userModel.update(
-          args,
-          { where: { id: args.user.id } },
+        models.User.update(
+          args.user,
+          {
+            where: {
+              id: auth.id,
+            },
+          },
         );
 
-        const user = await userModel.findOne({
-          where: { id: args.user.id },
+        const user = await models.User.findOne({
+          where: {
+            id: auth.id,
+          },
           raw: true,
         });
 
-        pubsub.publish(USER_UPDATED, { userUpdated: user });
+        pubsub.publish(USER_UPDATED, { user });
         return user;
       } catch (err) {
         throw new Error(err);

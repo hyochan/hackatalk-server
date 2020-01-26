@@ -100,22 +100,22 @@ export type Mutation = {
 
 
 export type MutationSignInGoogleArgs = {
-  socialUser: SocialUserCreateInput
+  socialUser: SocialUserInput
 };
 
 
 export type MutationSignInFacebookArgs = {
-  socialUser: SocialUserCreateInput
+  socialUser: SocialUserInput
 };
 
 
 export type MutationSignInAppleArgs = {
-  socialUser: SocialUserCreateInput
+  socialUser: SocialUserInput
 };
 
 
 export type MutationSignUpArgs = {
-  user: UserCreateInput
+  user: UserInput
 };
 
 
@@ -125,7 +125,7 @@ export type MutationAddNotificationTokenArgs = {
 
 
 export type MutationUpdateProfileArgs = {
-  user: UserUpdateInput
+  user: UserInput
 };
 
 
@@ -159,6 +159,7 @@ export type Query = {
    __typename?: 'Query',
   users: Array<User>,
   user?: Maybe<User>,
+  me?: Maybe<User>,
   signInEmail: AuthPayload,
   findPassword?: Maybe<Scalars['Boolean']>,
   messages: Array<Message>,
@@ -200,7 +201,7 @@ export type Reply = {
   deletedAt?: Maybe<Scalars['DateTime']>,
 };
 
-export type SocialUserCreateInput = {
+export type SocialUserInput = {
   socialId: Scalars['String'],
   authType: AuthType,
   email?: Maybe<Scalars['String']>,
@@ -245,7 +246,7 @@ export type User = {
   deletedAt?: Maybe<Scalars['DateTime']>,
 };
 
-export type UserCreateInput = {
+export type UserInput = {
   email: Scalars['String'],
   password: Scalars['String'],
   name?: Maybe<Scalars['String']>,
@@ -253,6 +254,7 @@ export type UserCreateInput = {
   birthday?: Maybe<Scalars['Date']>,
   gender?: Maybe<Gender>,
   phone?: Maybe<Scalars['String']>,
+  status?: Maybe<Scalars['String']>,
 };
 
 export enum UserModeType {
@@ -260,17 +262,6 @@ export enum UserModeType {
   Hidden = 'HIDDEN',
   Block = 'BLOCK'
 }
-
-export type UserUpdateInput = {
-  id: Scalars['ID'],
-  email?: Maybe<Scalars['String']>,
-  password: Scalars['String'],
-  name?: Maybe<Scalars['String']>,
-  nickname?: Maybe<Scalars['String']>,
-  birthday?: Maybe<Scalars['Date']>,
-  gender?: Maybe<Gender>,
-  phone?: Maybe<Scalars['String']>,
-};
 
 
 
@@ -362,10 +353,9 @@ export type ResolversTypes = {
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
   Friend: ResolverTypeWrapper<Friend>,
   Mutation: ResolverTypeWrapper<{}>,
-  SocialUserCreateInput: SocialUserCreateInput,
-  UserCreateInput: UserCreateInput,
+  SocialUserInput: SocialUserInput,
+  UserInput: UserInput,
   NotificationCreateInput: NotificationCreateInput,
-  UserUpdateInput: UserUpdateInput,
   Subscription: ResolverTypeWrapper<{}>,
 };
 
@@ -390,10 +380,9 @@ export type ResolversParentTypes = {
   AuthPayload: AuthPayload,
   Friend: Friend,
   Mutation: {},
-  SocialUserCreateInput: SocialUserCreateInput,
-  UserCreateInput: UserCreateInput,
+  SocialUserInput: SocialUserInput,
+  UserInput: UserInput,
   NotificationCreateInput: NotificationCreateInput,
-  UserUpdateInput: UserUpdateInput,
   Subscription: {},
 };
 
@@ -477,6 +466,7 @@ export type NotificationResolvers<ContextType = MyContext, ParentType extends Re
 export type QueryResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, QueryUsersArgs>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
+  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<QuerySignInEmailArgs, 'email' | 'password'>>,
   findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryFindPasswordArgs, 'email'>>,
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,

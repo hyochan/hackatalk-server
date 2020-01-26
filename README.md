@@ -19,3 +19,9 @@
 ### Test Graphql Apis
 
 - [stage.hackatalk.dev/graphql](https://stage.hackatalk.dev/graphql)
+
+### Migration
+
+```
+yarn migrate
+```

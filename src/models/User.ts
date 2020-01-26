@@ -9,6 +9,7 @@ const {
   UUID,
   UUIDV1,
   ENUM,
+  TEXT,
 } = DataTypes;
 
 export enum Gender {
@@ -66,6 +67,7 @@ User.init({
     type: BOOLEAN,
     defaultValue: false,
   },
+  status: TEXT,
 }, {
   sequelize,
   modelName: 'user',

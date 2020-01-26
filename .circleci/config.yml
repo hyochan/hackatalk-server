@@ -1,4 +1,6 @@
-version: 2
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.5
 jobs:
   build:
     # machine: true
@@ -76,13 +78,19 @@ jobs:
           command: |
             yarn test --coverage --max-workers=2 --silent
 
-      - run:
-          name: Upload code coverage
-          command: |
-            yarn codecov -t 2b096ad2-7ba8-4b1b-a319-b3e712037ca5
+      - codecov/upload:
+          file: ./coverage/lcov.info
+          token: 2b096ad2-7ba8-4b1b-a319-b3e712037ca5
+
+      - store_test_results:
+          path: coverage
+
+      - store_artifacts:
+          path: coverage
+
 
 workflows:
-  version: 2
+  version: 2.1
   build-deploy:
     jobs:
       - build
