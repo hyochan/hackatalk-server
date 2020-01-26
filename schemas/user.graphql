@@ -21,6 +21,7 @@ type User {
   email: String
   name: String
   nickname: String
+  thumbURL: String
   photoURL: String
   birthday: Date
   gender: Gender
@@ -55,6 +56,7 @@ input SocialUserInput {
   authType: AuthType!
   email: String
   photoURL: String
+  thumbURL: String
   name: String
   nickname: String
   birthday: Date

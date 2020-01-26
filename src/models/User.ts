@@ -32,6 +32,7 @@ export class User extends Model {
   public password: string;
   public name: string;
   public nickname: string;
+  public thumbUrl: string;
   public photoURL: string;
   public birthday: Date;
   public gender: Gender;
@@ -62,6 +63,7 @@ User.init({
   },
   name: STRING,
   nickname: STRING,
+  thumbUrl: STRING,
   photoURL: STRING,
   birthday: {
     type: DATEONLY,
