@@ -92,7 +92,11 @@ const resolver: Resolvers = {
         );
 
         pubsub.publish(FRIENDS_CHANGED, {
-          friendsChanged: auth,
+          friendsChanged: {
+            userId: auth.id,
+            friend: user,
+            action: FriendSubAction.Added,
+          },
         });
         return user;
       } catch (err) {
