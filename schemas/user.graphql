@@ -51,6 +51,15 @@ input UserInput {
   statusMessage: String
 }
 
+input UserQueryInput {
+  email: String
+  name: String
+  nickname: String
+  birthday: Date
+  gender: Gender
+  phone: String
+}
+
 input SocialUserInput {
   socialId: String!
   authType: AuthType!

@@ -7,7 +7,7 @@
 # import Membership from "membership.graphql"
 
 type Query {
-  users(includeUser: Boolean): [User!]!
+  users(user: UserQueryInput, includeUser: Boolean): [User!]!
   user(id: ID!): User
   me: User
   findPassword(email: String!): Boolean

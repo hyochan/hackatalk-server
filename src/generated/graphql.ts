@@ -175,6 +175,7 @@ export type Query = {
 
 
 export type QueryUsersArgs = {
+  user?: Maybe<UserQueryInput>,
   includeUser?: Maybe<Scalars['Boolean']>
 };
 
@@ -268,6 +269,15 @@ export enum UserModeType {
   Block = 'BLOCK'
 }
 
+export type UserQueryInput = {
+  email?: Maybe<Scalars['String']>,
+  name?: Maybe<Scalars['String']>,
+  nickname?: Maybe<Scalars['String']>,
+  birthday?: Maybe<Scalars['Date']>,
+  gender?: Maybe<Gender>,
+  phone?: Maybe<Scalars['String']>,
+};
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -340,12 +350,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>,
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-  User: ResolverTypeWrapper<User>,
-  ID: ResolverTypeWrapper<Scalars['ID']>,
+  UserQueryInput: UserQueryInput,
   String: ResolverTypeWrapper<Scalars['String']>,
   Date: ResolverTypeWrapper<Scalars['Date']>,
   Gender: Gender,
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+  User: ResolverTypeWrapper<User>,
+  ID: ResolverTypeWrapper<Scalars['ID']>,
   AuthType: AuthType,
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>,
   Notification: ResolverTypeWrapper<Notification>,
@@ -367,12 +378,13 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {},
-  Boolean: Scalars['Boolean'],
-  User: User,
-  ID: Scalars['ID'],
+  UserQueryInput: UserQueryInput,
   String: Scalars['String'],
   Date: Scalars['Date'],
   Gender: Gender,
+  Boolean: Scalars['Boolean'],
+  User: User,
+  ID: Scalars['ID'],
   AuthType: AuthType,
   DateTime: Scalars['DateTime'],
   Notification: Notification,

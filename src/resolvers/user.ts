@@ -81,15 +81,20 @@ const resolver: Resolvers = {
 
       if (!auth) throw new AuthenticationError('User is not signed in');
 
-      if (args.includeUser) {
+      if (!args.includeUser) {
         return userModel.findAll({
           where: {
-            userId: { $ne: auth.id },
+            ...args.user,
+            id: {
+              $ne: auth.id,
+            },
           },
         });
       }
 
-      return userModel.findAll();
+      return userModel.findAll({
+        where: args.user,
+      });
     },
     user: (_, args, { models }): Promise<User> => {
       const { User } = models;
