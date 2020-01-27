@@ -61,6 +61,12 @@ export type Friend = {
   deletedAt?: Maybe<Scalars['DateTime']>,
 };
 
+export enum FriendSubAction {
+  Added = 'ADDED',
+  Updated = 'UPDATED',
+  Deleted = 'DELETED'
+}
+
 export enum Gender {
   Male = 'MALE',
   Female = 'FEMALE'
@@ -259,7 +265,9 @@ export type Subscription = {
 
 
 export type SubscriptionFriendsChangedArgs = {
-  userId: Scalars['ID']
+  userId: Scalars['ID'],
+  friend?: Maybe<User>,
+  action?: Maybe<FriendSubAction>
 };
 
 export type User = {
@@ -408,6 +416,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']>,
   ChannelInput: ChannelInput,
   Subscription: ResolverTypeWrapper<{}>,
+  FriendSubAction: FriendSubAction,
   Friend: ResolverTypeWrapper<Friend>,
 };
 
@@ -439,6 +448,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int'],
   ChannelInput: ChannelInput,
   Subscription: {},
+  FriendSubAction: FriendSubAction,
   Friend: Friend,
 };
 

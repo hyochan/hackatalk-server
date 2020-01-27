@@ -1,4 +1,4 @@
-import { Resolvers, User } from '../generated/graphql';
+import { FriendSubAction, Resolvers, User } from '../generated/graphql';
 
 import { AuthenticationError } from 'apollo-server-core';
 import { Op } from 'sequelize';
@@ -57,7 +57,11 @@ const resolver: Resolvers = {
         );
 
         pubsub.publish(FRIENDS_CHANGED, {
-          friendsChanged: auth,
+          friendsChanged: {
+            userId: auth.id,
+            friend: user,
+            action: FriendSubAction.Added,
+          },
         });
         return user;
       } catch (err) {
@@ -102,7 +106,7 @@ const resolver: Resolvers = {
         (_, args, { pubsub }) => pubsub.asyncIterator(FRIENDS_CHANGED),
         (payload, { userId }) => {
           const { friendsChanged } = payload;
-          return friendsChanged.id === userId;
+          return friendsChanged.userId === userId;
         },
       ),
     },
