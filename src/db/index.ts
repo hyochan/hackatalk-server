@@ -44,7 +44,10 @@ const sequelize = new Sequelize(
   config.database,
   config.username,
   config.password,
-  config,
+  {
+    ...config,
+    operatorsAliases,
+  },
 );
 
 if (process.env.NODE_ENV !== 'test') {
