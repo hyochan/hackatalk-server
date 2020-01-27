@@ -29,13 +29,25 @@ export enum AuthType {
 export type Channel = {
    __typename?: 'Channel',
   id: Scalars['ID'],
-  type?: Maybe<Scalars['String']>,
+  type?: Maybe<ChannelType>,
+  name?: Maybe<Scalars['String']>,
   messages?: Maybe<Array<Maybe<Message>>>,
   membership?: Maybe<Membership>,
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   deletedAt?: Maybe<Scalars['DateTime']>,
 };
+
+export type ChannelInput = {
+  type?: Maybe<ChannelType>,
+  name?: Maybe<Scalars['String']>,
+  friendsId: Array<Scalars['String']>,
+};
+
+export enum ChannelType {
+  Private = 'PRIVATE',
+  Public = 'PUBLIC'
+}
 
 
 
@@ -94,9 +106,13 @@ export type Mutation = {
   signInApple: AuthPayload,
   signUp: AuthPayload,
   addNotificationToken?: Maybe<Notification>,
+  removeNotificationToken: Scalars['Int'],
   updateProfile?: Maybe<User>,
   addFriend?: Maybe<User>,
   deleteFriend?: Maybe<User>,
+  createChannel?: Maybe<Channel>,
+  updateChannel: Scalars['Int'],
+  deleteChannel: Scalars['Int'],
 };
 
 
@@ -131,6 +147,11 @@ export type MutationAddNotificationTokenArgs = {
 };
 
 
+export type MutationRemoveNotificationTokenArgs = {
+  token: Scalars['String']
+};
+
+
 export type MutationUpdateProfileArgs = {
   user: UserInput
 };
@@ -145,6 +166,21 @@ export type MutationDeleteFriendArgs = {
   friendId: Scalars['ID']
 };
 
+
+export type MutationCreateChannelArgs = {
+  channel?: Maybe<ChannelInput>
+};
+
+
+export type MutationUpdateChannelArgs = {
+  channel?: Maybe<ChannelInput>
+};
+
+
+export type MutationDeleteChannelArgs = {
+  channelId: Scalars['ID']
+};
+
 export type Notification = {
    __typename?: 'Notification',
   id: Scalars['ID'],
@@ -156,7 +192,6 @@ export type Notification = {
 };
 
 export type NotificationCreateInput = {
-  userId: Scalars['ID'],
   token: Scalars['String'],
   device?: Maybe<Scalars['String']>,
   os?: Maybe<Scalars['String']>,
@@ -170,7 +205,7 @@ export type Query = {
   findPassword?: Maybe<Scalars['Boolean']>,
   messages: Array<Message>,
   channels: Array<Channel>,
-  friends: Array<Friend>,
+  friends: Array<User>,
 };
 
 
@@ -245,8 +280,6 @@ export type User = {
   isOnline?: Maybe<Scalars['Boolean']>,
   lastSignedIn?: Maybe<Scalars['DateTime']>,
   notifications?: Maybe<Array<Maybe<Notification>>>,
-  channels?: Maybe<Array<Maybe<Channel>>>,
-  friends?: Maybe<Array<Maybe<User>>>,
   createdAt?: Maybe<Scalars['DateTime']>,
   updatedAt?: Maybe<Scalars['DateTime']>,
   deletedAt?: Maybe<Scalars['DateTime']>,
@@ -360,19 +393,22 @@ export type ResolversTypes = {
   AuthType: AuthType,
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>,
   Notification: ResolverTypeWrapper<Notification>,
-  Channel: ResolverTypeWrapper<Channel>,
   Message: ResolverTypeWrapper<Message>,
-  Reply: ResolverTypeWrapper<Reply>,
+  Channel: ResolverTypeWrapper<Channel>,
+  ChannelType: ChannelType,
   Membership: ResolverTypeWrapper<Membership>,
   MemberType: MemberType,
   UserModeType: UserModeType,
-  Friend: ResolverTypeWrapper<Friend>,
+  Reply: ResolverTypeWrapper<Reply>,
   Mutation: ResolverTypeWrapper<{}>,
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
   NotificationCreateInput: NotificationCreateInput,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
+  ChannelInput: ChannelInput,
   Subscription: ResolverTypeWrapper<{}>,
+  Friend: ResolverTypeWrapper<Friend>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -388,19 +424,22 @@ export type ResolversParentTypes = {
   AuthType: AuthType,
   DateTime: Scalars['DateTime'],
   Notification: Notification,
-  Channel: Channel,
   Message: Message,
-  Reply: Reply,
+  Channel: Channel,
+  ChannelType: ChannelType,
   Membership: Membership,
   MemberType: MemberType,
   UserModeType: UserModeType,
-  Friend: Friend,
+  Reply: Reply,
   Mutation: {},
   AuthPayload: AuthPayload,
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
   NotificationCreateInput: NotificationCreateInput,
+  Int: Scalars['Int'],
+  ChannelInput: ChannelInput,
   Subscription: {},
+  Friend: Friend,
 };
 
 export type AuthPayloadResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = {
@@ -410,7 +449,8 @@ export type AuthPayloadResolvers<ContextType = MyContext, ParentType extends Res
 
 export type ChannelResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Channel'] = ResolversParentTypes['Channel']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  type?: Resolver<Maybe<ResolversTypes['ChannelType']>, ParentType, ContextType>,
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   messages?: Resolver<Maybe<Array<Maybe<ResolversTypes['Message']>>>, ParentType, ContextType>,
   membership?: Resolver<Maybe<ResolversTypes['Membership']>, ParentType, ContextType>,
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
@@ -467,9 +507,13 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   signInApple?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInAppleArgs, 'socialUser'>>,
   signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>,
   addNotificationToken?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<MutationAddNotificationTokenArgs, 'notification'>>,
+  removeNotificationToken?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationRemoveNotificationTokenArgs, 'token'>>,
   updateProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'user'>>,
   addFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddFriendArgs, 'friendId'>>,
   deleteFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteFriendArgs, 'friendId'>>,
+  createChannel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType, MutationCreateChannelArgs>,
+  updateChannel?: Resolver<ResolversTypes['Int'], ParentType, ContextType, MutationUpdateChannelArgs>,
+  deleteChannel?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>,
 };
 
 export type NotificationResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification']> = {
@@ -488,7 +532,7 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
   findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryFindPasswordArgs, 'email'>>,
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
   channels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType>,
-  friends?: Resolver<Array<ResolversTypes['Friend']>, ParentType, ContextType>,
+  friends?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>,
 };
 
 export type ReplyResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Reply'] = ResolversParentTypes['Reply']> = {
@@ -526,8 +570,6 @@ export type UserResolvers<ContextType = MyContext, ParentType extends ResolversP
   isOnline?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
   lastSignedIn?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   notifications?: Resolver<Maybe<Array<Maybe<ResolversTypes['Notification']>>>, ParentType, ContextType>,
-  channels?: Resolver<Maybe<Array<Maybe<ResolversTypes['Channel']>>>, ParentType, ContextType>,
-  friends?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>,
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,

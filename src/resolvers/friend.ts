@@ -1,27 +1,34 @@
-import { Friend, Resolvers, User } from '../generated/graphql';
+import { Resolvers, User } from '../generated/graphql';
 
 import { AuthenticationError } from 'apollo-server-core';
+import { Op } from 'sequelize';
 import { withFilter } from 'apollo-server';
 
 const FRIENDS_CHANGED = 'FRIENDS_CHANGED';
 
 const resolver: Resolvers = {
   Query: {
-    friends: async (_, args, { getUser, models }): Promise<Friend[]> => {
+    friends: async (_, args, { getUser, models }): Promise<User[]> => {
       const auth = await getUser();
 
       if (!auth) throw new AuthenticationError('User is not signed in');
 
       const { Friend: friendModel, User: userModel } = models;
 
-      const friends = await friendModel.findAll({
-        where: { userId: { $eq: auth.id } },
-        include: [
-          {
-            model: userModel,
-            as: 'user',
-          },
-        ],
+      const friendIds = await friendModel.findAll({
+        attributes: ['userId'],
+        where: { userId: { [Op.eq]: auth.id } },
+        raw: true,
+      });
+
+      const friendArray = [];
+      friendIds.forEach((friendId) => {
+        friendArray.push(friendId.userId);
+      });
+
+      const friends = await userModel.findAll({
+        where: { id: { [Op.in]: friendArray } },
+        raw: true,
       });
 
       return friends;

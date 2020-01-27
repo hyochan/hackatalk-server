@@ -33,8 +33,6 @@ type User {
   isOnline: Boolean
   lastSignedIn: DateTime
   notifications: [Notification]
-  channels: [Channel]
-  friends: [User]
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime

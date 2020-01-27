@@ -1,6 +1,7 @@
 import {
   AuthPayload,
   Channel,
+  Friend,
   Notification,
   Resolvers,
   SocialUserInput,
@@ -249,27 +250,6 @@ your password will reset to <strong>dooboolab2017</strong>.
     },
   },
   User: {
-    channels: async (_, args, { models }): Promise<Channel[]> => {
-      const { id } = _;
-      const { Channel: channelModel, User: userModel } = models;
-
-      const channels = await channelModel.findAll({
-        where: {
-          $or: [{
-            ownerId: { $eq: id },
-            userId: { $eq: id },
-          }],
-        },
-        include: [
-          {
-            model: userModel,
-            as: 'owner',
-          },
-        ],
-      });
-
-      return channels;
-    },
     notifications: (_, args, { models }): Promise<Notification[]> => {
       const { id } = _;
       const { Notification: notificationModel } = models;

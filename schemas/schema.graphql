@@ -13,7 +13,7 @@ type Query {
   findPassword(email: String!): Boolean
   messages: [Message!]!
   channels: [Channel!]!
-  friends: [Friend!]!
+  friends: [User!]!
 }
 
 type Mutation {
@@ -23,9 +23,13 @@ type Mutation {
   signInApple(socialUser: SocialUserInput!): AuthPayload!
   signUp(user: UserInput!): AuthPayload!
   addNotificationToken(notification: NotificationCreateInput!): Notification
+  removeNotificationToken(token: String!): Int!
   updateProfile(user: UserInput!): User
   addFriend(friendId: ID!): User
   deleteFriend(friendId: ID!): User
+  createChannel(channel: ChannelInput): Channel
+  updateChannel(channel: ChannelInput): Int!
+  deleteChannel(channelId: ID!): Int!
 }
 
 type Subscription {

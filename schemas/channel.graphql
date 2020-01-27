@@ -3,12 +3,24 @@
 
 scalar DateTime
 
+enum ChannelType {
+  PRIVATE,
+  PUBLIC
+}
+
 type Channel {
   id: ID!
-  type: String
+  type: ChannelType
+  name: String
   messages: [Message]
   membership: Membership
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
+}
+
+input ChannelInput {
+  type: ChannelType
+  name: String
+  friendsId: [String!]!
 }
