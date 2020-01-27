@@ -14,3 +14,8 @@ type Friend {
   updatedAt: DateTime
   deletedAt: DateTime
 }
+
+type FriendSub {
+  user: User
+  action: FriendSubAction
+}

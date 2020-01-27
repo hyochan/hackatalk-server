@@ -57,9 +57,8 @@ const resolver: Resolvers = {
         );
 
         pubsub.publish(FRIENDS_CHANGED, {
-          friendsChanged: {
-            userId: auth.id,
-            friend: user,
+          friendChanged: {
+            user,
             action: FriendSubAction.Added,
           },
         });
@@ -92,10 +91,9 @@ const resolver: Resolvers = {
         );
 
         pubsub.publish(FRIENDS_CHANGED, {
-          friendsChanged: {
-            userId: auth.id,
-            friend: user,
-            action: FriendSubAction.Added,
+          friendChanged: {
+            user,
+            action: FriendSubAction.Deleted,
           },
         });
         return user;
@@ -105,12 +103,12 @@ const resolver: Resolvers = {
     },
   },
   Subscription: {
-    friendsChanged: {
+    friendChanged: {
       subscribe: withFilter(
         (_, args, { pubsub }) => pubsub.asyncIterator(FRIENDS_CHANGED),
         (payload, { userId }) => {
-          const { friendsChanged } = payload;
-          return friendsChanged.userId === userId;
+          const { friendChanged } = payload;
+          return friendChanged.userId === userId;
         },
       ),
     },

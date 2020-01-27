@@ -35,5 +35,5 @@ type Mutation {
 type Subscription {
   userSignedIn: User
   userUpdated: User
-  friendsChanged(userId: ID! friend: User action: FriendSubAction): User
+  friendChanged(userId: ID!): FriendSub
 }

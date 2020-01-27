@@ -61,6 +61,12 @@ export type Friend = {
   deletedAt?: Maybe<Scalars['DateTime']>,
 };
 
+export type FriendSub = {
+   __typename?: 'FriendSub',
+  user?: Maybe<User>,
+  action?: Maybe<FriendSubAction>,
+};
+
 export enum FriendSubAction {
   Added = 'ADDED',
   Updated = 'UPDATED',
@@ -260,14 +266,12 @@ export type Subscription = {
    __typename?: 'Subscription',
   userSignedIn?: Maybe<User>,
   userUpdated?: Maybe<User>,
-  friendsChanged?: Maybe<User>,
+  friendChanged?: Maybe<FriendSub>,
 };
 
 
-export type SubscriptionFriendsChangedArgs = {
-  userId: Scalars['ID'],
-  friend?: Maybe<User>,
-  action?: Maybe<FriendSubAction>
+export type SubscriptionFriendChangedArgs = {
+  userId: Scalars['ID']
 };
 
 export type User = {
@@ -416,6 +420,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']>,
   ChannelInput: ChannelInput,
   Subscription: ResolverTypeWrapper<{}>,
+  FriendSub: ResolverTypeWrapper<FriendSub>,
   FriendSubAction: FriendSubAction,
   Friend: ResolverTypeWrapper<Friend>,
 };
@@ -448,6 +453,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int'],
   ChannelInput: ChannelInput,
   Subscription: {},
+  FriendSub: FriendSub,
   FriendSubAction: FriendSubAction,
   Friend: Friend,
 };
@@ -483,6 +489,11 @@ export type FriendResolvers<ContextType = MyContext, ParentType extends Resolver
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+};
+
+export type FriendSubResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['FriendSub'] = ResolversParentTypes['FriendSub']> = {
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
+  action?: Resolver<Maybe<ResolversTypes['FriendSubAction']>, ParentType, ContextType>,
 };
 
 export type MembershipResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Membership'] = ResolversParentTypes['Membership']> = {
@@ -560,7 +571,7 @@ export type ReplyResolvers<ContextType = MyContext, ParentType extends Resolvers
 export type SubscriptionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
   userSignedIn?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "userSignedIn", ParentType, ContextType>,
   userUpdated?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "userUpdated", ParentType, ContextType>,
-  friendsChanged?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "friendsChanged", ParentType, ContextType, RequireFields<SubscriptionFriendsChangedArgs, 'userId'>>,
+  friendChanged?: SubscriptionResolver<Maybe<ResolversTypes['FriendSub']>, "friendChanged", ParentType, ContextType, RequireFields<SubscriptionFriendChangedArgs, 'userId'>>,
 };
 
 export type UserResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -591,6 +602,7 @@ export type Resolvers<ContextType = MyContext> = {
   Date?: GraphQLScalarType,
   DateTime?: GraphQLScalarType,
   Friend?: FriendResolvers<ContextType>,
+  FriendSub?: FriendSubResolvers<ContextType>,
   Membership?: MembershipResolvers<ContextType>,
   Message?: MessageResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,
