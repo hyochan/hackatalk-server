@@ -1,3 +1,4 @@
+import Channel from './channel';
 import Chat from './message';
 import Friend from './friend';
 import Notification from './notification';
@@ -8,6 +9,7 @@ export const allResolvers = [
   Friend,
   Notification,
   User,
+  Channel,
 ];
 
 export default {
@@ -15,4 +17,5 @@ export default {
   Friend,
   Chat,
   Notification,
+  Channel,
 };

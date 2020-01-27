@@ -1,5 +1,11 @@
 scalar DateTime
 
+enum FriendSubAction {
+  ADDED,
+  UPDATED,
+  DELETED,
+}
+
 type Friend {
   id: ID!
   user: User
@@ -7,4 +13,9 @@ type Friend {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
+}
+
+type FriendSub {
+  user: User
+  action: FriendSubAction
 }

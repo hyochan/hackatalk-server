@@ -3,19 +3,19 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
    return queryInterface.addColumn(
-      'users',
-      'thumbURL',
+      'channels',
+      'name',
       {
         type: Sequelize.STRING,
-        before: "photoURL",
+        after: "type",
       },
     );
   },
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.removeColumn(
-      'users',
-      'thumbURL',
+      'channels',
+      'name',
     );
   }
 };

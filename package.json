@@ -21,6 +21,8 @@
     "generate": "graphql-codegen --config codegen.yml",
     "codecov": "codecov",
     "migrate:generate": "sequelize-cli migration:generate --name",
+    "migrate:local": "cross-env NODE_ENV=local sequelize db:migrate",
+    "migrate:test": "cross-env NODE_ENV=test sequelize db:migrate",
     "migrate:dev": "cross-env NODE_ENV=development sequelize db:migrate",
     "migrate:prod": "cross-env NODE_ENV=production sequelize db:migrate",
     "migrate": "yarn migrate:dev && yarn migrate:prod"
