@@ -118,13 +118,14 @@ export type Mutation = {
   signInApple: AuthPayload,
   signUp: AuthPayload,
   addNotificationToken?: Maybe<Notification>,
-  removeNotificationToken: Scalars['Int'],
+  removeNotificationToken?: Maybe<Scalars['Int']>,
   updateProfile?: Maybe<User>,
   addFriend?: Maybe<User>,
   deleteFriend?: Maybe<User>,
   createChannel?: Maybe<Channel>,
-  updateChannel: Scalars['Int'],
-  deleteChannel: Scalars['Int'],
+  updateChannel?: Maybe<Scalars['Int']>,
+  deleteChannel?: Maybe<Scalars['Int']>,
+  setOnlineStatus?: Maybe<Scalars['Int']>,
 };
 
 
@@ -191,6 +192,11 @@ export type MutationUpdateChannelArgs = {
 
 export type MutationDeleteChannelArgs = {
   channelId: Scalars['ID']
+};
+
+
+export type MutationSetOnlineStatusArgs = {
+  isOnline?: Maybe<Scalars['Boolean']>
 };
 
 export type Notification = {
@@ -528,13 +534,14 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   signInApple?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInAppleArgs, 'socialUser'>>,
   signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>,
   addNotificationToken?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<MutationAddNotificationTokenArgs, 'notification'>>,
-  removeNotificationToken?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationRemoveNotificationTokenArgs, 'token'>>,
+  removeNotificationToken?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationRemoveNotificationTokenArgs, 'token'>>,
   updateProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'user'>>,
   addFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddFriendArgs, 'friendId'>>,
   deleteFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteFriendArgs, 'friendId'>>,
   createChannel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType, MutationCreateChannelArgs>,
-  updateChannel?: Resolver<ResolversTypes['Int'], ParentType, ContextType, MutationUpdateChannelArgs>,
-  deleteChannel?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>,
+  updateChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, MutationUpdateChannelArgs>,
+  deleteChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>,
+  setOnlineStatus?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, MutationSetOnlineStatusArgs>,
 };
 
 export type NotificationResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification']> = {

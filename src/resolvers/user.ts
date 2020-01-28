@@ -230,6 +230,29 @@ your password will reset to <strong>dooboolab2017</strong>.
         throw new Error(err);
       }
     },
+    setOnlineStatus: async (_, args, { getUser, models, pubsub }): Promise<number> => {
+      try {
+        const auth = await getUser();
+        if (!auth) { throw new AuthenticationError('User is not logged in'); }
+
+        const update = models.User.update(
+          {
+            isOnline: args.isOnline || false,
+          },
+          {
+            where: {
+              id: auth.id,
+            },
+          },
+        );
+
+        pubsub.publish(USER_UPDATED, { user: auth });
+
+        return update[0];
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
   },
   Subscription: {
     userSignedIn: {

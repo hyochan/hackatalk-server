@@ -23,13 +23,14 @@ type Mutation {
   signInApple(socialUser: SocialUserInput!): AuthPayload!
   signUp(user: UserInput!): AuthPayload!
   addNotificationToken(notification: NotificationCreateInput!): Notification
-  removeNotificationToken(token: String!): Int!
+  removeNotificationToken(token: String!): Int
   updateProfile(user: UserInput!): User
   addFriend(friendId: ID!): User
   deleteFriend(friendId: ID!): User
   createChannel(channel: ChannelInput): Channel
-  updateChannel(channel: ChannelInput): Int!
-  deleteChannel(channelId: ID!): Int!
+  updateChannel(channel: ChannelInput): Int
+  deleteChannel(channelId: ID!): Int
+  setOnlineStatus(isOnline: Boolean): Int
 }
 
 type Subscription {
