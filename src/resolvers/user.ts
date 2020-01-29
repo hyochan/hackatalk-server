@@ -82,7 +82,7 @@ const resolver: Resolvers = {
 
       if (!auth) throw new AuthenticationError('User is not signed in');
 
-      if (!args.includeUser) {
+      if (args.includeUser === false) {
         return userModel.findAll({
           where: {
             ...args.user,
