@@ -1,0 +1,10 @@
+scalar DateTime
+
+type Photo {
+  id: String!
+  thumbURL: String
+  photoURL: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  deletedAt: DateTime
+}

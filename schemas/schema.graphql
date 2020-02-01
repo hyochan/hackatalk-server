@@ -5,6 +5,7 @@
 # import Message from "message.graphql"
 # import Friend from "friend.graphql"
 # import Membership from "membership.graphql"
+# import Photo from "photo.graphql"
 
 type Query {
   users(user: UserQueryInput, includeUser: Boolean): [User!]!
