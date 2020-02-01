@@ -12,6 +12,7 @@ import { Role, encryptCredential, validateCredential, validateEmail } from '../u
 import { AuthType } from '../models/User';
 import { AuthenticationError } from 'apollo-server-core';
 import { ModelType } from '../models';
+import { Op } from 'sequelize';
 import SendGridMail from '@sendgrid/mail';
 import jwt from 'jsonwebtoken';
 import qs from 'querystring';
@@ -31,7 +32,7 @@ const signInWithSocialAccount = async (
     const emailUser = await userModel.findOne({
       where: {
         email: socialUser.email,
-        socialId: { $ne: socialUser.socialId },
+        socialId: { [Op.ne]: socialUser.socialId },
       },
       raw: true,
     });
@@ -87,7 +88,7 @@ const resolver: Resolvers = {
           where: {
             ...args.user,
             id: {
-              $ne: auth.id,
+              [Op.ne]: auth.id,
             },
           },
         });
