@@ -1,6 +1,7 @@
 # import Reply from "reply.graphql"
 # import User from "user.graphql"
 # import Channel from "channel.graphql"
+# import Photo from "photo.graphql"
 
 scalar DateTime
 
@@ -10,6 +11,7 @@ type Message {
   sender: User
   type: String
   text: String
+  picture: [Photo]
   filePath: String
   replies: [Reply]
   createdAt: DateTime

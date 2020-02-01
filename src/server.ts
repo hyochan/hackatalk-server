@@ -3,7 +3,6 @@ import models, { ModelType } from './models';
 
 import { ApolloServer } from 'apollo-server-express';
 import { Http2Server } from 'http2';
-import { Op } from 'sequelize';
 import { PubSub } from 'graphql-subscriptions';
 import SendGridMail from '@sendgrid/mail';
 import { User } from './models/User';
