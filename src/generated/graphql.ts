@@ -31,7 +31,7 @@ export type Channel = {
   createdAt: Scalars['DateTime'],
   deletedAt?: Maybe<Scalars['DateTime']>,
   id: Scalars['ID'],
-  membership?: Maybe<Membership>,
+  membership?: Maybe<Array<Maybe<Membership>>>,
   messages?: Maybe<Array<Maybe<Message>>>,
   name?: Maybe<Scalars['String']>,
   type?: Maybe<ChannelType>,
@@ -41,7 +41,7 @@ export type Channel = {
 export type ChannelInput = {
   type?: Maybe<ChannelType>,
   name?: Maybe<Scalars['String']>,
-  friendsId: Array<Scalars['String']>,
+  friendIds: Array<Scalars['String']>,
 };
 
 export enum ChannelType {
@@ -489,7 +489,7 @@ export type ChannelResolvers<ContextType = MyContext, ParentType extends Resolve
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
-  membership?: Resolver<Maybe<ResolversTypes['Membership']>, ParentType, ContextType>,
+  membership?: Resolver<Maybe<Array<Maybe<ResolversTypes['Membership']>>>, ParentType, ContextType>,
   messages?: Resolver<Maybe<Array<Maybe<ResolversTypes['Message']>>>, ParentType, ContextType>,
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   type?: Resolver<Maybe<ResolversTypes['ChannelType']>, ParentType, ContextType>,

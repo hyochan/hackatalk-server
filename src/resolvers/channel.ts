@@ -1,7 +1,7 @@
-import { Channel, Resolvers } from '../generated/graphql';
+import { Channel, Membership, Message, Resolvers } from '../generated/graphql';
 
 import { AuthenticationError } from 'apollo-server-core';
-import { ChannelType } from '../models/Channel';
+import { MemberType } from '../models/Membership';
 import { Op } from 'sequelize';
 
 const resolver: Resolvers = {
@@ -38,19 +38,50 @@ const resolver: Resolvers = {
       if (!auth) throw new AuthenticationError('User is not signed in');
 
       const { Membership: membershipModel, Channel: channelModel } = models;
-      const { name, type, friendsId } = args.channel;
+      const { name, type, friendIds } = args.channel;
 
-      /**
-       * TODO
-       * 1. Check if there is a membership with only two users with `PRIVATE` type.
-       * 2. Create new channel
-       */
+      if (!friendIds || friendIds.length === 0) throw new Error('friendIds is required');
+
+      const channelMembers = [auth.id, ...friendIds];
       const channel = await channelModel.create({
         name,
         type,
       });
 
+      const membershipData = channelMembers.map((userId) => {
+        return {
+          userId,
+          channelId: channel.id,
+          ...((userId === auth.id || channelMembers.length === 2) && {
+            type: MemberType.Owner,
+          }),
+        };
+      });
+      await membershipModel.bulkCreate(membershipData);
+
       return channel;
+    },
+  },
+  Channel: {
+    membership: (_, args, { models }): Promise<Membership[]> => {
+      const { id } = _;
+      const { Membership: membershipModel } = models;
+
+      return membershipModel.findAll({
+        where: {
+          channelId: id,
+        },
+      });
+    },
+    messages: (_, args, { models }): Promise<Message[]> => {
+      const { id } = _;
+      const { Message: messageModel } = models;
+
+      return messageModel.findAll({
+        where: {
+          channelId: id,
+        },
+      });
     },
   },
 };
