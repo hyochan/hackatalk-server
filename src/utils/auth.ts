@@ -22,6 +22,17 @@ export interface Auth {
   role: Role;
 }
 
+// eslint-disable-next-line
+export const getToken = (req: Express.Request & any): string => {
+  const authHeader = req.get('Authorization');
+
+  if (!authHeader) {
+    return null;
+  }
+
+  return authHeader.replace('Bearer ', '');
+};
+
 export const validateEmail = (email: string): boolean => {
   // eslint-disable-next-line max-len
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

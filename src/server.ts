@@ -1,4 +1,4 @@
-import { JWT_SECRET, verifyUser } from './utils/auth';
+import { JWT_SECRET, getToken, verifyUser } from './utils/auth';
 import models, { ModelType } from './models';
 
 import { ApolloServer } from 'apollo-server-express';
@@ -16,17 +16,6 @@ SendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const { PORT = 4000 } = process.env;
 const pubsub = new PubSub();
-
-// eslint-disable-next-line
-const getToken = (req: Express.Request & any): string => {
-  const authHeader = req.get('Authorization');
-
-  if (!authHeader) {
-    return null;
-  }
-
-  return authHeader.replace('Bearer ', '');
-};
 
 const createApolloServer = (): ApolloServer => new ApolloServer({
   typeDefs: importSchema('schemas/schema.graphql'),
