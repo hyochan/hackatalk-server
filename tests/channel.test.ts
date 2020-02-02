@@ -1,8 +1,16 @@
 import { GraphQLClient, request } from 'graphql-request';
+
+import { Http2Server } from 'http2';
+import { createApp } from '../src/app';
 import sequelize from '../src/db';
+import { startServer } from '../src/server';
+
+const port = 4000;
+const testHost = `http://localhost:${port}/graphql`;
 
 describe('Resolver - Channel', () => {
-  const { TEST_HOST, createTestUser } = global as any;
+  let server: Http2Server;
+
   let client: GraphQLClient;
   const mutation = /* GraphQL */`
     mutation createChannel($channel: ChannelInput){
@@ -14,11 +22,45 @@ describe('Resolver - Channel', () => {
     }
   `;
 
+  const signUpMutationUser1 = /* GraphQL */`
+    mutation {
+      signUp(user: {
+        email: "test-1@dooboo.com"
+        password: "test-1"
+        name: "test-1"
+      }) {
+        token,
+        user {
+          email
+        }
+      }
+    }
+  `;
+
+  const signUpMutationUser2 = /* GraphQL */`
+    mutation {
+      signUp(user: {
+        email: "test-2@dooboo.com"
+        password: "test-2"
+        name: "test-2"
+      }) {
+        token,
+        user {
+          email
+        }
+      }
+    }
+  `;
+
   beforeAll(async () => {
-    const testUser = await createTestUser('test-1');
-    client = new GraphQLClient(TEST_HOST, {
+    const app = createApp();
+    await sequelize.sync({ force: true });
+    server = await startServer(app);
+
+    const { signUp } = await request(testHost, signUpMutationUser1);
+    client = new GraphQLClient(testHost, {
       headers: {
-        authorization: `Bearer ${testUser.token}`,
+        authorization: signUp.token,
       },
     });
   });
@@ -31,7 +73,7 @@ describe('Resolver - Channel', () => {
       },
     };
 
-    const promise = request(TEST_HOST, mutation, variables);
+    const promise = request(testHost, mutation, variables);
     expect(promise).rejects.toThrow('User is not signed in');
   });
 
@@ -48,10 +90,10 @@ describe('Resolver - Channel', () => {
   });
 
   it('should return channel id and name', async () => {
-    const testUser = await createTestUser('test-2');
+    const { signUp } = await request(testHost, signUpMutationUser2);
     const variables = {
       channel: {
-        friendIds: [testUser.user.id],
+        friendIds: [signUp.user.id],
         name: 'test-channel',
       },
     };
@@ -62,6 +104,6 @@ describe('Resolver - Channel', () => {
   });
 
   afterAll(async () => {
-    await sequelize.drop();
+    server.close();
   });
 });

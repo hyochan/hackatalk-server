@@ -45,7 +45,7 @@ Membership.init({
   },
 }, {
   sequelize,
-  indexes: [{ unique: true, fields: ['channelId', 'userId'] }],
+  // indexes: [{ unique: true, fields: ['channelId', 'userId'] }],
   modelName: 'membership',
   timestamps: true,
   paranoid: true,

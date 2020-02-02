@@ -1,9 +1,15 @@
+import { Http2Server } from 'http2';
+import { createApp } from '../src/app';
 import { request } from 'graphql-request';
 import sequelize from '../src/db';
+import { startServer } from '../src/server';
+
+const port = 4000;
+const testHost = `http://localhost:${port}/graphql`;
 
 describe('Resolver - User', () => {
-  const { TEST_HOST } = global as any;
-  const name = 'dooboo10';
+  let server: Http2Server;
+  const name = 'dooboo1';
   const email = `${name}@dooboo.com`;
   const password = 'password';
 
@@ -22,8 +28,14 @@ describe('Resolver - User', () => {
     }
   `;
 
+  beforeAll(async () => {
+    const app = createApp();
+    await sequelize.sync({ force: true });
+    server = await startServer(app);
+  });
+
   it('should signUp user', async () => {
-    const response = await request(TEST_HOST, mutation);
+    const response = await request(testHost, mutation);
 
     expect(response).toHaveProperty('signUp');
     expect(response.signUp).toHaveProperty('token');
@@ -32,6 +44,6 @@ describe('Resolver - User', () => {
   });
 
   afterAll(async () => {
-    await sequelize.drop();
+    server.close();
   });
 });
