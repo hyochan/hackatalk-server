@@ -236,7 +236,7 @@ your password will reset to <strong>dooboolab2017</strong>.
         const auth = await getUser();
         if (!auth) { throw new AuthenticationError('User is not logged in'); }
 
-        const update = models.User.update(
+        const update = await models.User.update(
           {
             isOnline: args.isOnline || false,
           },
