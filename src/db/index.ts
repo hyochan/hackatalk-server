@@ -8,8 +8,8 @@ const sequelize = new Sequelize(
   config,
 );
 
-if (process.env.NODE_ENV !== 'test') {
-  sequelize.sync();
-}
+sequelize.sync({
+  force: !!(process.env.NODE_ENV === 'test'),
+});
 
 export default sequelize;
