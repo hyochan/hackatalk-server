@@ -6,10 +6,12 @@ const {
   STORAGE_KEY,
 } = process.env;
 
-export const blobService = AzureStorage.createBlobService(
-  STORAGE_ACCOUNT,
-  STORAGE_KEY,
-);
+const blobService = STORAGE_ACCOUNT
+  ? AzureStorage.createBlobService(
+    STORAGE_ACCOUNT,
+    STORAGE_KEY,
+  )
+  : undefined;
 
 export const uploadFileToAzureBlobFromFile = (
   file: string,
