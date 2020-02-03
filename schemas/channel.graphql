@@ -13,7 +13,7 @@ type Channel {
   type: ChannelType
   name: String
   messages: [Message]
-  membership: [Membership]
+  memberships: [Membership]
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime

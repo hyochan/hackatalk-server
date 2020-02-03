@@ -63,7 +63,7 @@ const resolver: Resolvers = {
     },
   },
   Channel: {
-    membership: (_, args, { models }): Promise<Membership[]> => {
+    memberships: (_, args, { models }): Promise<Membership[]> => {
       const { id } = _;
       const { Membership: membershipModel } = models;
 
