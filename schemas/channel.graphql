@@ -14,6 +14,7 @@ type Channel {
   name: String
   messages: [Message]
   memberships: [Membership]
+  myMembership: Membership
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime

@@ -73,6 +73,18 @@ const resolver: Resolvers = {
         },
       });
     },
+    myMembership: async (_, args, { getUser, models }): Promise<Membership> => {
+      const { id: userId } = await getUser();
+      const { id: channelId } = _;
+      const { Membership: membershipModel } = models;
+
+      return membershipModel.findOne({
+        where: {
+          channelId,
+          userId,
+        },
+      });
+    },
     messages: (_, args, { models }): Promise<Message[]> => {
       const { id } = _;
       const { Message: messageModel } = models;
