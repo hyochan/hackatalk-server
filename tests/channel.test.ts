@@ -1,16 +1,8 @@
 import { GraphQLClient, request } from 'graphql-request';
 
-import { Http2Server } from 'http2';
-import { createApp } from '../src/app';
-import sequelize from '../src/db';
-import { startServer } from '../src/server';
-
-const port = 4000;
-const testHost = `http://localhost:${port}/graphql`;
+import { testHost } from './testSetup';
 
 describe('Resolver - Channel', () => {
-  let server: Http2Server;
-
   let client: GraphQLClient;
   const mutation = /* GraphQL */`
     mutation createChannel($channel: ChannelInput){
@@ -53,10 +45,6 @@ describe('Resolver - Channel', () => {
   `;
 
   beforeAll(async () => {
-    const app = createApp();
-    await sequelize.sync({ force: true });
-    server = await startServer(app);
-
     const { signUp } = await request(testHost, signUpMutationUser1);
     client = new GraphQLClient(testHost, {
       headers: {
@@ -101,9 +89,5 @@ describe('Resolver - Channel', () => {
     expect(promise).resolves.toHaveProperty('createChannel.id');
     expect(promise).resolves.toHaveProperty('createChannel.name');
     expect(promise).resolves.toHaveProperty('createChannel.type');
-  });
-
-  afterAll(async () => {
-    server.close();
   });
 });

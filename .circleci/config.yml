@@ -76,7 +76,7 @@ jobs:
           name: Jest test
           working_directory: .
           command: |
-            yarn test --coverage --silent --detectOpenHandles --runInBand
+            yarn test --coverage --silent --detectOpenHandles
 
       - codecov/upload:
           file: ./coverage/lcov.info
