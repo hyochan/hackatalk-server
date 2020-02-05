@@ -6,15 +6,15 @@ import { Op } from 'sequelize';
 
 const resolver: Resolvers = {
   Query: {
-    channels: async (_, args, { getUser, models }): Promise<Channel[]> => {
-      const auth = await getUser();
+    channels: async (_, args, { verifyUser, models }): Promise<Channel[]> => {
+      const auth = verifyUser();
 
       if (!auth) throw new AuthenticationError('User is not signed in');
 
       const { Channel: channelModel, Membership: membershipModel } = models;
 
       const memberships = await membershipModel.findAll({
-        where: { userId: auth.id },
+        where: { userId: auth.userId },
         raw: true,
       });
 
@@ -32,8 +32,8 @@ const resolver: Resolvers = {
     },
   },
   Mutation: {
-    createChannel: async (_, args, { getUser, models }): Promise<Channel> => {
-      const auth = await getUser();
+    createChannel: async (_, args, { verifyUser, models }): Promise<Channel> => {
+      const auth = verifyUser();
 
       if (!auth) throw new AuthenticationError('User is not signed in');
 
@@ -42,7 +42,7 @@ const resolver: Resolvers = {
 
       if (!friendIds || friendIds.length === 0) throw new Error('friendIds is required');
 
-      const channelMembers = [auth.id, ...friendIds];
+      const channelMembers = [auth.userId, ...friendIds];
       const channel = await channelModel.create({
         name,
         type,
@@ -52,7 +52,7 @@ const resolver: Resolvers = {
         return {
           userId,
           channelId: channel.id,
-          ...((userId === auth.id || channelMembers.length === 2) && {
+          ...((userId === auth.userId || channelMembers.length === 2) && {
             type: MemberType.Owner,
           }),
         };
@@ -73,8 +73,8 @@ const resolver: Resolvers = {
         },
       });
     },
-    myMembership: async (_, args, { getUser, models }): Promise<Membership> => {
-      const { id: userId } = await getUser();
+    myMembership: (_, args, { verifyUser, models }): Promise<Membership> => {
+      const { userId } = verifyUser();
       const { id: channelId } = _;
       const { Membership: membershipModel } = models;
 

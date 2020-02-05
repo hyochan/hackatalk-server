@@ -1,8 +1,8 @@
-import { JWT_SECRET, getToken, verifyUser } from './utils/auth';
-import models, { ModelType } from './models';
+import { JWT_SECRET, JwtUser, getToken, verifyUser } from './utils/auth';
 
 import { ApolloServer } from 'apollo-server-express';
 import { Http2Server } from 'http2';
+import { MyContext } from './context';
 import { PubSub } from 'graphql-subscriptions';
 import SendGridMail from '@sendgrid/mail';
 import { User } from './models/User';
@@ -11,6 +11,7 @@ import { createApp } from './app';
 import { createServer as createHttpServer } from 'http';
 import express from 'express';
 import { importSchema } from 'graphql-import';
+import models from './models';
 
 SendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -19,12 +20,14 @@ const pubsub = new PubSub();
 
 const createApolloServer = (): ApolloServer => new ApolloServer({
   typeDefs: importSchema('schemas/schema.graphql'),
-  context: ({ req }): {
-    getUser: () => Promise<User>;
-    models: ModelType;
-    pubsub: PubSub;
-    appSecret: string;
-  } => ({
+  context: ({ req }): MyContext => ({
+    verifyUser: (): JwtUser => {
+      const token = getToken(req);
+      if (!token) {
+        return null;
+      }
+      return verifyUser(token);
+    },
     getUser: (): Promise<User> => {
       const { User: userModel } = models;
       const token = getToken(req);
