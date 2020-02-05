@@ -1,7 +1,5 @@
 import {
   AuthPayload,
-  Channel,
-  Friend,
   Notification,
   Resolvers,
   SocialUserInput,
@@ -77,9 +75,9 @@ const resolver: Resolvers = {
       const auth = await getUser();
       return auth;
     },
-    users: async (_, args, { getUser, models }): Promise<User[]> => {
+    users: async (_, args, { verifyUser, models }): Promise<User[]> => {
       const { User: userModel } = models;
-      const auth = await getUser();
+      const auth = verifyUser();
 
       if (!auth) throw new AuthenticationError('User is not signed in');
 
@@ -88,7 +86,7 @@ const resolver: Resolvers = {
           where: {
             ...args.user,
             id: {
-              [Op.ne]: auth.id,
+              [Op.ne]: auth.userId,
             },
           },
         });
@@ -201,9 +199,9 @@ your password will reset to <strong>dooboolab2017</strong>.
 
       return { token, user };
     },
-    updateProfile: async (_, args, { getUser, models, pubsub }): Promise<User> => {
+    updateProfile: async (_, args, { verifyUser, models, pubsub }): Promise<User> => {
       try {
-        const auth = await getUser();
+        const auth = verifyUser();
         if (!auth) {
           throw new AuthenticationError(
             'User is not logged in',
@@ -213,14 +211,14 @@ your password will reset to <strong>dooboolab2017</strong>.
           args.user,
           {
             where: {
-              id: auth.id,
+              id: auth.userId,
             },
           },
         );
 
         const user = await models.User.findOne({
           where: {
-            id: auth.id,
+            id: auth.userId,
           },
           raw: true,
         });
@@ -231,9 +229,9 @@ your password will reset to <strong>dooboolab2017</strong>.
         throw new Error(err);
       }
     },
-    setOnlineStatus: async (_, args, { getUser, models, pubsub }): Promise<number> => {
+    setOnlineStatus: async (_, args, { verifyUser, models, pubsub }): Promise<number> => {
       try {
-        const auth = await getUser();
+        const auth = verifyUser();
         if (!auth) { throw new AuthenticationError('User is not logged in'); }
 
         const update = await models.User.update(
@@ -242,7 +240,7 @@ your password will reset to <strong>dooboolab2017</strong>.
           },
           {
             where: {
-              id: auth.id,
+              id: auth.userId,
             },
           },
         );

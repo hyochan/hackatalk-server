@@ -7,7 +7,7 @@ export const { JWT_SECRET = 'undefined' } = process.env;
 
 export type Token = string;
 
-interface JwtUser {
+export interface JwtUser {
   userId: string;
   role: number;
   iat: number;

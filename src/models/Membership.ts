@@ -20,7 +20,7 @@ class Membership extends Model {
   public id!: string;
   public channelId!: string;
   public userId!: string;
-  public type: string;
+  public type: MemberType;
   public alert: boolean;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -35,6 +35,7 @@ Membership.init({
   },
   type: {
     type: ENUM('OWNER', 'MEMBER'),
+    defaultValue: MemberType.Member,
   },
   userAlert: {
     type: BOOLEAN,
@@ -44,7 +45,7 @@ Membership.init({
   },
 }, {
   sequelize,
-  indexes: [{ unique: true, fields: ['channelId', 'userId'] }],
+  // indexes: [{ unique: true, fields: ['channelId', 'userId'] }],
   modelName: 'membership',
   timestamps: true,
   paranoid: true,

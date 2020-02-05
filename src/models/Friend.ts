@@ -26,7 +26,7 @@ Friend.init({
   },
 }, {
   sequelize,
-  indexes: [{ unique: true, fields: ['friendId', 'userId'] }],
+  // indexes: [{ unique: true, fields: ['friendId', 'userId'] }],
   modelName: 'friend',
   timestamps: true,
   paranoid: true,
