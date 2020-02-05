@@ -14,7 +14,7 @@ beforeAll(async () => {
   await sequelize.sync({ force: true });
 });
 
-afterAll(() => {
-  sequelize.drop();
+afterAll(async () => {
+  await sequelize.drop();
   server.close();
 });
