@@ -57,7 +57,7 @@ const signInWithSocialAccount = async (
       birthday: socialUser.birthday,
       gender: socialUser.gender,
       phone: socialUser.phone,
-      verified: false,
+      verified: true,
     },
   });
 
