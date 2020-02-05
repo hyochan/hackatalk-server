@@ -196,26 +196,7 @@ your password will reset to <strong>dooboolab2017</strong>.
         appSecret,
       );
 
-      const hashedEmail = await encryptCredential(email);
-
-      const msg = {
-        to: email,
-        from: 'noreply@hackatalk.dev',
-        subject: '[HackaTalk] Verify your email address!',
-        html: `
-By clicking on
-<a href=
-"${process.env.REDIRECT_URL}/verify_email/${qs.escape(email)}/${qs.escape(hashedEmail)}"
->VERIFY EMAIL</a>,
-you are able to sign in to <strong>HackaTalk</strong> 🙌.
-        `,
-      };
-      try {
-        await SendGridMail.send(msg);
-        return { token, user };
-      } catch (err) {
-        throw new Error(`email sent failed\n${err.message}`);
-      }
+      return { token, user };
     },
     sendVerification: async (_, args, { models }): Promise<boolean> => {
       const { email } = args;
