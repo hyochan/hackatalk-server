@@ -5,7 +5,14 @@ import {
   SocialUserInput,
   User,
 } from '../generated/graphql';
-import { Role, encryptCredential, validateCredential, validateEmail } from '../utils/auth';
+import {
+  Role,
+  encryptCredential,
+  getEmailVerificationHTML,
+  getPasswordResetHTML,
+  validateCredential,
+  validateEmail,
+} from '../utils/auth';
 
 import { AuthType } from '../models/User';
 import { AuthenticationError } from 'apollo-server-core';
@@ -13,7 +20,6 @@ import { ModelType } from '../models';
 import { Op } from 'sequelize';
 import SendGridMail from '@sendgrid/mail';
 import jwt from 'jsonwebtoken';
-import qs from 'querystring';
 import { withFilter } from 'apollo-server';
 
 const USER_SIGNED_IN = 'USER_SIGNED_IN';
@@ -113,14 +119,8 @@ const resolver: Resolvers = {
       const msg = {
         to: email,
         from: 'noreply@hackatalk.dev',
-        subject: '[HackaTalk] Change your password!',
-        html: `
-By clicking on
-<a href=
-"${process.env.REDIRECT_URL}/reset_password/${qs.escape(email)}/${qs.escape(hashedEmail)}"
->RESET PASSWORD</a>,
-your password will reset to <strong>dooboolab2017</strong>.
-        `,
+        subject: '[HackaTalk] Reset your password!',
+        html: getPasswordResetHTML(email, hashedEmail),
       };
       try {
         await SendGridMail.send(msg);
@@ -209,17 +209,12 @@ your password will reset to <strong>dooboolab2017</strong>.
 
         if (user) {
           const hashedEmail = await encryptCredential(email);
+          const html = getEmailVerificationHTML(email, hashedEmail);
           const msg = {
             to: email,
             from: 'noreply@hackatalk.dev',
             subject: '[HackaTalk] Verify your email address!',
-            html: `
-  By clicking on
-  <a href=
-  "${process.env.REDIRECT_URL}/verify_email/${qs.escape(email)}/${qs.escape(hashedEmail)}"
-  >VERIFY EMAIL</a>,
-  you are able to signin to <strong>HackaTalk</strong> 🙌.
-          `,
+            html,
           };
           await SendGridMail.send(msg);
           return true;
