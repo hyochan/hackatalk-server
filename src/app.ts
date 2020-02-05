@@ -1,11 +1,11 @@
 import { encryptCredential, getToken, validateCredential } from './utils/auth';
+import { resetPassword, verifyEmail } from './models/User';
 
 import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
 import multer from 'multer';
 import qs from 'querystring';
-import { resetPassword } from './models/User';
 import { uploadFileToAzureBlobFromFile } from './utils/azure';
 
 require('dotenv').config();
@@ -29,6 +29,23 @@ export const createApp = (): express.Application => {
         await resetPassword(email, password);
         return res.send(
           'Your password has successfully changed. Please sign in and change the password.',
+        );
+      }
+      res.send('Error occured. Plesae try again.');
+    } catch (err) {
+      res.send('Error occured. Plesae try again.');
+    }
+  });
+  app.get('/verify_email/:email/:hashed', async (req, res) => {
+    const email = qs.unescape(req.params.email);
+    const hashed = qs.unescape(req.params.hashed);
+
+    try {
+      const validated = await validateCredential(email, hashed);
+      if (validated) {
+        await verifyEmail(email);
+        return res.send(
+          'Your email has been verified. Please continue with HackaTalk 👊',
         );
       }
       res.send('Error occured. Plesae try again.');

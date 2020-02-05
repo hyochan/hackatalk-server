@@ -98,6 +98,15 @@ export const resetPassword = (email: string, password: string): Promise<[number,
   );
 };
 
+export const verifyEmail = (email: string): Promise<[number, User[]]> => {
+  return User.update(
+    { verified: true },
+    {
+      where: { email },
+    },
+  );
+};
+
 export type UserModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): User;
 }

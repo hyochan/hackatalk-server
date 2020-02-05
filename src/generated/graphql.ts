@@ -120,6 +120,7 @@ export type Mutation = {
   deleteChannel?: Maybe<Scalars['Int']>,
   deleteFriend?: Maybe<User>,
   removeNotificationToken?: Maybe<Scalars['Int']>,
+  sendVerification?: Maybe<Scalars['Boolean']>,
   setOnlineStatus?: Maybe<Scalars['Int']>,
   signInApple: AuthPayload,
   signInEmail: AuthPayload,
@@ -158,6 +159,11 @@ export type MutationDeleteFriendArgs = {
 
 export type MutationRemoveNotificationTokenArgs = {
   token: Scalars['String']
+};
+
+
+export type MutationSendVerificationArgs = {
+  email: Scalars['String']
 };
 
 
@@ -558,6 +564,7 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   deleteChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>,
   deleteFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteFriendArgs, 'friendId'>>,
   removeNotificationToken?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationRemoveNotificationTokenArgs, 'token'>>,
+  sendVerification?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSendVerificationArgs, 'email'>>,
   setOnlineStatus?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, MutationSetOnlineStatusArgs>,
   signInApple?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInAppleArgs, 'socialUser'>>,
   signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInEmailArgs, 'email' | 'password'>>,
