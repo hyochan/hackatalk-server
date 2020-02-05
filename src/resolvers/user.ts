@@ -5,7 +5,14 @@ import {
   SocialUserInput,
   User,
 } from '../generated/graphql';
-import { Role, encryptCredential, validateCredential, validateEmail } from '../utils/auth';
+import {
+  Role,
+  encryptCredential,
+  getEmailVerificationHTML,
+  getPasswordResetHTML,
+  validateCredential,
+  validateEmail,
+} from '../utils/auth';
 
 import { AuthType } from '../models/User';
 import { AuthenticationError } from 'apollo-server-core';
@@ -13,7 +20,6 @@ import { ModelType } from '../models';
 import { Op } from 'sequelize';
 import SendGridMail from '@sendgrid/mail';
 import jwt from 'jsonwebtoken';
-import qs from 'querystring';
 import { withFilter } from 'apollo-server';
 
 const USER_SIGNED_IN = 'USER_SIGNED_IN';
@@ -113,14 +119,8 @@ const resolver: Resolvers = {
       const msg = {
         to: email,
         from: 'noreply@hackatalk.dev',
-        subject: '[HackaTalk] Change your password!',
-        html: `
-By clicking on
-<a href=
-"${process.env.REDIRECT_URL}/reset_password/${qs.escape(email)}/${qs.escape(hashedEmail)}"
->RESET PASSWORD</a>,
-your password will reset to <strong>dooboolab2017</strong>.
-        `,
+        subject: '[HackaTalk] Reset your password!',
+        html: getPasswordResetHTML(email, hashedEmail),
       };
       try {
         await SendGridMail.send(msg);
@@ -169,11 +169,10 @@ your password will reset to <strong>dooboolab2017</strong>.
 
     signUp: async (_, args, { appSecret, models }): Promise<AuthPayload> => {
       const { User: userModel } = models;
+      const { email } = args.user;
 
       const emailUser = await userModel.findOne({
-        where: {
-          email: args.user.email,
-        },
+        where: { email },
         raw: true,
       });
 
@@ -198,6 +197,32 @@ your password will reset to <strong>dooboolab2017</strong>.
       );
 
       return { token, user };
+    },
+    sendVerification: async (_, args, { models }): Promise<boolean> => {
+      const { email } = args;
+      const { User: userModel } = models;
+
+      try {
+        const user = await userModel.findOne({
+          where: { email },
+        });
+
+        if (user) {
+          const hashedEmail = await encryptCredential(email);
+          const html = getEmailVerificationHTML(email, hashedEmail);
+          const msg = {
+            to: email,
+            from: 'noreply@hackatalk.dev',
+            subject: '[HackaTalk] Verify your email address!',
+            html,
+          };
+          await SendGridMail.send(msg);
+          return true;
+        }
+        return false;
+      } catch (err) {
+        throw new Error(`email sent failed\n${err.message}`);
+      }
     },
     updateProfile: async (_, args, { verifyUser, models, pubsub }): Promise<User> => {
       try {

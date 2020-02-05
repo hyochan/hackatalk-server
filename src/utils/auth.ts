@@ -1,10 +1,25 @@
 import bcrypt from 'bcrypt-nodejs';
+import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import path from 'path';
+import qs from 'querystring';
 
+export function initializeDotEnv(): void {
+  const env = process.env.NODE_ENV;
+  const envPath = env === 'production'
+    ? path.resolve(__dirname, '../../dotenv/prod.env')
+    : env === 'development'
+      ? path.resolve(__dirname, '../../dotenv/dev.env')
+      : env === 'test'
+        ? path.resolve(__dirname, '../../dotenv/test.env')
+        : path.resolve(__dirname, '../../dotenv/.env');
+  dotenv.config({ path: envPath });
+};
+
+initializeDotEnv();
 const SALT_ROUND = 10;
 
 export const { JWT_SECRET = 'undefined' } = process.env;
-
 export type Token = string;
 
 export interface JwtUser {
@@ -66,3 +81,19 @@ export const validateCredential = async (
     resolve(res);
   });
 });
+
+export const getEmailVerificationHTML = (email: string, hashedEmail: string): string => `
+By clicking on
+<a href=
+"${process.env.REDIRECT_URL}/verify_email/${qs.escape(email)}/${qs.escape(hashedEmail)}"
+>VERIFY EMAIL</a>,
+you are able to signin to <strong>HackaTalk</strong> 🙌.
+`;
+
+export const getPasswordResetHTML = (email: string, hashedEmail: string): string => `
+By clicking on
+<a href=
+"${process.env.REDIRECT_URL}/reset_password/${qs.escape(email)}/${qs.escape(hashedEmail)}"
+>RESET PASSWORD</a>,
+your password will reset to <strong>dooboolab2017</strong>.
+`;
