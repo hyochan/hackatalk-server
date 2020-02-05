@@ -83,17 +83,11 @@ export const validateCredential = async (
 });
 
 export const getEmailVerificationHTML = (email: string, hashedEmail: string): string => `
-By clicking on
-<a href=
-"${process.env.REDIRECT_URL}/verify_email/${qs.escape(email)}/${qs.escape(hashedEmail)}"
->VERIFY EMAIL</a>,
-you are able to signin to <strong>HackaTalk</strong> 🙌.
+By visiting below url link, you are able to signin to <strong>HackaTalk</strong> 🙌.<br/><br/>
+${process.env.REDIRECT_URL}/verify_email/${qs.escape(email)}/${qs.escape(hashedEmail)}
 `;
 
 export const getPasswordResetHTML = (email: string, hashedEmail: string): string => `
-By clicking on
-<a href=
-"${process.env.REDIRECT_URL}/reset_password/${qs.escape(email)}/${qs.escape(hashedEmail)}"
->RESET PASSWORD</a>,
-your password will reset to <strong>dooboolab2017</strong>.
+By visiting below url link, your password will reset to <strong>dooboolab2017</strong>. <br/><br/>
+${process.env.REDIRECT_URL}/reset_password/${qs.escape(email)}/${qs.escape(hashedEmail)}
 `;
