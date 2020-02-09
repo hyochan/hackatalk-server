@@ -3,6 +3,7 @@
 [![CircleCI](https://circleci.com/gh/dooboolab/hackatalk-server.svg?style=shield)](https://circleci.com/gh/dooboolab/hackatalk-server)
 [![codecov](https://codecov.io/gh/dooboolab/hackatalk-server/branch/master/graph/badge.svg)](https://codecov.io/gh/dooboolab/hackatalk-server)
 [![Build Status](https://dev.azure.com/hackatalkdevops/HackaTalk/_apis/build/status/hackatalk%20-%20CI?branchName=master)](https://dev.azure.com/hackatalkdevops/HackaTalk/_build/latest?definitionId=1&branchName=master)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 
 > Specification
 
