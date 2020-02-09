@@ -26,7 +26,7 @@ type Mutation {
   sendVerification(email: String!): Boolean
   addNotificationToken(notification: NotificationCreateInput!): Notification
   removeNotificationToken(token: String!): Int
-  updateProfile(user: UserInput!): User
+  updateProfile(user: UserProfileInput!): User
   addFriend(friendId: ID!): User
   deleteFriend(friendId: ID!): User
   createChannel(channel: ChannelInput): Channel

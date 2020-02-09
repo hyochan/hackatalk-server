@@ -204,7 +204,7 @@ export type MutationUpdateChannelArgs = {
 
 
 export type MutationUpdateProfileArgs = {
-  user: UserInput
+  user: UserProfileInput
 };
 
 export type Notification = {
@@ -338,6 +338,15 @@ export enum UserModeType {
   Block = 'BLOCK'
 }
 
+export type UserProfileInput = {
+  name?: Maybe<Scalars['String']>,
+  nickname?: Maybe<Scalars['String']>,
+  birthday?: Maybe<Scalars['Date']>,
+  gender?: Maybe<Gender>,
+  phone?: Maybe<Scalars['String']>,
+  statusMessage?: Maybe<Scalars['String']>,
+};
+
 export type UserQueryInput = {
   email?: Maybe<Scalars['String']>,
   name?: Maybe<Scalars['String']>,
@@ -446,6 +455,7 @@ export type ResolversTypes = {
   SocialUserInput: SocialUserInput,
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
   UserInput: UserInput,
+  UserProfileInput: UserProfileInput,
   Subscription: ResolverTypeWrapper<{}>,
   FriendSub: ResolverTypeWrapper<FriendSub>,
   FriendSubAction: FriendSubAction,
@@ -480,6 +490,7 @@ export type ResolversParentTypes = {
   SocialUserInput: SocialUserInput,
   AuthPayload: AuthPayload,
   UserInput: UserInput,
+  UserProfileInput: UserProfileInput,
   Subscription: {},
   FriendSub: FriendSub,
   FriendSubAction: FriendSubAction,
