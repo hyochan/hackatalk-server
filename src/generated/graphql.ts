@@ -267,7 +267,6 @@ export type Query = {
   findPassword?: Maybe<Scalars['Boolean']>,
   friends: Array<User>,
   galleries: Array<Gallery>,
-  gallery?: Maybe<Gallery>,
   me?: Maybe<User>,
   messages: Array<Message>,
   user?: Maybe<User>,
@@ -277,6 +276,11 @@ export type Query = {
 
 export type QueryFindPasswordArgs = {
   email: Scalars['String']
+};
+
+
+export type QueryGalleriesArgs = {
+  userId: Scalars['String']
 };
 
 
@@ -654,8 +658,7 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
   channels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType>,
   findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryFindPasswordArgs, 'email'>>,
   friends?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>,
-  galleries?: Resolver<Array<ResolversTypes['Gallery']>, ParentType, ContextType>,
-  gallery?: Resolver<Maybe<ResolversTypes['Gallery']>, ParentType, ContextType>,
+  galleries?: Resolver<Array<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<QueryGalleriesArgs, 'userId'>>,
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,

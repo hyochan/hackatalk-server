@@ -16,8 +16,7 @@ type Query {
   messages: [Message!]!
   channels: [Channel!]!
   friends: [User!]!
-  galleries: [Gallery!]!
-  gallery: Gallery
+  galleries(userId: String!): [Gallery!]!
 }
 
 type Mutation {

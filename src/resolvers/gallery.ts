@@ -3,6 +3,19 @@ import { Gallery, Resolvers } from '../generated/graphql';
 import { AuthenticationError } from 'apollo-server-core';
 
 const resolver: Resolvers = {
+  Query: {
+    galleries: async (_, { userId }, { verifyUser, models }): Promise<Gallery[]> => {
+      const auth = verifyUser();
+
+      if (!auth) throw new AuthenticationError('User is not signed in');
+      const { Gallery: galleryModel } = models;
+      return galleryModel.findAll({
+        where: {
+          userId,
+        },
+      });
+    },
+  },
   Mutation: {
     createGallery: async (_, { photoURL }, { verifyUser, models }): Promise<Gallery> => {
       const auth = verifyUser();
