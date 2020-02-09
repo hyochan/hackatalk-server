@@ -98,11 +98,7 @@ const resolver: Resolvers = {
       const auth = await getUser();
       return auth;
     },
-    users: async (
-      _,
-      args,
-      { verifyUser, models },
-    ): Promise<UsersConnection> => {
+    users: async (_, args, { verifyUser, models }): Promise<UsersConnection> => {
       const { User: userModel } = models;
       const auth = verifyUser();
       checkAuth(auth);
@@ -115,13 +111,11 @@ const resolver: Resolvers = {
       const cursor: User['createdAt'] = 'createdAt';
 
       if (filter && user) {
-        const userOrConditions: WhereOptions[] = Object.keys(user).map(
-          (colName) => ({
-            [colName]: {
-              [Op.like]: `%${user[colName]}%`,
-            },
-          }),
-        );
+        const userOrConditions: WhereOptions[] = Object.keys(user).map((colName) => ({
+          [colName]: {
+            [Op.like]: `%${user[colName]}%`,
+          },
+        }));
         where = { ...where, [Op.or]: userOrConditions };
       } else if (user) {
         where = { ...where, ...user };
@@ -203,11 +197,7 @@ const resolver: Resolvers = {
     },
   },
   Mutation: {
-    signInEmail: async (
-      _,
-      args,
-      { models, appSecret, pubsub },
-    ): Promise<AuthPayload> => {
+    signInEmail: async (_, args, { models, appSecret, pubsub }): Promise<AuthPayload> => {
       const { User: userModel } = models;
 
       const user = await userModel.findOne({
@@ -242,11 +232,7 @@ const resolver: Resolvers = {
       }
     },
 
-    signInWithSocialAccount: async (
-      _,
-      { socialUser },
-      { appSecret, models },
-    ): Promise<AuthPayload> =>
+    signInWithSocialAccount: async (_, { socialUser }, { appSecret, models }): Promise<AuthPayload> =>
       signInWithSocialAccount(socialUser, models, appSecret),
 
     signUp: async (_, args, { appSecret, models }): Promise<AuthPayload> => {
@@ -328,11 +314,7 @@ const resolver: Resolvers = {
         throw ErrorEmailSentFailed(err);
       }
     },
-    updateProfile: async (
-      _,
-      args,
-      { verifyUser, models, pubsub },
-    ): Promise<User> => {
+    updateProfile: async (_, args, { verifyUser, models, pubsub }): Promise<User> => {
       try {
         const auth = verifyUser();
         if (!auth) {
@@ -357,11 +339,7 @@ const resolver: Resolvers = {
         throw new Error(err.message);
       }
     },
-    setOnlineStatus: async (
-      _,
-      args,
-      { verifyUser, models, pubsub },
-    ): Promise<number> => {
+    setOnlineStatus: async (_, args, { verifyUser, models, pubsub }): Promise<number> => {
       try {
         const auth = verifyUser();
         if (!auth) {
@@ -386,11 +364,7 @@ const resolver: Resolvers = {
         throw new Error(err.message);
       }
     },
-    changeEmailPassword: async (
-      _,
-      { password, newPassword },
-      { verifyUser, models },
-    ): Promise<boolean> => {
+    changeEmailPassword: async (_, { password, newPassword }, { verifyUser, models }): Promise<boolean> => {
       try {
         const auth = verifyUser();
         checkAuth(auth);

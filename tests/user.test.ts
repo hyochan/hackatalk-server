@@ -14,7 +14,6 @@ const signInEmail = /* GraphQL */ `
       token
       user {
         email
-      }
     }
   }
 `;
@@ -128,6 +127,26 @@ describe('Resolver - User', () => {
       expect(mutationRes.updateProfile[column]).toEqual(variables[column]);
     }
   });
+  it('Mutation-changeEmailPassword : should user password updated after user sign-in', async () => {
+    const signInRes = await request(testHost, signInEmail);
+    const changeEmailPassword = /* GraphQL */ `
+    mutation changeEmailPassword($password: String!, $newPassword: String!) {
+      changeEmailPassword(password: $password, newPassword: $newPassword)
+    }
+  `;
+    const client = new GraphQLClient(testHost, {
+      headers: {
+        authorization: `Bearer ${signInRes.signInEmail.token}`,
+      },
+    });
+    const variables = {
+      password: 'password',
+      newPassword: 'newPassword',
+    };
+    const mutationRes = await client.request(changeEmailPassword, variables);
+    expect(mutationRes).toHaveProperty('changeEmailPassword');
+    expect(mutationRes.changeEmailPassword).toEqual(true);
+
   it('Query-users: should get users with "first" argument', async () => {
     const email = 'parkopp@gmail.com';
     const password = 'password';
