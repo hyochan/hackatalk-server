@@ -23,9 +23,7 @@ Gallery.init({
     allowNull: false,
     primaryKey: true,
   },
-  photoURL: {
-    type: STRING,
-  },
+  photoURL: STRING,
 }, {
   sequelize,
   modelName: 'gallery',

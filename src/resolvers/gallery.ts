@@ -8,6 +8,9 @@ const resolver: Resolvers = {
       const auth = verifyUser();
 
       if (!auth) throw new AuthenticationError('User is not signed in');
+      if (!photoURL.startsWith('http')) {
+        throw Error('photoURL is not a url. It should start with http.');
+      }
 
       const { Gallery: galleryModel } = models;
       const gallery = await galleryModel.create({
@@ -21,12 +24,14 @@ const resolver: Resolvers = {
       const auth = verifyUser();
 
       if (!auth) throw new AuthenticationError('User is not signed in');
+      if (!photoURL.startsWith('http')) {
+        throw Error('photoURL is not a url. It should start with http.');
+      }
+
       const { Gallery: galleryModel } = models;
 
       const result = await galleryModel.update(
-        {
-          photoURL,
-        },
+        { photoURL },
         {
           where: {
             id: galleryId,
