@@ -1,8 +1,8 @@
-/* eslint-disable */
-const { initializeDotEnv } = require('../src/utils/auth');
-/* eslint-enable */
 
-initializeDotEnv();
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const initDotEnv = require('./initDotEnv');
+
+initDotEnv();
 
 let config = {
   username: process.env.DB_USER,
