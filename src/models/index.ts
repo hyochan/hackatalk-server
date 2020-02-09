@@ -1,5 +1,6 @@
 import Channel, { ChannelModelStatic } from './Channel';
 import Friend, { FriendModelStatic } from './Friend';
+import Gallery, { GalleryModelStatic } from './Gallery';
 import Membership, { MembershipModelStatic } from './Membership';
 import Message, { MessageModelStatic } from './Message';
 import Notification, { NotificationModelStatic } from './Notification';
@@ -16,6 +17,7 @@ export default {
   Notification,
   Photo,
   Reply,
+  Gallery,
 };
 
 export interface ModelType {
@@ -27,4 +29,5 @@ export interface ModelType {
   Membership: MembershipModelStatic;
   Notification: NotificationModelStatic;
   Photo: PhotoModelStatic;
+  Gallery: GalleryModelStatic;
 };

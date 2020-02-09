@@ -74,6 +74,15 @@ export enum FriendSubAction {
   Deleted = 'DELETED'
 }
 
+export type Gallery = {
+   __typename?: 'Gallery',
+  createdAt: Scalars['DateTime'],
+  deletedAt?: Maybe<Scalars['DateTime']>,
+  id: Scalars['ID'],
+  photoURL: Scalars['String'],
+  updatedAt: Scalars['DateTime'],
+};
+
 export enum Gender {
   Male = 'MALE',
   Female = 'FEMALE'
@@ -117,6 +126,7 @@ export type Mutation = {
   addFriend?: Maybe<User>,
   addNotificationToken?: Maybe<Notification>,
   createChannel?: Maybe<Channel>,
+  createGallery?: Maybe<Gallery>,
   deleteChannel?: Maybe<Scalars['Int']>,
   deleteFriend?: Maybe<User>,
   removeNotificationToken?: Maybe<Scalars['Int']>,
@@ -144,6 +154,11 @@ export type MutationAddNotificationTokenArgs = {
 
 export type MutationCreateChannelArgs = {
   channel?: Maybe<ChannelInput>
+};
+
+
+export type MutationCreateGalleryArgs = {
+  photoURL: Scalars['String']
 };
 
 
@@ -451,6 +466,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>,
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
+  Gallery: ResolverTypeWrapper<Gallery>,
   Int: ResolverTypeWrapper<Scalars['Int']>,
   SocialUserInput: SocialUserInput,
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
@@ -486,6 +502,7 @@ export type ResolversParentTypes = {
   Mutation: {},
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
+  Gallery: Gallery,
   Int: Scalars['Int'],
   SocialUserInput: SocialUserInput,
   AuthPayload: AuthPayload,
@@ -540,6 +557,15 @@ export type FriendSubResolvers<ContextType = MyContext, ParentType extends Resol
   __isTypeOf?: isTypeOfResolverFn,
 };
 
+export type GalleryResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Gallery'] = ResolversParentTypes['Gallery']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  photoURL?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn,
+};
+
 export type MembershipResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Membership'] = ResolversParentTypes['Membership']> = {
   channel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType>,
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
@@ -572,6 +598,7 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   addFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddFriendArgs, 'friendId'>>,
   addNotificationToken?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<MutationAddNotificationTokenArgs, 'notification'>>,
   createChannel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType, MutationCreateChannelArgs>,
+  createGallery?: Resolver<Maybe<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<MutationCreateGalleryArgs, 'photoURL'>>,
   deleteChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>,
   deleteFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteFriendArgs, 'friendId'>>,
   removeNotificationToken?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationRemoveNotificationTokenArgs, 'token'>>,
@@ -665,6 +692,7 @@ export type Resolvers<ContextType = MyContext> = {
   DateTime?: GraphQLScalarType,
   Friend?: FriendResolvers<ContextType>,
   FriendSub?: FriendSubResolvers<ContextType>,
+  Gallery?: GalleryResolvers<ContextType>,
   Membership?: MembershipResolvers<ContextType>,
   Message?: MessageResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,

@@ -6,6 +6,7 @@
 # import Friend from "friend.graphql"
 # import Membership from "membership.graphql"
 # import Photo from "photo.graphql"
+# import Gallery from "gallery.graphql"
 
 type Query {
   users(user: UserQueryInput, includeUser: Boolean): [User!]!
@@ -15,6 +16,8 @@ type Query {
   messages: [Message!]!
   channels: [Channel!]!
   friends: [User!]!
+  galleries: [Gallery!]!
+  gallery: Gallery
 }
 
 type Mutation {
@@ -33,6 +36,7 @@ type Mutation {
   updateChannel(channel: ChannelInput): Int
   deleteChannel(channelId: ID!): Int
   setOnlineStatus(isOnline: Boolean): Int
+  createGallery(photoURL: String!): Gallery
 }
 
 type Subscription {

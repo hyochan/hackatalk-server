@@ -1,22 +1,11 @@
 import bcrypt from 'bcrypt-nodejs';
-import dotenv from 'dotenv';
+import initDotEnv from '../../config/initDotEnv';
 import jwt from 'jsonwebtoken';
-import path from 'path';
 import qs from 'querystring';
 
-export function initializeDotEnv(): void {
-  const env = process.env.NODE_ENV;
-  const envPath = env === 'production'
-    ? path.resolve(__dirname, '../../dotenv/prod.env')
-    : env === 'development'
-      ? path.resolve(__dirname, '../../dotenv/dev.env')
-      : env === 'test'
-        ? path.resolve(__dirname, '../../dotenv/test.env')
-        : path.resolve(__dirname, '../../dotenv/.env');
-  dotenv.config({ path: envPath });
-};
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 
-initializeDotEnv();
+initDotEnv();
 const SALT_ROUND = 10;
 
 export const { JWT_SECRET = 'undefined' } = process.env;
