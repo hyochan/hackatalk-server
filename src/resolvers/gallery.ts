@@ -17,6 +17,39 @@ const resolver: Resolvers = {
 
       return gallery;
     },
+    updateGallery: async (_, { galleryId, photoURL }, { verifyUser, models }): Promise<number> => {
+      const auth = verifyUser();
+
+      if (!auth) throw new AuthenticationError('User is not signed in');
+      const { Gallery: galleryModel } = models;
+
+      const result = await galleryModel.update(
+        {
+          photoURL,
+        },
+        {
+          where: {
+            id: galleryId,
+          },
+        },
+      );
+
+      return result[0];
+    },
+    deleteGallery: async (_, { galleryId }, { verifyUser, models }): Promise<number> => {
+      const auth = verifyUser();
+
+      if (!auth) throw new AuthenticationError('User is not signed in');
+
+      const { Gallery: galleryModel } = models;
+      const result = await galleryModel.destroy({
+        where: {
+          id: galleryId,
+        },
+      });
+
+      return result[0];
+    },
   },
 };
 

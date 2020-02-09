@@ -232,7 +232,7 @@ const resolver: Resolvers = {
             'User is not logged in',
           );
         }
-        models.User.update(
+        await models.User.update(
           args.user,
           {
             where: {

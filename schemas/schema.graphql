@@ -37,6 +37,8 @@ type Mutation {
   deleteChannel(channelId: ID!): Int
   setOnlineStatus(isOnline: Boolean): Int
   createGallery(photoURL: String!): Gallery
+  updateGallery(galleryId: ID!, photoURL: String!): Int
+  deleteGallery(galleryId: ID!): Int
 }
 
 type Subscription {

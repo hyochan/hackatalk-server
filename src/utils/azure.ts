@@ -1,4 +1,7 @@
 import AzureStorage, { BlobService } from 'azure-storage';
+
+import stream from 'stream';
+
 require('dotenv').config();
 
 const {
@@ -12,6 +15,26 @@ const blobService = STORAGE_ACCOUNT
     STORAGE_KEY,
   )
   : undefined;
+
+export const uploadFileToAzureBlobFromStream = (
+  stream: stream.Readable,
+  destFile: string,
+  destDir: string,
+  streamLength: number,
+): Promise<BlobService.BlobResult> => {
+  return new Promise(function(resolve, reject) {
+    blobService.createBlockBlobFromStream(destDir, destFile, stream, streamLength, function(
+      error,
+      resultUpload,
+    ) {
+      if (!error) {
+        resolve(resultUpload);
+        return;
+      }
+      reject(error);
+    });
+  });
+};
 
 export const uploadFileToAzureBlobFromFile = (
   file: string,
