@@ -18,8 +18,10 @@ SendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 const { PORT = 4000 } = process.env;
 const pubsub = new PubSub();
 
+const typeDefs = importSchema('schemas/schema.graphql');
+
 const createApolloServer = (): ApolloServer => new ApolloServer({
-  typeDefs: importSchema('schemas/schema.graphql'),
+  typeDefs,
   context: ({ req }): MyContext => ({
     verifyUser: (): JwtUser => {
       const token = getToken(req);

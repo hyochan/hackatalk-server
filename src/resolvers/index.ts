@@ -1,6 +1,7 @@
 import Channel from './channel';
 import Chat from './message';
 import Friend from './friend';
+import Gallery from './gallery';
 import Notification from './notification';
 import User from './user';
 
@@ -10,6 +11,7 @@ export const allResolvers = [
   Notification,
   User,
   Channel,
+  Gallery,
 ];
 
 export default {
@@ -18,4 +20,5 @@ export default {
   Chat,
   Notification,
   Channel,
+  Gallery,
 };

@@ -74,6 +74,15 @@ export enum FriendSubAction {
   Deleted = 'DELETED'
 }
 
+export type Gallery = {
+   __typename?: 'Gallery',
+  createdAt: Scalars['DateTime'],
+  deletedAt?: Maybe<Scalars['DateTime']>,
+  id: Scalars['ID'],
+  photoURL: Scalars['String'],
+  updatedAt: Scalars['DateTime'],
+};
+
 export enum Gender {
   Male = 'MALE',
   Female = 'FEMALE'
@@ -117,8 +126,10 @@ export type Mutation = {
   addFriend?: Maybe<User>,
   addNotificationToken?: Maybe<Notification>,
   createChannel?: Maybe<Channel>,
+  createGallery?: Maybe<Gallery>,
   deleteChannel?: Maybe<Scalars['Int']>,
   deleteFriend?: Maybe<User>,
+  deleteGallery?: Maybe<Scalars['Int']>,
   removeNotificationToken?: Maybe<Scalars['Int']>,
   sendVerification?: Maybe<Scalars['Boolean']>,
   setOnlineStatus?: Maybe<Scalars['Int']>,
@@ -128,6 +139,7 @@ export type Mutation = {
   signInGoogle: AuthPayload,
   signUp: AuthPayload,
   updateChannel?: Maybe<Scalars['Int']>,
+  updateGallery?: Maybe<Scalars['Int']>,
   updateProfile?: Maybe<User>,
 };
 
@@ -147,6 +159,11 @@ export type MutationCreateChannelArgs = {
 };
 
 
+export type MutationCreateGalleryArgs = {
+  photoURL: Scalars['String']
+};
+
+
 export type MutationDeleteChannelArgs = {
   channelId: Scalars['ID']
 };
@@ -154,6 +171,11 @@ export type MutationDeleteChannelArgs = {
 
 export type MutationDeleteFriendArgs = {
   friendId: Scalars['ID']
+};
+
+
+export type MutationDeleteGalleryArgs = {
+  galleryId: Scalars['ID']
 };
 
 
@@ -203,6 +225,12 @@ export type MutationUpdateChannelArgs = {
 };
 
 
+export type MutationUpdateGalleryArgs = {
+  galleryId: Scalars['ID'],
+  photoURL: Scalars['String']
+};
+
+
 export type MutationUpdateProfileArgs = {
   user: UserProfileInput
 };
@@ -238,6 +266,7 @@ export type Query = {
   channels: Array<Channel>,
   findPassword?: Maybe<Scalars['Boolean']>,
   friends: Array<User>,
+  galleries: Array<Gallery>,
   me?: Maybe<User>,
   messages: Array<Message>,
   user?: Maybe<User>,
@@ -247,6 +276,11 @@ export type Query = {
 
 export type QueryFindPasswordArgs = {
   email: Scalars['String']
+};
+
+
+export type QueryGalleriesArgs = {
+  userId: Scalars['String']
 };
 
 
@@ -415,7 +449,7 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => Maybe<TTypes>;
 
-export type isTypeOfResolverFn = (obj: any, info: GraphQLResolveInfo) => boolean;
+export type isTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -447,6 +481,7 @@ export type ResolversTypes = {
   Photo: ResolverTypeWrapper<Photo>,
   Reply: ResolverTypeWrapper<Reply>,
   ChannelType: ChannelType,
+  Gallery: ResolverTypeWrapper<Gallery>,
   UserQueryInput: UserQueryInput,
   Mutation: ResolverTypeWrapper<{}>,
   NotificationCreateInput: NotificationCreateInput,
@@ -482,6 +517,7 @@ export type ResolversParentTypes = {
   Photo: Photo,
   Reply: Reply,
   ChannelType: ChannelType,
+  Gallery: Gallery,
   UserQueryInput: UserQueryInput,
   Mutation: {},
   NotificationCreateInput: NotificationCreateInput,
@@ -500,7 +536,7 @@ export type ResolversParentTypes = {
 export type AuthPayloadResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = {
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export type ChannelResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Channel'] = ResolversParentTypes['Channel']> = {
@@ -513,7 +549,7 @@ export type ChannelResolvers<ContextType = MyContext, ParentType extends Resolve
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   type?: Resolver<Maybe<ResolversTypes['ChannelType']>, ParentType, ContextType>,
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
@@ -531,13 +567,22 @@ export type FriendResolvers<ContextType = MyContext, ParentType extends Resolver
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export type FriendSubResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['FriendSub'] = ResolversParentTypes['FriendSub']> = {
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   action?: Resolver<Maybe<ResolversTypes['FriendSubAction']>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+};
+
+export type GalleryResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Gallery'] = ResolversParentTypes['Gallery']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  photoURL?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export type MembershipResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Membership'] = ResolversParentTypes['Membership']> = {
@@ -550,7 +595,7 @@ export type MembershipResolvers<ContextType = MyContext, ParentType extends Reso
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   userAlert?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
   userMode?: Resolver<Maybe<ResolversTypes['UserModeType']>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export type MessageResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
@@ -565,15 +610,17 @@ export type MessageResolvers<ContextType = MyContext, ParentType extends Resolve
   text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export type MutationResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddFriendArgs, 'friendId'>>,
   addNotificationToken?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<MutationAddNotificationTokenArgs, 'notification'>>,
   createChannel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType, MutationCreateChannelArgs>,
+  createGallery?: Resolver<Maybe<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<MutationCreateGalleryArgs, 'photoURL'>>,
   deleteChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>,
   deleteFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteFriendArgs, 'friendId'>>,
+  deleteGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteGalleryArgs, 'galleryId'>>,
   removeNotificationToken?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationRemoveNotificationTokenArgs, 'token'>>,
   sendVerification?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSendVerificationArgs, 'email'>>,
   setOnlineStatus?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, MutationSetOnlineStatusArgs>,
@@ -583,6 +630,7 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   signInGoogle?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInGoogleArgs, 'socialUser'>>,
   signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>,
   updateChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, MutationUpdateChannelArgs>,
+  updateGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationUpdateGalleryArgs, 'galleryId' | 'photoURL'>>,
   updateProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'user'>>,
 };
 
@@ -593,7 +641,7 @@ export type NotificationResolvers<ContextType = MyContext, ParentType extends Re
   os?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export type PhotoResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Photo'] = ResolversParentTypes['Photo']> = {
@@ -603,13 +651,14 @@ export type PhotoResolvers<ContextType = MyContext, ParentType extends Resolvers
   photoURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   thumbURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export type QueryResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   channels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType>,
   findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryFindPasswordArgs, 'email'>>,
   friends?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>,
+  galleries?: Resolver<Array<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<QueryGalleriesArgs, 'userId'>>,
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
@@ -626,7 +675,7 @@ export type ReplyResolvers<ContextType = MyContext, ParentType extends Resolvers
   text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export type SubscriptionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
@@ -655,7 +704,7 @@ export type UserResolvers<ContextType = MyContext, ParentType extends ResolversP
   thumbURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   verified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export type Resolvers<ContextType = MyContext> = {
@@ -665,6 +714,7 @@ export type Resolvers<ContextType = MyContext> = {
   DateTime?: GraphQLScalarType,
   Friend?: FriendResolvers<ContextType>,
   FriendSub?: FriendSubResolvers<ContextType>,
+  Gallery?: GalleryResolvers<ContextType>,
   Membership?: MembershipResolvers<ContextType>,
   Message?: MessageResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,

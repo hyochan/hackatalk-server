@@ -1,0 +1,9 @@
+scalar DateTime
+
+type Gallery {
+  id: ID!
+  photoURL: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
