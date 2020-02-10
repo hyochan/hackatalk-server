@@ -125,6 +125,7 @@ export type Mutation = {
    __typename?: 'Mutation',
   addFriend?: Maybe<User>,
   addNotificationToken?: Maybe<Notification>,
+  changeEmailPassword?: Maybe<Scalars['Boolean']>,
   createChannel?: Maybe<Channel>,
   createGallery?: Maybe<Gallery>,
   deleteChannel?: Maybe<Scalars['Int']>,
@@ -151,6 +152,12 @@ export type MutationAddFriendArgs = {
 
 export type MutationAddNotificationTokenArgs = {
   notification: NotificationCreateInput
+};
+
+
+export type MutationChangeEmailPasswordArgs = {
+  password: Scalars['String'],
+  newPassword: Scalars['String']
 };
 
 
@@ -616,6 +623,7 @@ export type MessageResolvers<ContextType = MyContext, ParentType extends Resolve
 export type MutationResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddFriendArgs, 'friendId'>>,
   addNotificationToken?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<MutationAddNotificationTokenArgs, 'notification'>>,
+  changeEmailPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationChangeEmailPasswordArgs, 'password' | 'newPassword'>>,
   createChannel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType, MutationCreateChannelArgs>,
   createGallery?: Resolver<Maybe<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<MutationCreateGalleryArgs, 'photoURL'>>,
   deleteChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>,

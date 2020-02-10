@@ -141,7 +141,7 @@ const resolver: Resolvers = {
         raw: true,
       });
 
-      if (!user) throw new AuthenticationError('User does not exsists');
+      if (!user) throw new AuthenticationError('User does not exists');
 
       const validate = await validateCredential(args.password, user.password);
 
@@ -232,7 +232,7 @@ const resolver: Resolvers = {
             'User is not logged in',
           );
         }
-        await models.User.update(
+        models.User.update(
           args.user,
           {
             where: {
@@ -273,6 +273,45 @@ const resolver: Resolvers = {
         pubsub.publish(USER_UPDATED, { user: auth });
 
         return update[0];
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    changeEmailPassword: async (
+      _, { password, newPassword }, { verifyUser, models }): Promise<boolean> => {
+      try {
+        const auth = verifyUser();
+        if (!auth) { throw new AuthenticationError('User is not logged in'); }
+
+        const { User: userModel } = models;
+
+        const user = await userModel.findOne({
+          where: {
+            id: auth.userId,
+          },
+          raw: true,
+        });
+
+        if (!user) throw new AuthenticationError('User does not exists');
+
+        const validate = await validateCredential(password, user.password);
+
+        if (!validate) throw new AuthenticationError('Password is not correct');
+
+        newPassword = await encryptCredential(newPassword);
+
+        const update = await models.User.update(
+          {
+            password: newPassword,
+          },
+          {
+            where: {
+              id: auth.userId,
+            },
+          },
+        );
+
+        return !!update[0];
       } catch (err) {
         throw new Error(err);
       }
