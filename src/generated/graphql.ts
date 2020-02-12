@@ -270,6 +270,10 @@ export type Query = {
   me?: Maybe<User>,
   messages: Array<Message>,
   user?: Maybe<User>,
+  /** 
+ * If filter is true, it will filter user with email, nickname or name.
+   * You can add page
+ */
   users: Array<User>,
 };
 
@@ -286,7 +290,10 @@ export type QueryUserArgs = {
 
 export type QueryUsersArgs = {
   user?: Maybe<UserQueryInput>,
-  includeUser?: Maybe<Scalars['Boolean']>
+  includeUser?: Maybe<Scalars['Boolean']>,
+  filter?: Maybe<Scalars['Boolean']>,
+  first?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>
 };
 
 export type Reply = {
@@ -478,10 +485,10 @@ export type ResolversTypes = {
   ChannelType: ChannelType,
   Gallery: ResolverTypeWrapper<Gallery>,
   UserQueryInput: UserQueryInput,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
   Mutation: ResolverTypeWrapper<{}>,
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
-  Int: ResolverTypeWrapper<Scalars['Int']>,
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
@@ -514,10 +521,10 @@ export type ResolversParentTypes = {
   ChannelType: ChannelType,
   Gallery: Gallery,
   UserQueryInput: UserQueryInput,
+  Int: Scalars['Int'],
   Mutation: {},
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
-  Int: Scalars['Int'],
   AuthPayload: AuthPayload,
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
