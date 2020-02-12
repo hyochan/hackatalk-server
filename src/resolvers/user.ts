@@ -84,22 +84,57 @@ const resolver: Resolvers = {
     users: async (_, args, { verifyUser, models }): Promise<User[]> => {
       const { User: userModel } = models;
       const auth = verifyUser();
+      const { user, includeUser, filter, first, after } = args;
 
       if (!auth) throw new AuthenticationError('User is not signed in');
 
-      if (args.includeUser === false) {
+      let query: object = {};
+      if (after) {
+        query = {
+          id: { [Op.gt]: after },
+        };
+      }
+
+      let limit: number;
+      if (first) {
+        limit = first;
+      }
+
+      if (includeUser === false) {
         return userModel.findAll({
           where: {
-            ...args.user,
+            ...user,
             id: {
               [Op.ne]: auth.userId,
             },
+            verified: true,
+          },
+        });
+      }
+
+      if (filter) {
+        return userModel.findAll({
+          where: {
+            [Op.or]: {
+              name: { [Op.like]: user.name },
+              nickname: { [Op.like]: user.nickname },
+              email: { [Op.like]: user.email },
+            },
+            verified: true,
           },
         });
       }
 
       return userModel.findAll({
-        where: args.user,
+        where: {
+          ...user,
+          ...query,
+          verified: true,
+        },
+        limit,
+        order: [
+          ['id', 'ASC'],
+        ],
       });
     },
     user: (_, args, { models }): Promise<User> => {

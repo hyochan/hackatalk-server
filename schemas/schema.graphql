@@ -9,7 +9,11 @@
 # import Gallery from "gallery.graphql"
 
 type Query {
-  users(user: UserQueryInput, includeUser: Boolean): [User!]!
+  """
+  If filter is true, it will filter user with email, nickname or name.
+  You can add page
+  """
+  users(user: UserQueryInput, includeUser: Boolean, filter: Boolean, first: Int, after: String): [User!]!
   user(id: ID!): User
   me: User
   messages: [Message!]!
