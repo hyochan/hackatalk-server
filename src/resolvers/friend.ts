@@ -16,7 +16,7 @@ const resolver: Resolvers = {
       const { Friend: friendModel, User: userModel } = models;
 
       const friendIds = await friendModel.findAll({
-        attributes: ['userId'],
+        attributes: ['friendId'],
         where: { userId: { [Op.eq]: auth.id } },
         raw: true,
       });
