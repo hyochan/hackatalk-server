@@ -131,13 +131,12 @@ export type Mutation = {
   deleteChannel?: Maybe<Scalars['Int']>,
   deleteFriend?: Maybe<User>,
   deleteGallery?: Maybe<Scalars['Int']>,
+  findPassword?: Maybe<Scalars['Boolean']>,
   removeNotificationToken?: Maybe<Scalars['Int']>,
   sendVerification?: Maybe<Scalars['Boolean']>,
   setOnlineStatus?: Maybe<Scalars['Int']>,
-  signInApple: AuthPayload,
   signInEmail: AuthPayload,
-  signInFacebook: AuthPayload,
-  signInGoogle: AuthPayload,
+  signInWithSocialAccount: AuthPayload,
   signUp: AuthPayload,
   updateChannel?: Maybe<Scalars['Int']>,
   updateGallery?: Maybe<Scalars['Int']>,
@@ -186,6 +185,11 @@ export type MutationDeleteGalleryArgs = {
 };
 
 
+export type MutationFindPasswordArgs = {
+  email: Scalars['String']
+};
+
+
 export type MutationRemoveNotificationTokenArgs = {
   token: Scalars['String']
 };
@@ -201,23 +205,13 @@ export type MutationSetOnlineStatusArgs = {
 };
 
 
-export type MutationSignInAppleArgs = {
-  socialUser: SocialUserInput
-};
-
-
 export type MutationSignInEmailArgs = {
   email: Scalars['String'],
   password: Scalars['String']
 };
 
 
-export type MutationSignInFacebookArgs = {
-  socialUser: SocialUserInput
-};
-
-
-export type MutationSignInGoogleArgs = {
+export type MutationSignInWithSocialAccountArgs = {
   socialUser: SocialUserInput
 };
 
@@ -271,18 +265,12 @@ export type Photo = {
 export type Query = {
    __typename?: 'Query',
   channels: Array<Channel>,
-  findPassword?: Maybe<Scalars['Boolean']>,
   friends: Array<User>,
   galleries: Array<Gallery>,
   me?: Maybe<User>,
   messages: Array<Message>,
   user?: Maybe<User>,
   users: Array<User>,
-};
-
-
-export type QueryFindPasswordArgs = {
-  email: Scalars['String']
 };
 
 
@@ -494,8 +482,8 @@ export type ResolversTypes = {
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
   Int: ResolverTypeWrapper<Scalars['Int']>,
-  SocialUserInput: SocialUserInput,
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
+  SocialUserInput: SocialUserInput,
   UserInput: UserInput,
   UserProfileInput: UserProfileInput,
   Subscription: ResolverTypeWrapper<{}>,
@@ -530,8 +518,8 @@ export type ResolversParentTypes = {
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
   Int: Scalars['Int'],
-  SocialUserInput: SocialUserInput,
   AuthPayload: AuthPayload,
+  SocialUserInput: SocialUserInput,
   UserInput: UserInput,
   UserProfileInput: UserProfileInput,
   Subscription: {},
@@ -629,13 +617,12 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   deleteChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>,
   deleteFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteFriendArgs, 'friendId'>>,
   deleteGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteGalleryArgs, 'galleryId'>>,
+  findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationFindPasswordArgs, 'email'>>,
   removeNotificationToken?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationRemoveNotificationTokenArgs, 'token'>>,
   sendVerification?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSendVerificationArgs, 'email'>>,
   setOnlineStatus?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, MutationSetOnlineStatusArgs>,
-  signInApple?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInAppleArgs, 'socialUser'>>,
   signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInEmailArgs, 'email' | 'password'>>,
-  signInFacebook?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInFacebookArgs, 'socialUser'>>,
-  signInGoogle?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInGoogleArgs, 'socialUser'>>,
+  signInWithSocialAccount?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInWithSocialAccountArgs, 'socialUser'>>,
   signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>,
   updateChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, MutationUpdateChannelArgs>,
   updateGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationUpdateGalleryArgs, 'galleryId' | 'photoURL'>>,
@@ -664,7 +651,6 @@ export type PhotoResolvers<ContextType = MyContext, ParentType extends Resolvers
 
 export type QueryResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   channels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType>,
-  findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryFindPasswordArgs, 'email'>>,
   friends?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>,
   galleries?: Resolver<Array<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<QueryGalleriesArgs, 'userId'>>,
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,

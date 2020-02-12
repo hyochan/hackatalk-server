@@ -107,28 +107,6 @@ const resolver: Resolvers = {
 
       return User.findOne({ where: args });
     },
-    findPassword: async (_, args): Promise<boolean> => {
-      const email = args.email;
-
-      if (!email || !validateEmail(email)) {
-        throw new Error('Not a valid email address');
-      }
-
-      const hashedEmail = await encryptCredential(email);
-
-      const msg = {
-        to: email,
-        from: 'noreply@hackatalk.dev',
-        subject: '[HackaTalk] Reset your password!',
-        html: getPasswordResetHTML(email, hashedEmail),
-      };
-      try {
-        await SendGridMail.send(msg);
-        return true;
-      } catch (err) {
-        throw new Error(`email sent failed\n${err.message}`);
-      }
-    },
   },
   Mutation: {
     signInEmail: async (_, args, { models, appSecret, pubsub }): Promise<AuthPayload> => {
@@ -158,13 +136,11 @@ const resolver: Resolvers = {
       pubsub.publish(USER_SIGNED_IN, { userSignedIn: user });
       return { token, user };
     },
-    signInGoogle: async (_, { socialUser }, { appSecret, models }): Promise<AuthPayload> =>
-      signInWithSocialAccount(socialUser, models, appSecret),
 
-    signInFacebook: async (_, { socialUser }, { appSecret, models }): Promise<AuthPayload> =>
-      signInWithSocialAccount(socialUser, models, appSecret),
-
-    signInApple: async (_, { socialUser }, { appSecret, models }): Promise<AuthPayload> =>
+    signInWithSocialAccount: async (
+      _, { socialUser },
+      { appSecret, models },
+    ): Promise<AuthPayload> =>
       signInWithSocialAccount(socialUser, models, appSecret),
 
     signUp: async (_, args, { appSecret, models }): Promise<AuthPayload> => {
@@ -220,6 +196,28 @@ const resolver: Resolvers = {
           return true;
         }
         return false;
+      } catch (err) {
+        throw new Error(`email sent failed\n${err.message}`);
+      }
+    },
+    findPassword: async (_, args): Promise<boolean> => {
+      const email = args.email;
+
+      if (!email || !validateEmail(email)) {
+        throw new Error('Not a valid email address');
+      }
+
+      const hashedEmail = await encryptCredential(email);
+
+      const msg = {
+        to: email,
+        from: 'noreply@hackatalk.dev',
+        subject: '[HackaTalk] Reset your password!',
+        html: getPasswordResetHTML(email, hashedEmail),
+      };
+      try {
+        await SendGridMail.send(msg);
+        return true;
       } catch (err) {
         throw new Error(`email sent failed\n${err.message}`);
       }
