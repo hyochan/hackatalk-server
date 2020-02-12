@@ -21,13 +21,10 @@ const resolver: Resolvers = {
         raw: true,
       });
 
-      const friendArray = [];
-      friendIds.forEach((friendId) => {
-        friendArray.push(friendId.userId);
-      });
-
       const friends = await userModel.findAll({
-        where: { id: { [Op.in]: friendArray } },
+        where: {
+          id: { [Op.in]: friendIds.map(({ friendId }) => friendId) },
+        },
         raw: true,
       });
 
