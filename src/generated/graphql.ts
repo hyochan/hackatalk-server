@@ -272,7 +272,7 @@ export type Query = {
   user?: Maybe<User>,
   /** 
  * If filter is true, it will filter user with email, nickname or name.
-   * You can add page
+   * You can add pagination with first and after args.
  */
   users: Array<User>,
 };

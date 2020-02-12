@@ -104,22 +104,32 @@ const resolver: Resolvers = {
         return userModel.findAll({
           where: {
             ...user,
+            ...query,
             id: {
               [Op.ne]: auth.userId,
             },
             verified: true,
           },
+          limit,
+          order: [
+            ['id', 'ASC'],
+          ],
         });
       }
 
-      if (filter) {
+      if (filter && user) {
         return userModel.findAll({
           where: {
+            ...query,
             [Op.or]: {
-              name: { [Op.like]: user.name },
               nickname: { [Op.like]: user.nickname },
               email: { [Op.like]: user.email },
+              name: { [Op.like]: user.name },
             },
+            limit,
+            order: [
+              ['id', 'ASC'],
+            ],
             verified: true,
           },
         });
