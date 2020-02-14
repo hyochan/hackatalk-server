@@ -275,6 +275,7 @@ export type Query = {
    * You can add pagination with first and after args.
  */
   users: Array<User>,
+  virgilJwt: Scalars['String'],
 };
 
 
@@ -664,6 +665,7 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, QueryUsersArgs>,
+  virgilJwt?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
 };
 
 export type ReplyResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Reply'] = ResolversParentTypes['Reply']> = {
