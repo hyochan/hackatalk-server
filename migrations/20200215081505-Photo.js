@@ -1,6 +1,11 @@
 'use strict';
 
-const { STRING, DATE, UUID, UUIDV4 } = require('sequelize');
+const {
+  STRING,
+  DATE,
+  UUID,
+  UUIDV4
+} = require('sequelize');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -19,6 +24,14 @@ module.exports = {
         thumbURL: {
           type: STRING
         },
+        channelId: {
+          type: UUID,
+          references: {
+            model: 'channels',
+            key: 'id'
+          },
+          allowNull: true,
+        },
         createdAt: {
           type: DATE
         },
@@ -27,6 +40,14 @@ module.exports = {
         },
         deletedAt: {
           type: DATE
+        },
+        messageId: {
+          type: UUID,
+          references: {
+            model: 'messages',
+            key: 'id'
+          },
+          allowNull: true,
         },
       },
       {

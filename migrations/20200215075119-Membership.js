@@ -1,6 +1,12 @@
 'use strict';
 
-const { ENUM, BOOLEAN, DATE, UUID, UUIDV4 } = require('sequelize');
+const {
+  ENUM,
+  BOOLEAN,
+  DATE,
+  UUID,
+  UUIDV4
+} = require('sequelize');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -31,6 +37,22 @@ module.exports = {
         },
         deletedAt: {
           type: DATE
+        },
+        userId: {
+          type: UUID,
+          references: {
+            model: 'users',
+            key: 'id'
+          },
+          allowNull: true
+        },
+        channelId: {
+          type: UUID,
+          references: {
+            model: 'channels',
+            key: 'id'
+          },
+          allowNull: true,
         },
       },
       {

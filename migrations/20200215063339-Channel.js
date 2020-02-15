@@ -1,6 +1,12 @@
 'use strict';
 
-const { ENUM, STRING, DATE, UUID, UUIDV4 } = require('sequelize');
+const {
+  ENUM,
+  STRING,
+  DATE,
+  UUID,
+  UUIDV4
+} = require('sequelize');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
