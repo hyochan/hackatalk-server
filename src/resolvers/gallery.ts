@@ -9,6 +9,7 @@ const resolver: Resolvers = {
 
       if (!auth) throw new AuthenticationError('User is not signed in');
       const { Gallery: galleryModel } = models;
+
       return galleryModel.findAll({
         where: {
           userId,
@@ -22,7 +23,7 @@ const resolver: Resolvers = {
 
       if (!auth) throw new AuthenticationError('User is not signed in');
       if (!photoURL.startsWith('http')) {
-        throw Error('photoURL is not a url. It should start with http.');
+        throw new Error('photoURL is not a url. It should start with http.');
       }
 
       const { Gallery: galleryModel } = models;
@@ -38,7 +39,7 @@ const resolver: Resolvers = {
 
       if (!auth) throw new AuthenticationError('User is not signed in');
       if (!photoURL.startsWith('http')) {
-        throw Error('photoURL is not a url. It should start with http.');
+        throw new Error('photoURL is not a url. It should start with http.');
       }
 
       const { Gallery: galleryModel } = models;
@@ -66,7 +67,7 @@ const resolver: Resolvers = {
         },
       });
 
-      return result[0];
+      return result;
     },
   },
 };
