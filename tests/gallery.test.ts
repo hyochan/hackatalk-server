@@ -120,32 +120,4 @@ describe('Resolver - Gallery', () => {
     const promise2 = client.request(updateGallery, variables2);
     expect(promise2).rejects.toThrow('photoURL is not a url. It should start with http.');
   });
-
-  it('should throw errors when user is not signed in', () => {
-    client = new GraphQLClient(testHost, {
-      headers: null,
-    });
-
-    const promise0 = client.request(galleries);
-    expect(promise0).rejects.toThrow('User is not signed in');
-
-    const variables1 = {
-      photoURL: 'error://',
-    };
-    const promise1 = client.request(createGallery, variables1);
-    expect(promise1).rejects.toThrow('User is not signed in');
-
-    const variables2 = {
-      galleryId: 'test',
-      photoURL: 'error://',
-    };
-    const promise2 = client.request(updateGallery, variables2);
-    expect(promise2).rejects.toThrow('User is not signed in');
-
-    const variables3 = {
-      galleryId: 'test',
-    };
-    const promise3 = client.request(deleteGallery, variables3);
-    expect(promise3).rejects.toThrow('User is not signed in');
-  });
 });

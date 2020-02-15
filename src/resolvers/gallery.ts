@@ -1,13 +1,12 @@
 import { Gallery, Resolvers } from '../generated/graphql';
 
-import { AuthenticationError } from 'apollo-server-core';
+import { checkAuth } from '../utils/auth';
 
 const resolver: Resolvers = {
   Query: {
     galleries: async (_, { userId }, { verifyUser, models }): Promise<Gallery[]> => {
       const auth = verifyUser();
-
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      checkAuth(auth);
       const { Gallery: galleryModel } = models;
 
       return galleryModel.findAll({
@@ -21,7 +20,7 @@ const resolver: Resolvers = {
     createGallery: async (_, { photoURL }, { verifyUser, models }): Promise<Gallery> => {
       const auth = verifyUser();
 
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      checkAuth(auth);
       if (!photoURL.startsWith('http')) {
         throw new Error('photoURL is not a url. It should start with http.');
       }
@@ -37,7 +36,7 @@ const resolver: Resolvers = {
     updateGallery: async (_, { galleryId, photoURL }, { verifyUser, models }): Promise<number> => {
       const auth = verifyUser();
 
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      checkAuth(auth);
       if (!photoURL.startsWith('http')) {
         throw new Error('photoURL is not a url. It should start with http.');
       }
@@ -57,8 +56,7 @@ const resolver: Resolvers = {
     },
     deleteGallery: async (_, { galleryId }, { verifyUser, models }): Promise<number> => {
       const auth = verifyUser();
-
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      checkAuth(auth);
 
       const { Gallery: galleryModel } = models;
       const result = await galleryModel.destroy({
