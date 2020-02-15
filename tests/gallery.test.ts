@@ -107,17 +107,10 @@ describe('Resolver - Gallery', () => {
   });
 
   it('should throw errors during when urls are not valid', () => {
-    const variables1 = {
+    const variables = {
       photoURL: 'error://',
     };
-    const promise1 = client.request(createGallery, variables1);
-    expect(promise1).rejects.toThrow('photoURL is not a url. It should start with http.');
-
-    const variables2 = {
-      galleryId: 'test',
-      photoURL: 'error://',
-    };
-    const promise2 = client.request(updateGallery, variables2);
-    expect(promise2).rejects.toThrow('photoURL is not a url. It should start with http.');
+    const promise = client.request(createGallery, variables);
+    expect(promise).rejects.toThrow('photoURL is not a url. It should start with http.');
   });
 });
