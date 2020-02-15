@@ -7,8 +7,8 @@
   "author": "dooboolab",
   "license": "GPL-3.0-only",
   "scripts": {
-    "local": "cross-env NODE_ENV=local sequelize db:migrate && cross-env NODE_ENV=local nodemon --exec ts-node src/server.ts",
-    "start": "cross-env NODE_ENV=development sequelize db:migrate && cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts",
+    "local": "cross-env NODE_ENV=local sequelize db:migrate && NODE_ENV=local nodemon --exec ts-node src/server.ts",
+    "start": "cross-env NODE_ENV=development sequelize db:migrate && NODE_ENV=development nodemon --exec ts-node src/server.ts",
     "prod": "cross-env NODE_ENV=production ts-node src/server.ts",
     "pm2": "cross-env NODE_ENV=local pm2 start ts-node -- -P tsconfig.json ./src/server.ts --node-args='--local' --watch",
     "pm2:prod": "cross-env pm2 start ts-node -- -P tsconfig.json ./src/server.ts --node-args='--production'",
