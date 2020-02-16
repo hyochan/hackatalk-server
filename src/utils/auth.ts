@@ -1,3 +1,4 @@
+import { AuthenticationError } from 'apollo-server-core';
 import bcrypt from 'bcrypt-nodejs';
 import initDotEnv from '../../config/initDotEnv';
 import jwt from 'jsonwebtoken';
@@ -80,3 +81,7 @@ export const getPasswordResetHTML = (email: string, hashedEmail: string): string
 By visiting below url link, your password will reset to <strong>dooboolab2017</strong>. <br/><br/>
 ${process.env.REDIRECT_URL}/reset_password/${qs.escape(email)}/${qs.escape(hashedEmail)}
 `;
+
+export const checkAuth = (auth: JwtUser): void => {
+  if (!auth) throw new AuthenticationError('User is not signed in');
+};
