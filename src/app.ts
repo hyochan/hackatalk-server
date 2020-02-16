@@ -31,7 +31,7 @@ i18next
     },
     fallbackLng: ['en', 'ko'],
     saveMissing: true,
-    debug: true,
+    debug: false,
   });
 
 export const createApp = (): express.Application => {
@@ -130,7 +130,7 @@ export const createApp = (): express.Application => {
   );
 
   app.get('/', (req, res) => {
-    res.send(`${req.t('IT_WORKS')} x1`);
+    res.send(`${req.t('IT_WORKS')} - Version 0.0.1`);
   });
 
   return app;

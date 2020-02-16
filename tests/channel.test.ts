@@ -1,5 +1,6 @@
 import { GraphQLClient, request } from 'graphql-request';
 
+import { ErrorString } from '../src/utils/error';
 import { testHost } from './testSetup';
 
 describe('Resolver - Channel', () => {
@@ -62,7 +63,7 @@ describe('Resolver - Channel', () => {
     };
 
     const promise = request(testHost, mutation, variables);
-    expect(promise).rejects.toThrow('User is not signed in');
+    expect(promise).rejects.toThrow(ErrorString.UserNotSignedIn);
   });
 
   it('should throw Error "friendIds is required"', async () => {
@@ -74,7 +75,7 @@ describe('Resolver - Channel', () => {
     };
 
     const promise = client.request(mutation, variables);
-    expect(promise).rejects.toThrow('friendIds is required');
+    expect(promise).rejects.toThrow(ErrorString.FriendIdsRequired);
   });
 
   it('should return channel id and name', async () => {

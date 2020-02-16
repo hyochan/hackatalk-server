@@ -1,20 +1,19 @@
 import { Message, Resolvers } from '../generated/graphql';
 
-import { AuthenticationError } from 'apollo-server-core';
+import { checkAuth } from '../utils/auth';
 
 const resolver: Resolvers = {
   Query: {
     messages: async (
       _,
       args, {
-        getUser,
+        verifyUser,
         models,
       },
     ): Promise<Message[]> => {
       const { Message: messageModel } = models;
-      const auth = await getUser();
-
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      const auth = verifyUser();
+      checkAuth(auth);
 
       return messageModel.findAll({
         where: {
