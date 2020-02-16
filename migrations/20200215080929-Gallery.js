@@ -40,7 +40,7 @@ module.exports = {
         },
       },
       {
-        charset: 'utf8',
+        charset: 'utf8mb4',
       }
     );
   },
