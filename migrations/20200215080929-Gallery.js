@@ -21,14 +21,6 @@ module.exports = {
         photoURL: {
           type: STRING
         },
-        userId: {
-          type: UUID,
-          references: {
-            model: 'users',
-            key: 'id'
-          },
-          allowNull: true
-        },
         createdAt: {
           type: DATE
         },
@@ -37,6 +29,14 @@ module.exports = {
         },
         deletedAt: {
           type: DATE
+        },
+        userId: {
+          type: UUID,
+          references: {
+            model: 'users',
+            key: 'id'
+          },
+          allowNull: true
         },
       },
       {

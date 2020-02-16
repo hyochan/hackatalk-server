@@ -35,9 +35,6 @@ module.exports = {
         updatedAt: {
           type: DATE
         },
-        deletedAt: {
-          type: DATE
-        },
         userId: {
           type: UUID,
           references: {
