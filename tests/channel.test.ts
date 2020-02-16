@@ -1,6 +1,5 @@
 import { GraphQLClient, request } from 'graphql-request';
 
-import { ErrorString } from '../src/utils/error';
 import { testHost } from './testSetup';
 
 describe('Resolver - Channel', () => {

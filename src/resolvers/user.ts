@@ -92,7 +92,7 @@ const resolver: Resolvers = {
     },
     virgilJwt: async (_, args, { getUser }): Promise<string> => {
       const auth = await getUser();
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      if (!auth) throw ErrorUserNotSignedIn();
 
       const generator = createOrGetVirgilJwtGenerator();
       const virgilJwtToken = generator.generateToken(auth.id);

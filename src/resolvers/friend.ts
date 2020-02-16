@@ -1,6 +1,5 @@
 import { FriendSubAction, Resolvers, User } from '../generated/graphql';
 
-import { AuthenticationError } from 'apollo-server-core';
 import {
   ErrorUserNotSignedIn,
 } from '../utils/error';
