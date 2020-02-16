@@ -24,6 +24,7 @@ i18next
   .init({
     lng: 'en',
     preload: ['en', 'ko'],
+    load: 'languageOnly',
     backend: {
       loadPath: path.join(__dirname, '../locales', '{{lng}}.json'),
       addPath: path.join(__dirname, '../locales', '{{lng}}.missing.json'),
