@@ -296,6 +296,15 @@ export type QueryUsersArgs = {
   after?: Maybe<Scalars['String']>
 };
 
+export type Reaction = {
+   __typename?: 'Reaction',
+  createdAt?: Maybe<Scalars['DateTime']>,
+  deletedAt?: Maybe<Scalars['DateTime']>,
+  id: Scalars['String'],
+  type?: Maybe<Scalars['String']>,
+  updatedAt?: Maybe<Scalars['DateTime']>,
+};
+
 export type Reply = {
    __typename?: 'Reply',
   createdAt?: Maybe<Scalars['DateTime']>,
@@ -497,6 +506,7 @@ export type ResolversTypes = {
   FriendSub: ResolverTypeWrapper<FriendSub>,
   FriendSubAction: FriendSubAction,
   Friend: ResolverTypeWrapper<Friend>,
+  Reaction: ResolverTypeWrapper<Reaction>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -533,6 +543,7 @@ export type ResolversParentTypes = {
   FriendSub: FriendSub,
   FriendSubAction: FriendSubAction,
   Friend: Friend,
+  Reaction: Reaction,
 };
 
 export type AuthPayloadResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = {
@@ -666,6 +677,15 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, QueryUsersArgs>,
 };
 
+export type ReactionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Reaction'] = ResolversParentTypes['Reaction']> = {
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+};
+
 export type ReplyResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Reply'] = ResolversParentTypes['Reply']> = {
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
@@ -722,6 +742,7 @@ export type Resolvers<ContextType = MyContext> = {
   Notification?: NotificationResolvers<ContextType>,
   Photo?: PhotoResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
+  Reaction?: ReactionResolvers<ContextType>,
   Reply?: ReplyResolvers<ContextType>,
   Subscription?: SubscriptionResolvers<ContextType>,
   User?: UserResolvers<ContextType>,

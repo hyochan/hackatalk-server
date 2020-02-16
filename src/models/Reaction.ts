@@ -26,10 +26,7 @@ Reaction.init({
     allowNull: false,
     primaryKey: true,
   },
-  type: {
-    type: STRING,
-    allowNull: false,
-  },
+  type: STRING,
 }, {
   sequelize,
   modelName: 'reaction',
@@ -40,8 +37,8 @@ Reaction.init({
 Reaction.belongsTo(Message, { as: 'message' });
 Reaction.belongsTo(User, { as: 'user' });
 
-export type reactionModelStatic = typeof Model & {
+export type ReactionModelStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): Reaction;
   }
 
-export default Reaction as reactionModelStatic;
+export default Reaction as ReactionModelStatic;

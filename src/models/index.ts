@@ -5,8 +5,8 @@ import Membership, { MembershipModelStatic } from './Membership';
 import Message, { MessageModelStatic } from './Message';
 import Notification, { NotificationModelStatic } from './Notification';
 import Photo, { PhotoModelStatic } from './Photo';
-import Reply, { ReplyModelStatic } from './Reply';
 import Reaction, { ReactionModelStatic } from './Reaction';
+import Reply, { ReplyModelStatic } from './Reply';
 import User, { UserModelStatic } from './User';
 
 export default {
