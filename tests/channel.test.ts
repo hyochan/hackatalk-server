@@ -77,6 +77,7 @@ describe('Resolver - Channel', () => {
     };
 
     const promise = client.request(mutation, variables);
+    expect(promise).rejects.toThrow(ErrorString.FriendIdsRequired);
   });
     const variables = {
       channel: {
