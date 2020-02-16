@@ -2,7 +2,7 @@ scalar DateTime
 
 type Reaction {
   id: String!
-  type: String!
+  type: String
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime

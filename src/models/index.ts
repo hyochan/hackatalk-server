@@ -6,6 +6,7 @@ import Message, { MessageModelStatic } from './Message';
 import Notification, { NotificationModelStatic } from './Notification';
 import Photo, { PhotoModelStatic } from './Photo';
 import Reply, { ReplyModelStatic } from './Reply';
+import Reaction, { ReactionModelStatic } from './Reaction';
 import User, { UserModelStatic } from './User';
 
 export default {
@@ -17,6 +18,7 @@ export default {
   Notification,
   Photo,
   Reply,
+  Reaction,
   Gallery,
 };
 
@@ -26,6 +28,7 @@ export interface ModelType {
   Channel: ChannelModelStatic;
   Message: MessageModelStatic;
   Reply: ReplyModelStatic;
+  Reaction: ReactionModelStatic;
   Membership: MembershipModelStatic;
   Notification: NotificationModelStatic;
   Photo: PhotoModelStatic;
