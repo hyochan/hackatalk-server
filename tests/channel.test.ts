@@ -1,5 +1,6 @@
 import { GraphQLClient, request } from 'graphql-request';
 
+import { ErrorString } from '../src/utils/error';
 import { testHost } from './testSetup';
 
 describe('Resolver - Channel', () => {
@@ -76,11 +77,7 @@ describe('Resolver - Channel', () => {
     };
 
     const promise = client.request(mutation, variables);
-    expect(promise).rejects.toThrow();
   });
-
-  it('should return channel id and name', async () => {
-    const { signUp } = await request(testHost, signUpMutationUser2);
     const variables = {
       channel: {
         friendIds: [signUp.user.id],
