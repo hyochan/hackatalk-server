@@ -1,23 +1,26 @@
 import { FriendSubAction, Resolvers, User } from '../generated/graphql';
 
 import { AuthenticationError } from 'apollo-server-core';
+import {
+  ErrorUserNotSignedIn,
+} from '../utils/error';
 import { Op } from 'sequelize';
+import { checkAuth } from '../utils/auth';
 import { withFilter } from 'apollo-server';
 
 const FRIENDS_CHANGED = 'FRIENDS_CHANGED';
 
 const resolver: Resolvers = {
   Query: {
-    friends: async (_, args, { getUser, models }): Promise<User[]> => {
-      const auth = await getUser();
-
-      if (!auth) throw new AuthenticationError('User is not signed in');
+    friends: async (_, args, { verifyUser, models }): Promise<User[]> => {
+      const auth = verifyUser();
+      checkAuth(auth);
 
       const { Friend: friendModel, User: userModel } = models;
 
       const friendIds = await friendModel.findAll({
         attributes: ['friendId'],
-        where: { userId: { [Op.eq]: auth.id } },
+        where: { userId: { [Op.eq]: auth.userId } },
         raw: true,
       });
 
@@ -32,11 +35,10 @@ const resolver: Resolvers = {
     },
   },
   Mutation: {
-    addFriend: async (_, { friendId }, { getUser, models, pubsub }):
+    addFriend: async (_, { friendId }, { verifyUser, models, pubsub }):
       Promise<User> => {
-      const auth = await getUser();
-
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      const auth = verifyUser();
+      checkAuth(auth);
 
       const { User: userModel, Friend: friendModel } = models;
 
@@ -47,7 +49,7 @@ const resolver: Resolvers = {
 
         await friendModel.upsert(
           {
-            userId: auth.id,
+            userId: auth.userId,
             friendId,
             deletedAt: null,
           },
@@ -61,14 +63,15 @@ const resolver: Resolvers = {
         });
         return user;
       } catch (err) {
-        throw new Error(err);
+        throw new Error(err.message);
       }
     },
-    deleteFriend: async (_, { friendId }, { getUser, models, pubsub }):
+    deleteFriend: async (_, { friendId }, { verifyUser, models, pubsub }):
       Promise<User> => {
-      const auth = await getUser();
+      const auth = verifyUser();
+      checkAuth(auth);
 
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      if (!auth) throw ErrorUserNotSignedIn();
 
       const { User: userModel, Friend: friendModel } = models;
 
@@ -81,7 +84,7 @@ const resolver: Resolvers = {
         await friendModel.destroy(
           {
             where: {
-              userId: auth.id,
+              userId: auth.userId,
               friendId,
             },
           },
@@ -95,7 +98,7 @@ const resolver: Resolvers = {
         });
         return user;
       } catch (err) {
-        throw new Error(err);
+        throw new Error(err.message);
       }
     },
   },

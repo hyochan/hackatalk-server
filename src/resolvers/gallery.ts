@@ -1,10 +1,11 @@
 import { Gallery, Resolvers } from '../generated/graphql';
 
+import { ErrorUrlNotValid } from '../utils/error';
 import { checkAuth } from '../utils/auth';
 
 const throwInvalidURL = (photoURL: string): void => {
   if (!photoURL.startsWith('http')) {
-    throw new Error('photoURL is not a url. It should start with http.');
+    throw ErrorUrlNotValid();
   }
 };
 

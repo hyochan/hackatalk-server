@@ -1,5 +1,6 @@
 import { GraphQLClient, request } from 'graphql-request';
 
+import { ErrorString } from '../src/utils/error';
 import { testHost } from './testSetup';
 
 describe('Resolver - Gallery', () => {
@@ -111,6 +112,6 @@ describe('Resolver - Gallery', () => {
       photoURL: 'error://',
     };
     const promise = client.request(createGallery, variables);
-    expect(promise).rejects.toThrow('photoURL is not a url. It should start with http.');
+    expect(promise).rejects.toThrow(ErrorString.UrlNotValid);
   });
 });
