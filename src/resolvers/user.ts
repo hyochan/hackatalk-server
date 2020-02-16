@@ -27,6 +27,7 @@ import { AuthType } from '../models/User';
 import { ModelType } from '../models';
 import { Op } from 'sequelize';
 import SendGridMail from '@sendgrid/mail';
+import createOrGetVirgilJwtGenerator from '../utils/virgil';
 import jwt from 'jsonwebtoken';
 import { withFilter } from 'apollo-server';
 
@@ -88,6 +89,14 @@ const resolver: Resolvers = {
     me: async (_, args, { getUser }): Promise<User> => {
       const auth = await getUser();
       return auth;
+    },
+    virgilJwt: async (_, args, { getUser }): Promise<string> => {
+      const auth = await getUser();
+      if (!auth) throw new AuthenticationError('User is not signed in');
+
+      const generator = createOrGetVirgilJwtGenerator();
+      const virgilJwtToken = generator.generateToken(auth.id);
+      return virgilJwtToken.toString();
     },
     users: async (_, args, { verifyUser, models }): Promise<User[]> => {
       const { User: userModel } = models;
