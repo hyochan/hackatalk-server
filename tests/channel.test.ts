@@ -77,8 +77,11 @@ describe('Resolver - Channel', () => {
     };
 
     const promise = client.request(mutation, variables);
-    expect(promise).rejects.toThrow(ErrorString.FriendIdsRequired);
+    expect(promise).rejects.toThrow();
   });
+
+  it('should return channel id and name', async () => {
+    const { signUp } = await request(testHost, signUpMutationUser2);
     const variables = {
       channel: {
         friendIds: [signUp.user.id],
