@@ -15,8 +15,4 @@ const sequelize = new Sequelize(
   },
 );
 
-if (process.env.NODE_ENV !== 'test') {
-  sequelize.sync();
-}
-
 export default sequelize;
