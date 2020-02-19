@@ -1,10 +1,8 @@
 import { ErrorUserNotSignedIn } from '../utils/error';
 import bcrypt from 'bcrypt-nodejs';
-import initDotEnv from '../../config/initDotEnv';
 import jwt from 'jsonwebtoken';
 import qs from 'querystring';
 
-initDotEnv();
 const SALT_ROUND = 10;
 
 export const { JWT_SECRET = 'undefined' } = process.env;
