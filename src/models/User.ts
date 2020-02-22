@@ -63,7 +63,7 @@ User.init({
   },
   name: STRING,
   nickname: STRING,
-  thumbUrl: STRING,
+  thumbURL: STRING,
   photoURL: STRING,
   birthday: {
     type: DATEONLY,
