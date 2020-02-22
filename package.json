@@ -29,16 +29,16 @@
     "migrate": "yarn migrate:dev && yarn migrate:prod"
   },
   "dependencies": {
-    "@sendgrid/mail": "^6.5.2",
-    "apollo-server": "^2.10.0",
-    "apollo-server-express": "^2.10.0",
+    "@sendgrid/mail": "^6.5.3",
+    "apollo-server": "^2.10.1",
+    "apollo-server-express": "^2.10.1",
     "azure-storage": "^2.10.3",
     "bcrypt-nodejs": "^0.0.3",
     "cors": "^2.8.5",
     "graphql": "^14.6.0",
     "graphql-import": "^0.7.1",
     "http": "^0.0.0",
-    "i18next": "^19.1.0",
+    "i18next": "^19.3.1",
     "i18next-express-middleware": "^1.9.1",
     "i18next-node-fs-backend": "^2.1.3",
     "jest": "^25.1.0",
@@ -47,10 +47,10 @@
     "mysql2": "^2.1.0",
     "nodemailer": "^6.4.2",
     "querystring": "^0.2.0",
-    "sequelize": "^5.21.4",
+    "sequelize": "^5.21.5",
     "shortid": "^2.2.15",
-    "virgil-crypto": "^3.2.6",
-    "virgil-sdk": "^5.3.0"
+    "virgil-crypto": "^4.0.0",
+    "virgil-sdk": "^6.0.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.12.2",
@@ -63,15 +63,15 @@
     "@types/express-session": "^1.15.16",
     "@types/graphql": "^14.5.0",
     "@types/i18next-node-fs-backend": "^2.1.0",
-    "@types/jest": "^25.1.2",
+    "@types/jest": "^25.1.3",
     "@types/jsonwebtoken": "^8.3.7",
     "@types/multer": "^1.4.2",
-    "@types/node": "^13.7.1",
+    "@types/node": "^13.7.4",
     "@types/sequelize": "^4.28.8",
     "@types/shortid": "^0.0.29",
     "@types/validator": "^12.0.1",
-    "@typescript-eslint/eslint-plugin": "^2.19.2",
-    "@typescript-eslint/parser": "^2.19.2",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
     "codecov": "^3.6.5",
     "cross-env": "^7.0.0",
     "dotenv": "^8.2.0",
@@ -85,9 +85,9 @@
     "nodemon": "^2.0.2",
     "pm2": "^4.2.3",
     "sequelize-cli": "^5.5.1",
-    "ts-jest": "^25.2.0",
+    "ts-jest": "^25.2.1",
     "ts-node": "^8.6.2",
-    "typescript": "3.7.5"
+    "typescript": "3.8.2"
   },
   "resolutions": {
     "graphql": "14.6.0"

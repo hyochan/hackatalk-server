@@ -144,11 +144,11 @@ const resolver: Resolvers = {
               name: { [Op.like]: user.name },
             },
             limit,
-            order: [
-              ['id', 'ASC'],
-            ],
             verified: true,
           },
+          order: [
+            ['id', 'ASC'],
+          ],
         });
       }
 
