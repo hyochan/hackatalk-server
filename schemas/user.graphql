@@ -55,6 +55,8 @@ input UserProfileInput {
   birthday: Date
   gender: Gender
   phone: String
+  thumbURL: String
+  photoURL: String
   statusMessage: String
 }
 
