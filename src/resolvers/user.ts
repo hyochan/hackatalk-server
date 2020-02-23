@@ -290,7 +290,7 @@ const resolver: Resolvers = {
         if (!auth) {
           throw ErrorUserNotSignedIn();
         }
-        models.User.update(
+        await models.User.update(
           args.user,
           {
             where: {
