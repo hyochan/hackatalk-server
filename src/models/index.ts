@@ -5,9 +5,9 @@ import Membership, { MembershipModelStatic } from './Membership';
 import Message, { MessageModelStatic } from './Message';
 import Notification, { NotificationModelStatic } from './Notification';
 import Photo, { PhotoModelStatic } from './Photo';
-import Reaction, { ReactionModelStatic } from './Reaction';
 import Reply, { ReplyModelStatic } from './Reply';
 import User, { UserModelStatic } from './User';
+import Reaction, { ReactionModelStatic } from './Reaction';
 
 export default {
   User,
@@ -18,8 +18,8 @@ export default {
   Notification,
   Photo,
   Reply,
-  Reaction,
   Gallery,
+  Reaction,
 };
 
 export interface ModelType {
@@ -28,9 +28,9 @@ export interface ModelType {
   Channel: ChannelModelStatic;
   Message: MessageModelStatic;
   Reply: ReplyModelStatic;
-  Reaction: ReactionModelStatic;
   Membership: MembershipModelStatic;
   Notification: NotificationModelStatic;
   Photo: PhotoModelStatic;
   Gallery: GalleryModelStatic;
+  Reaction: ReactionModelStatic;
 };
