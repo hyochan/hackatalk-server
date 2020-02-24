@@ -143,7 +143,6 @@ export type Mutation = {
   updateChannel?: Maybe<Scalars['Int']>,
   updateGallery?: Maybe<Scalars['Int']>,
   updateProfile?: Maybe<User>,
-  updateReaction?: Maybe<Scalars['Int']>,
 };
 
 
@@ -249,11 +248,6 @@ export type MutationUpdateProfileArgs = {
   user: UserProfileInput
 };
 
-
-export type MutationUpdateReactionArgs = {
-  reactionId: Scalars['ID'],
-  type: Scalars['String']
-};
 
 export type Notification = {
    __typename?: 'Notification',
@@ -667,7 +661,6 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   updateChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, MutationUpdateChannelArgs>,
   updateGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationUpdateGalleryArgs, 'galleryId' | 'photoURL'>>,
   updateProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'user'>>,
-  updateReaction?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationUpdateReactionArgs, 'reactionId' | 'type'>>,
 };
 
 export type NotificationResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification']> = {
