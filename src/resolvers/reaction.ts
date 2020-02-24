@@ -8,7 +8,9 @@ const resolver: Resolvers = {
       const auth = verifyUser();
 
       if (!auth) throw new AuthenticationError('User is not signed in');
+
       const { Reaction: reactionModel } = models;
+
       return reactionModel.findAll();
     },
   },
@@ -20,6 +22,7 @@ const resolver: Resolvers = {
       if (!auth) throw new AuthenticationError('User is not signed in');
 
       const { Reaction: reactionModel } = models;
+
       const reaction = await reactionModel.create({
         type,
         userId: auth.userId,
@@ -33,6 +36,7 @@ const resolver: Resolvers = {
       if (!auth) throw new AuthenticationError('User is not signed in');
 
       const { Reaction: reactionModel } = models;
+
       const result = await reactionModel.destroy({
         where: {
           id: reactionId,
