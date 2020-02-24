@@ -41,7 +41,6 @@ Message.init({
   sequelize,
   modelName: 'message',
   timestamps: true,
-  paranoid: true,
 });
 
 Message.belongsTo(Channel, { as: 'channel' });

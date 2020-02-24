@@ -11,11 +11,8 @@ const sequelize = new Sequelize(
     define: config.define,
     dialectOptions: config.dialectOption,
     pool: config.pool,
+    logging: false,
   },
 );
-
-if (process.env.NODE_ENV !== 'test') {
-  sequelize.sync();
-}
 
 export default sequelize;

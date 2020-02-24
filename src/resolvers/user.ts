@@ -6,7 +6,16 @@ import {
   User,
 } from '../generated/graphql';
 import {
+  ErrorEmailForUserExists,
+  ErrorEmailNotValid,
+  ErrorEmailSentFailed,
+  ErrorPasswordIncorrect,
+  ErrorUserNotExists,
+  ErrorUserNotSignedIn,
+} from '../utils/error';
+import {
   Role,
+  checkAuth,
   encryptCredential,
   getEmailVerificationHTML,
   getPasswordResetHTML,
@@ -15,10 +24,10 @@ import {
 } from '../utils/auth';
 
 import { AuthType } from '../models/User';
-import { AuthenticationError } from 'apollo-server-core';
 import { ModelType } from '../models';
 import { Op } from 'sequelize';
 import SendGridMail from '@sendgrid/mail';
+import createOrGetVirgilJwtGenerator from '../utils/virgil';
 import jwt from 'jsonwebtoken';
 import { withFilter } from 'apollo-server';
 
@@ -42,7 +51,7 @@ const signInWithSocialAccount = async (
     });
 
     if (emailUser) {
-      throw new Error('Email for current user is already signed in');
+      throw ErrorEmailForUserExists();
     }
   }
 
@@ -81,12 +90,20 @@ const resolver: Resolvers = {
       const auth = await getUser();
       return auth;
     },
+    virgilToken: (_, args, { verifyUser }): string => {
+      const auth = verifyUser();
+      if (!auth) throw ErrorUserNotSignedIn();
+
+      const generator = createOrGetVirgilJwtGenerator();
+      const virgilJwtToken = generator.generateToken(auth.userId);
+      return virgilJwtToken.toString();
+    },
     users: async (_, args, { verifyUser, models }): Promise<User[]> => {
       const { User: userModel } = models;
       const auth = verifyUser();
-      const { user, includeUser, filter, first, after } = args;
+      checkAuth(auth);
 
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      const { user, includeUser, filter, first, after } = args;
 
       let query: object = {};
       if (after) {
@@ -127,11 +144,11 @@ const resolver: Resolvers = {
               name: { [Op.like]: user.name },
             },
             limit,
-            order: [
-              ['id', 'ASC'],
-            ],
             verified: true,
           },
+          order: [
+            ['id', 'ASC'],
+          ],
         });
       }
 
@@ -164,11 +181,11 @@ const resolver: Resolvers = {
         raw: true,
       });
 
-      if (!user) throw new AuthenticationError('User does not exists');
+      if (!user) throw ErrorUserNotExists();
 
       const validate = await validateCredential(args.password, user.password);
 
-      if (!validate) throw new AuthenticationError('Password is not correct');
+      if (!validate) throw ErrorPasswordIncorrect();
 
       const token: string = jwt.sign(
         {
@@ -198,7 +215,7 @@ const resolver: Resolvers = {
       });
 
       if (emailUser) {
-        throw new Error('Email for current user is already signed up.');
+        throw ErrorEmailForUserExists();
       }
 
       args.user.password = await encryptCredential(args.user.password);
@@ -242,14 +259,14 @@ const resolver: Resolvers = {
         }
         return false;
       } catch (err) {
-        throw new Error(`email sent failed\n${err.message}`);
+        throw ErrorEmailSentFailed(err);
       }
     },
     findPassword: async (_, args): Promise<boolean> => {
       const email = args.email;
 
       if (!email || !validateEmail(email)) {
-        throw new Error('Not a valid email address');
+        throw ErrorEmailNotValid();
       }
 
       const hashedEmail = await encryptCredential(email);
@@ -264,18 +281,16 @@ const resolver: Resolvers = {
         await SendGridMail.send(msg);
         return true;
       } catch (err) {
-        throw new Error(`email sent failed\n${err.message}`);
+        throw ErrorEmailSentFailed(err);
       }
     },
     updateProfile: async (_, args, { verifyUser, models, pubsub }): Promise<User> => {
       try {
         const auth = verifyUser();
         if (!auth) {
-          throw new AuthenticationError(
-            'User is not logged in',
-          );
+          throw ErrorUserNotSignedIn();
         }
-        models.User.update(
+        await models.User.update(
           args.user,
           {
             where: {
@@ -294,13 +309,13 @@ const resolver: Resolvers = {
         pubsub.publish(USER_UPDATED, { user });
         return user;
       } catch (err) {
-        throw new Error(err);
+        throw new Error(err.message);
       }
     },
     setOnlineStatus: async (_, args, { verifyUser, models, pubsub }): Promise<number> => {
       try {
         const auth = verifyUser();
-        if (!auth) { throw new AuthenticationError('User is not logged in'); }
+        if (!auth) { throw ErrorUserNotSignedIn(); }
 
         const update = await models.User.update(
           {
@@ -317,14 +332,14 @@ const resolver: Resolvers = {
 
         return update[0];
       } catch (err) {
-        throw new Error(err);
+        throw new Error(err.message);
       }
     },
     changeEmailPassword: async (
       _, { password, newPassword }, { verifyUser, models }): Promise<boolean> => {
       try {
         const auth = verifyUser();
-        if (!auth) { throw new AuthenticationError('User is not logged in'); }
+        checkAuth(auth);
 
         const { User: userModel } = models;
 
@@ -335,11 +350,11 @@ const resolver: Resolvers = {
           raw: true,
         });
 
-        if (!user) throw new AuthenticationError('User does not exists');
+        if (!user) throw ErrorUserNotExists();
 
         const validate = await validateCredential(password, user.password);
 
-        if (!validate) throw new AuthenticationError('Password is not correct');
+        if (!validate) throw ErrorPasswordIncorrect();
 
         newPassword = await encryptCredential(newPassword);
 
@@ -356,7 +371,7 @@ const resolver: Resolvers = {
 
         return !!update[0];
       } catch (err) {
-        throw new Error(err);
+        throw new Error(err.message);
       }
     },
   },

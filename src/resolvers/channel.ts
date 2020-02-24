@@ -1,15 +1,17 @@
 import { Channel, Membership, Message, Resolvers } from '../generated/graphql';
 
-import { AuthenticationError } from 'apollo-server-core';
+import {
+  ErrorFriendIdRequired,
+} from '../utils/error';
 import { MemberType } from '../models/Membership';
 import { Op } from 'sequelize';
+import { checkAuth } from '../utils/auth';
 
 const resolver: Resolvers = {
   Query: {
     channels: async (_, args, { verifyUser, models }): Promise<Channel[]> => {
       const auth = verifyUser();
-
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      checkAuth(auth);
 
       const { Channel: channelModel, Membership: membershipModel } = models;
 
@@ -34,13 +36,12 @@ const resolver: Resolvers = {
   Mutation: {
     createChannel: async (_, args, { verifyUser, models }): Promise<Channel> => {
       const auth = verifyUser();
-
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      checkAuth(auth);
 
       const { Membership: membershipModel, Channel: channelModel } = models;
       const { name, type, friendIds } = args.channel;
 
-      if (!friendIds || friendIds.length === 0) throw new Error('friendIds is required');
+      if (!friendIds || friendIds.length === 0) throw ErrorFriendIdRequired();
 
       const channelMembers = [auth.userId, ...friendIds];
       const channel = await channelModel.create({

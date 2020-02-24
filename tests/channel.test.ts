@@ -23,6 +23,7 @@ describe('Resolver - Channel', () => {
       }) {
         token,
         user {
+          id
           email
         }
       }
@@ -38,6 +39,7 @@ describe('Resolver - Channel', () => {
       }) {
         token,
         user {
+          id
           email
         }
       }
@@ -62,7 +64,7 @@ describe('Resolver - Channel', () => {
     };
 
     const promise = request(testHost, mutation, variables);
-    expect(promise).rejects.toThrow('User is not signed in');
+    expect(promise).rejects.toThrow();
   });
 
   it('should throw Error "friendIds is required"', async () => {
@@ -74,7 +76,7 @@ describe('Resolver - Channel', () => {
     };
 
     const promise = client.request(mutation, variables);
-    expect(promise).rejects.toThrow('friendIds is required');
+    expect(promise).rejects.toThrow();
   });
 
   it('should return channel id and name', async () => {

@@ -1,14 +1,22 @@
 import { Gallery, Resolvers } from '../generated/graphql';
 
-import { AuthenticationError } from 'apollo-server-core';
+import { ErrorUrlNotValid } from '../utils/error';
+import { checkAuth } from '../utils/auth';
+
+const throwInvalidURL = (photoURL: string): void => {
+  if (!photoURL.startsWith('http')) {
+    throw ErrorUrlNotValid();
+  }
+};
 
 const resolver: Resolvers = {
   Query: {
     galleries: async (_, { userId }, { verifyUser, models }): Promise<Gallery[]> => {
       const auth = verifyUser();
+      checkAuth(auth);
 
-      if (!auth) throw new AuthenticationError('User is not signed in');
       const { Gallery: galleryModel } = models;
+
       return galleryModel.findAll({
         where: {
           userId,
@@ -19,11 +27,9 @@ const resolver: Resolvers = {
   Mutation: {
     createGallery: async (_, { photoURL }, { verifyUser, models }): Promise<Gallery> => {
       const auth = verifyUser();
+      checkAuth(auth);
 
-      if (!auth) throw new AuthenticationError('User is not signed in');
-      if (!photoURL.startsWith('http')) {
-        throw Error('photoURL is not a url. It should start with http.');
-      }
+      throwInvalidURL(photoURL);
 
       const { Gallery: galleryModel } = models;
       const gallery = await galleryModel.create({
@@ -35,11 +41,9 @@ const resolver: Resolvers = {
     },
     updateGallery: async (_, { galleryId, photoURL }, { verifyUser, models }): Promise<number> => {
       const auth = verifyUser();
+      checkAuth(auth);
 
-      if (!auth) throw new AuthenticationError('User is not signed in');
-      if (!photoURL.startsWith('http')) {
-        throw Error('photoURL is not a url. It should start with http.');
-      }
+      throwInvalidURL(photoURL);
 
       const { Gallery: galleryModel } = models;
 
@@ -56,8 +60,7 @@ const resolver: Resolvers = {
     },
     deleteGallery: async (_, { galleryId }, { verifyUser, models }): Promise<number> => {
       const auth = verifyUser();
-
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      checkAuth(auth);
 
       const { Gallery: galleryModel } = models;
       const result = await galleryModel.destroy({
@@ -66,7 +69,7 @@ const resolver: Resolvers = {
         },
       });
 
-      return result[0];
+      return result;
     },
   },
 };

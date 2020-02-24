@@ -5,7 +5,7 @@ jobs:
   build:
     # machine: true
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:11
       - image: mysql:5.7
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --innodb-large-prefix=true --innodb-file-format=Barracuda
         environment:
@@ -76,7 +76,7 @@ jobs:
           name: Jest test
           working_directory: .
           command: |
-            yarn test --coverage --silent --detectOpenHandles
+            yarn test --coverage --silent
 
       - codecov/upload:
           file: ./coverage/lcov.info

@@ -1,11 +1,8 @@
+import { ErrorUserNotSignedIn } from '../utils/error';
 import bcrypt from 'bcrypt-nodejs';
-import initDotEnv from '../../config/initDotEnv';
 import jwt from 'jsonwebtoken';
 import qs from 'querystring';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-
-initDotEnv();
 const SALT_ROUND = 10;
 
 export const { JWT_SECRET = 'undefined' } = process.env;
@@ -80,3 +77,7 @@ export const getPasswordResetHTML = (email: string, hashedEmail: string): string
 By visiting below url link, your password will reset to <strong>dooboolab2017</strong>. <br/><br/>
 ${process.env.REDIRECT_URL}/reset_password/${qs.escape(email)}/${qs.escape(hashedEmail)}
 `;
+
+export const checkAuth = (auth: JwtUser): void => {
+  if (!auth) throw ErrorUserNotSignedIn;
+};

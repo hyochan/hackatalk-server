@@ -1,10 +1,14 @@
 import { encryptCredential, getToken, validateCredential } from './utils/auth';
 import { resetPassword, verifyEmail } from './models/User';
 
+import FilesystemBackend from 'i18next-node-fs-backend';
 import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
+import i18next from 'i18next';
+import middleware from 'i18next-express-middleware';
 import multer from 'multer';
+import path from 'path';
 import qs from 'querystring';
 import { uploadFileToAzureBlobFromFile } from './utils/azure';
 
@@ -14,10 +18,28 @@ const {
   STORAGE_ENDPOINT,
 } = process.env;
 
+i18next
+  .use(middleware.LanguageDetector)
+  .use(FilesystemBackend)
+  .init({
+    lng: 'en',
+    preload: ['en', 'ko'],
+    load: 'languageOnly',
+    backend: {
+      loadPath: path.join(__dirname, '../locales', '{{lng}}.json'),
+      addPath: path.join(__dirname, '../locales', '{{lng}}.missing.json'),
+    },
+    fallbackLng: ['en', 'ko'],
+    saveMissing: true,
+    debug: false,
+  });
+
 export const createApp = (): express.Application => {
   const app = express();
 
   app.use(cors());
+  app.use(middleware.handle(i18next));
+
   app.get('/reset_password/:email/:hashed', async (req, res) => {
     const email = qs.unescape(req.params.email);
     const hashed = qs.unescape(req.params.hashed);
@@ -108,7 +130,7 @@ export const createApp = (): express.Application => {
   );
 
   app.get('/', (req, res) => {
-    res.send('It works!!!! production x3');
+    res.send(`${req.t('IT_WORKS')} - Version 0.0.1`);
   });
 
   return app;

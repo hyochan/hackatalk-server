@@ -1,41 +1,39 @@
 import { Notification, Resolvers } from '../generated/graphql';
 
-import { AuthenticationError } from 'apollo-server-core';
+import { checkAuth } from '../utils/auth';
 
 const resolver: Resolvers = {
   Mutation: {
     addNotificationToken: async (
-      _, { notification }, { models, getUser }): Promise<Notification> => {
+      _, { notification }, { models, verifyUser }): Promise<Notification> => {
       const { Notification: notificationModel } = models;
 
-      const auth = await getUser();
-
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      const auth = verifyUser();
+      checkAuth(auth);
 
       const notificationArgs = {
         ...notification,
-        userId: auth.id,
+        userId: auth.userId,
       };
 
       try {
         const created = await notificationModel.create(notificationArgs);
         return created;
       } catch (err) {
-        throw new Error(err);
+        throw new Error(err.message);
       }
     },
     removeNotificationToken: async (
-      _, { token }, { models, getUser }): Promise<number> => {
+      _, { token }, { models, verifyUser }): Promise<number> => {
       const { Notification: notificationModel } = models;
 
-      const auth = await getUser();
-
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      const auth = verifyUser();
+      checkAuth(auth);
 
       try {
         const deleted = await notificationModel.destroy({
           where: {
-            userId: auth.id,
+            userId: auth.userId,
             token,
           },
         });
