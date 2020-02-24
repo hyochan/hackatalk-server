@@ -13,6 +13,7 @@ export type Scalars = {
   Float: number,
   DateTime: any,
   Date: any,
+  Upload: any,
 };
 
 export type AuthPayload = {
@@ -53,6 +54,13 @@ export enum ChannelType {
 }
 
 
+
+export type File = {
+   __typename?: 'File',
+  encoding: Scalars['String'],
+  filename: Scalars['String'],
+  mimetype: Scalars['String'],
+};
 
 export type Friend = {
    __typename?: 'Friend',
@@ -148,6 +156,7 @@ export type Mutation = {
   signInEmail: AuthPayload,
   signInWithSocialAccount: AuthPayload,
   signUp: AuthPayload,
+  singleUpload: File,
   updateChannel?: Maybe<Scalars['Int']>,
   updateGallery?: Maybe<Scalars['Int']>,
   updateProfile?: Maybe<User>,
@@ -235,6 +244,11 @@ export type MutationSignInWithSocialAccountArgs = {
 
 export type MutationSignUpArgs = {
   user: UserInput
+};
+
+
+export type MutationSingleUploadArgs = {
+  file: Scalars['Upload']
 };
 
 
@@ -361,6 +375,7 @@ export type Subscription = {
 export type SubscriptionFriendChangedArgs = {
   userId: Scalars['ID']
 };
+
 
 export type User = {
    __typename?: 'User',
@@ -544,6 +559,8 @@ export type ResolversTypes = {
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
+  Upload: ResolverTypeWrapper<Scalars['Upload']>,
+  File: ResolverTypeWrapper<File>,
   UserProfileInput: UserProfileInput,
   Subscription: ResolverTypeWrapper<{}>,
   FriendSub: ResolverTypeWrapper<FriendSub>,
@@ -584,6 +601,8 @@ export type ResolversParentTypes = {
   AuthPayload: AuthPayload,
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
+  Upload: Scalars['Upload'],
+  File: File,
   UserProfileInput: UserProfileInput,
   Subscription: {},
   FriendSub: FriendSub,
@@ -617,6 +636,13 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime'
 }
+
+export type FileResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = {
+  encoding?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  filename?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  mimetype?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+};
 
 export type FriendResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Friend'] = ResolversParentTypes['Friend']> = {
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
@@ -694,6 +720,7 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInEmailArgs, 'email' | 'password'>>,
   signInWithSocialAccount?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInWithSocialAccountArgs, 'socialUser'>>,
   signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>,
+  singleUpload?: Resolver<ResolversTypes['File'], ParentType, ContextType, RequireFields<MutationSingleUploadArgs, 'file'>>,
   updateChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, MutationUpdateChannelArgs>,
   updateGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationUpdateGalleryArgs, 'galleryId' | 'photoURL'>>,
   updateProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'user'>>,
@@ -756,6 +783,10 @@ export type SubscriptionResolvers<ContextType = MyContext, ParentType extends Re
   userUpdated?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "userUpdated", ParentType, ContextType>,
 };
 
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload'
+}
+
 export type UserResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   authType?: Resolver<Maybe<ResolversTypes['AuthType']>, ParentType, ContextType>,
   birthday?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
@@ -797,6 +828,7 @@ export type Resolvers<ContextType = MyContext> = {
   Channel?: ChannelResolvers<ContextType>,
   Date?: GraphQLScalarType,
   DateTime?: GraphQLScalarType,
+  File?: FileResolvers<ContextType>,
   Friend?: FriendResolvers<ContextType>,
   FriendSub?: FriendSubResolvers<ContextType>,
   Gallery?: GalleryResolvers<ContextType>,
@@ -810,6 +842,7 @@ export type Resolvers<ContextType = MyContext> = {
   Query?: QueryResolvers<ContextType>,
   Reply?: ReplyResolvers<ContextType>,
   Subscription?: SubscriptionResolvers<ContextType>,
+  Upload?: GraphQLScalarType,
   User?: UserResolvers<ContextType>,
   UserEdge?: UserEdgeResolvers<ContextType>,
   UsersConnection?: UsersConnectionResolvers<ContextType>,
