@@ -20,7 +20,8 @@ type Query {
   messages: [Message!]!
   channels: [Channel!]!
   friends: [User!]!
-  galleries(userId: String!): [Gallery!]!  
+  galleries(userId: String!): [Gallery!]!
+  reactions: [Reaction!]!  
 }
 
 type Mutation {
@@ -42,6 +43,9 @@ type Mutation {
   createGallery(photoURL: String!): Gallery
   updateGallery(galleryId: ID!, photoURL: String!): Int
   deleteGallery(galleryId: ID!): Int
+  createReaction(type: String!): Reaction
+  updateReaction(reactionId: ID!, type: String!): Int
+  deleteReaction(reactionId: ID!): Int
 }
 
 type Subscription {
