@@ -1,7 +1,6 @@
-import { VirgilAccessTokenSigner, VirgilCrypto } from 'virgil-crypto';
-import { JwtGenerator } from 'virgil-sdk';
+import { VirgilAccessTokenSigner, VirgilCrypto, initCrypto } from 'virgil-crypto';
 
-const virgilCrypto = new VirgilCrypto();
+import { JwtGenerator } from 'virgil-sdk';
 
 let virgilJwtGenerator: JwtGenerator | null;
 const createOrGetVirgilJwtGenerator = (): JwtGenerator => {
@@ -9,21 +8,27 @@ const createOrGetVirgilJwtGenerator = (): JwtGenerator => {
     return virgilJwtGenerator;
   }
 
-  const requiredParams = [
-    'VIRGIL_APP_ID',
-    'VIRGIL_APP_KEY_ID',
-    'VIRGIL_APP_KEY',
-  ].filter((name) => !process.env[name]);
+  initCrypto().then(() => {
+    const virgilCrypto = new VirgilCrypto();
 
-  if (requiredParams.length > 0) {
-    throw new Error(`Invalid configuration. Missing: ${requiredParams.join(', ')} in .env file`);
-  }
+    const requiredParams = [
+      'VIRGIL_APP_ID',
+      'VIRGIL_APP_KEY_ID',
+      'VIRGIL_APP_KEY',
+    ].filter((name) => !process.env[name]);
 
-  return new JwtGenerator({
-    appId: process.env.VIRGIL_APP_ID,
-    apiKeyId: process.env.VIRGIL_APP_KEY_ID,
-    apiKey: virgilCrypto.importPrivateKey(process.env.VIRGIL_APP_KEY),
-    accessTokenSigner: new VirgilAccessTokenSigner(virgilCrypto),
+    if (requiredParams.length > 0) {
+      throw new Error(`Invalid configuration. Missing: ${requiredParams.join(', ')} in .env file`);
+    }
+
+    virgilJwtGenerator = new JwtGenerator({
+      appId: process.env.VIRGIL_APP_ID,
+      apiKeyId: process.env.VIRGIL_APP_KEY_ID,
+      apiKey: virgilCrypto.importPrivateKey(process.env.VIRGIL_APP_KEY),
+      accessTokenSigner: new VirgilAccessTokenSigner(virgilCrypto),
+    });
+    ;
+    return virgilJwtGenerator;
   });
 };
 
