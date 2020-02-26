@@ -90,13 +90,17 @@ const resolver: Resolvers = {
       const auth = await getUser();
       return auth;
     },
-    virgilToken: (_, args, { verifyUser }): string => {
+    virgilToken: async (_, args, { verifyUser }): Promise<string> => {
       const auth = verifyUser();
       if (!auth) throw ErrorUserNotSignedIn();
 
-      const generator = createOrGetVirgilJwtGenerator();
-      const virgilJwtToken = generator.generateToken(auth.userId);
-      return virgilJwtToken.toString();
+      try {
+        const generator = await createOrGetVirgilJwtGenerator();
+        const virgilJwtToken = generator.generateToken(auth.userId);
+        return virgilJwtToken.toString();
+      } catch (err) {
+        throw new Error(err);
+      }
     },
     users: async (_, args, { verifyUser, models }): Promise<User[]> => {
       const { User: userModel } = models;
