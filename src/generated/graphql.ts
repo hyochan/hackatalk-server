@@ -275,7 +275,6 @@ export type Query = {
    * You can add pagination with first and after args.
  */
   users: Array<User>,
-  virgilToken: Scalars['String'],
 };
 
 
@@ -356,7 +355,6 @@ export type User = {
   thumbURL?: Maybe<Scalars['String']>,
   updatedAt?: Maybe<Scalars['DateTime']>,
   verified?: Maybe<Scalars['Boolean']>,
-  virgilToken?: Maybe<Scalars['String']>,
 };
 
 export type UserInput = {
@@ -668,7 +666,6 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, QueryUsersArgs>,
-  virgilToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
 };
 
 export type ReplyResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Reply'] = ResolversParentTypes['Reply']> = {
@@ -710,7 +707,6 @@ export type UserResolvers<ContextType = MyContext, ParentType extends ResolversP
   thumbURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   verified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
-  virgilToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 

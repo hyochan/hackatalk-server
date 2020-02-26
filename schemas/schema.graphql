@@ -16,7 +16,6 @@ type Query {
   users(user: UserQueryInput, includeUser: Boolean, filter: Boolean, first: Int, after: String): [User!]!
   user(id: ID!): User
   me: User
-  virgilToken: String!
   messages: [Message!]!
   channels: [Channel!]!
   friends: [User!]!
