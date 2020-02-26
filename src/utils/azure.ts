@@ -1,6 +1,7 @@
 import AzureStorage, { BlobService } from 'azure-storage';
 
-// import stream from 'stream';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import stream from 'stream';
 
 require('dotenv').config();
 
