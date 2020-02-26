@@ -2,6 +2,10 @@ import { GraphQLClient, request } from 'graphql-request';
 
 import { testHost } from './testSetup';
 
+jest.mock('../src/utils/virgil', () => {
+  return jest.fn();
+});
+
 describe('Resolver - User', () => {
   const name = 'dooboo1';
   const email = `${name}@dooboo.com`;
