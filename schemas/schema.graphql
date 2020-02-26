@@ -70,7 +70,7 @@ type Mutation {
   createGallery(photoURL: String!): Gallery
   updateGallery(galleryId: ID!, photoURL: String!): Int
   deleteGallery(galleryId: ID!): Int
-  singleUpload(file: Upload!): File!
+  singleUpload(file: Upload!, dir: String): String!
 }
 
 type Subscription {
