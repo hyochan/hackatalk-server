@@ -356,6 +356,7 @@ export type User = {
   thumbURL?: Maybe<Scalars['String']>,
   updatedAt?: Maybe<Scalars['DateTime']>,
   verified?: Maybe<Scalars['Boolean']>,
+  virgilToken?: Maybe<Scalars['String']>,
 };
 
 export type UserInput = {
@@ -381,6 +382,8 @@ export type UserProfileInput = {
   birthday?: Maybe<Scalars['Date']>,
   gender?: Maybe<Gender>,
   phone?: Maybe<Scalars['String']>,
+  thumbURL?: Maybe<Scalars['String']>,
+  photoURL?: Maybe<Scalars['String']>,
   statusMessage?: Maybe<Scalars['String']>,
 };
 
@@ -707,6 +710,7 @@ export type UserResolvers<ContextType = MyContext, ParentType extends ResolversP
   thumbURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   verified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
+  virgilToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
