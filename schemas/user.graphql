@@ -32,6 +32,7 @@ type User {
   statusMessage: String
   isOnline: Boolean
   lastSignedIn: DateTime
+  virgilToken: String
   notifications: [Notification]
   createdAt: DateTime
   updatedAt: DateTime
@@ -55,6 +56,8 @@ input UserProfileInput {
   birthday: Date
   gender: Gender
   phone: String
+  thumbURL: String
+  photoURL: String
   statusMessage: String
 }
 

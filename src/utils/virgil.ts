@@ -1,13 +1,15 @@
-import { VirgilAccessTokenSigner, VirgilCrypto } from 'virgil-crypto';
+import { VirgilAccessTokenSigner, VirgilCrypto, initCrypto } from 'virgil-crypto';
+
 import { JwtGenerator } from 'virgil-sdk';
 
-const virgilCrypto = new VirgilCrypto();
-
 let virgilJwtGenerator: JwtGenerator | null;
-const createOrGetVirgilJwtGenerator = (): JwtGenerator => {
+const createOrGetVirgilJwtGenerator = async (): Promise<JwtGenerator> => {
   if (virgilJwtGenerator) {
     return virgilJwtGenerator;
   }
+
+  await initCrypto();
+  const virgilCrypto = new VirgilCrypto();
 
   const requiredParams = [
     'VIRGIL_APP_ID',
@@ -19,12 +21,14 @@ const createOrGetVirgilJwtGenerator = (): JwtGenerator => {
     throw new Error(`Invalid configuration. Missing: ${requiredParams.join(', ')} in .env file`);
   }
 
-  return new JwtGenerator({
+  virgilJwtGenerator = new JwtGenerator({
     appId: process.env.VIRGIL_APP_ID,
     apiKeyId: process.env.VIRGIL_APP_KEY_ID,
     apiKey: virgilCrypto.importPrivateKey(process.env.VIRGIL_APP_KEY),
     accessTokenSigner: new VirgilAccessTokenSigner(virgilCrypto),
   });
+
+  return virgilJwtGenerator;
 };
 
 export default createOrGetVirgilJwtGenerator;

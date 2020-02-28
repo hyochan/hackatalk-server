@@ -146,7 +146,7 @@ export type Mutation = {
   signInEmail: AuthPayload,
   signInWithSocialAccount: AuthPayload,
   signUp: AuthPayload,
-  singleUpload: File,
+  singleUpload: Scalars['String'],
   updateChannel?: Maybe<Scalars['Int']>,
   updateGallery?: Maybe<Scalars['Int']>,
   updateProfile?: Maybe<User>,
@@ -231,7 +231,8 @@ export type MutationSignUpArgs = {
 
 
 export type MutationSingleUploadArgs = {
-  file: Scalars['Upload']
+  file: Scalars['Upload'],
+  dir?: Maybe<Scalars['String']>
 };
 
 
@@ -371,6 +372,7 @@ export type User = {
   thumbURL?: Maybe<Scalars['String']>,
   updatedAt?: Maybe<Scalars['DateTime']>,
   verified?: Maybe<Scalars['Boolean']>,
+  virgilToken?: Maybe<Scalars['String']>,
 };
 
 export type UserInput = {
@@ -396,6 +398,8 @@ export type UserProfileInput = {
   birthday?: Maybe<Scalars['Date']>,
   gender?: Maybe<Gender>,
   phone?: Maybe<Scalars['String']>,
+  thumbURL?: Maybe<Scalars['String']>,
+  photoURL?: Maybe<Scalars['String']>,
   statusMessage?: Maybe<Scalars['String']>,
 };
 
@@ -509,12 +513,12 @@ export type ResolversTypes = {
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
   Upload: ResolverTypeWrapper<Scalars['Upload']>,
-  File: ResolverTypeWrapper<File>,
   UserProfileInput: UserProfileInput,
   Subscription: ResolverTypeWrapper<{}>,
   FriendSub: ResolverTypeWrapper<FriendSub>,
   FriendSubAction: FriendSubAction,
   Friend: ResolverTypeWrapper<Friend>,
+  File: ResolverTypeWrapper<File>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -547,12 +551,12 @@ export type ResolversParentTypes = {
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
   Upload: Scalars['Upload'],
-  File: File,
   UserProfileInput: UserProfileInput,
   Subscription: {},
   FriendSub: FriendSub,
   FriendSubAction: FriendSubAction,
   Friend: Friend,
+  File: File,
 };
 
 export type AuthPayloadResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = {
@@ -658,7 +662,7 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInEmailArgs, 'email' | 'password'>>,
   signInWithSocialAccount?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInWithSocialAccountArgs, 'socialUser'>>,
   signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>,
-  singleUpload?: Resolver<ResolversTypes['File'], ParentType, ContextType, RequireFields<MutationSingleUploadArgs, 'file'>>,
+  singleUpload?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSingleUploadArgs, 'file'>>,
   updateChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, MutationUpdateChannelArgs>,
   updateGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationUpdateGalleryArgs, 'galleryId' | 'photoURL'>>,
   updateProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'user'>>,
@@ -738,6 +742,7 @@ export type UserResolvers<ContextType = MyContext, ParentType extends ResolversP
   thumbURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   verified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
+  virgilToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 

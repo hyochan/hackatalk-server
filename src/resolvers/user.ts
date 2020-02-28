@@ -81,7 +81,17 @@ const signInWithSocialAccount = async (
     },
     appSecret,
   );
-  return { token, user: user[0] };
+
+  const generator = await createOrGetVirgilJwtGenerator();
+  const virgilJwtToken = generator.generateToken(user[0].id);
+
+  return {
+    token,
+    user: {
+      ...user[0],
+      virgilToken: virgilJwtToken.toString(),
+    },
+  };
 };
 
 const resolver: Resolvers = {
@@ -90,13 +100,17 @@ const resolver: Resolvers = {
       const auth = await getUser();
       return auth;
     },
-    virgilToken: (_, args, { verifyUser }): string => {
+    virgilToken: async (_, args, { verifyUser }): Promise<string> => {
       const auth = verifyUser();
       if (!auth) throw ErrorUserNotSignedIn();
 
-      const generator = createOrGetVirgilJwtGenerator();
-      const virgilJwtToken = generator.generateToken(auth.userId);
-      return virgilJwtToken.toString();
+      try {
+        const generator = await createOrGetVirgilJwtGenerator();
+        const virgilJwtToken = generator.generateToken(auth.userId);
+        return virgilJwtToken.toString();
+      } catch (err) {
+        throw new Error(err);
+      }
     },
     users: async (_, args, { verifyUser, models }): Promise<User[]> => {
       const { User: userModel } = models;
@@ -144,11 +158,11 @@ const resolver: Resolvers = {
               name: { [Op.like]: user.name },
             },
             limit,
-            order: [
-              ['id', 'ASC'],
-            ],
             verified: true,
           },
+          order: [
+            ['id', 'ASC'],
+          ],
         });
       }
 
@@ -195,8 +209,21 @@ const resolver: Resolvers = {
         appSecret,
       );
 
-      pubsub.publish(USER_SIGNED_IN, { userSignedIn: user });
-      return { token, user };
+      try {
+        const generator = await createOrGetVirgilJwtGenerator();
+        const virgilJwtToken = generator.generateToken(user.id);
+
+        pubsub.publish(USER_SIGNED_IN, { userSignedIn: user });
+        return {
+          token,
+          user: {
+            ...user,
+            virgilToken: virgilJwtToken.toString(),
+          },
+        };
+      } catch (err) {
+        throw new Error(err);
+      }
     },
 
     signInWithSocialAccount: async (
@@ -290,7 +317,7 @@ const resolver: Resolvers = {
         if (!auth) {
           throw ErrorUserNotSignedIn();
         }
-        models.User.update(
+        await models.User.update(
           args.user,
           {
             where: {
