@@ -1,38 +1,48 @@
 import { Reaction, Resolvers } from '../generated/graphql';
 
 import { AuthenticationError } from 'apollo-server-core';
+import { checkAuth } from '../utils/auth';
 
 const resolver: Resolvers = {
-  Query: {
-    reactions: async (_, arg, { verifyUser, models }): Promise<Reaction[]> => {
-      const auth = verifyUser();
 
-      if (!auth) throw new AuthenticationError('User is not signed in');
+  // TODO : 논의 필요! Query 완성 -> Migration 완성 -> Test Code 완성 -> PR 날리기
+  // Query: {
+  //   reactions: async (_, { messageId}, { verifyUser, models }): Promise<Reaction[]> => {
+  //     // const auth = verifyUser();
+  //     // checkAuth(auth);
 
-      const { Reaction: reactionModel } = models;
-
-      return reactionModel.findAll();
-    },
-  },
+  //     const { Reaction: reactionModel } = models;
+  //     return reactionModel.findAll({
+  //       where: {
+  //         messageId,
+  //       },
+  //     });
+  //     return reactionModel.findAll();
+  //   },
+  // },
 
   Mutation: {
-    createReaction: async (_, { type }, { verifyUser, models }): Promise<Reaction> => {
-      const auth = verifyUser();
+    // reactionId
+    createReaction: async (_, { messageId, type }, { verifyUser, models }): Promise<Reaction> => {
+      // const auth = verifyUser();
+      // checkAuth(auth);
 
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      // if (!auth) throw new AuthenticationError('User is not signed in');
 
       const { Reaction: reactionModel } = models;
       const reaction = await reactionModel.create({
+        messageId,
+        // userId: auth.userId,
         type,
-        userId: auth.userId,
       });
 
       return reaction;
     },
     deleteReaction: async (_, { reactionId }, { verifyUser, models }): Promise<number> => {
-      const auth = verifyUser();
+      // const auth = verifyUser();
+      // checkAuth(auth);
 
-      if (!auth) throw new AuthenticationError('User is not signed in');
+      // if (!auth) throw new AuthenticationError('User is not signed in');
 
       const { Reaction: reactionModel } = models;
 
@@ -42,7 +52,7 @@ const resolver: Resolvers = {
         },
       });
 
-      return result[0];
+      return result;
     },
   },
 };

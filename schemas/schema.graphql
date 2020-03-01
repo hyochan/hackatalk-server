@@ -44,8 +44,7 @@ type Mutation {
   createGallery(photoURL: String!): Gallery
   updateGallery(galleryId: ID!, photoURL: String!): Int
   deleteGallery(galleryId: ID!): Int
-  createReaction(type: String!): Reaction
-  updateReaction(reactionId: ID!, type: String!): Int
+  createReaction(messageId: ID!, type: String!): Reaction
   deleteReaction(reactionId: ID!): Int
 }
 

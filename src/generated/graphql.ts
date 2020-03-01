@@ -173,6 +173,7 @@ export type MutationCreateGalleryArgs = {
 
 
 export type MutationCreateReactionArgs = {
+  messageId: Scalars['ID'],
   type: Scalars['String']
 };
 
@@ -247,7 +248,6 @@ export type MutationUpdateGalleryArgs = {
 export type MutationUpdateProfileArgs = {
   user: UserProfileInput
 };
-
 
 export type Notification = {
    __typename?: 'Notification',
@@ -404,6 +404,8 @@ export type UserProfileInput = {
   birthday?: Maybe<Scalars['Date']>,
   gender?: Maybe<Gender>,
   phone?: Maybe<Scalars['String']>,
+  thumbURL?: Maybe<Scalars['String']>,
+  photoURL?: Maybe<Scalars['String']>,
   statusMessage?: Maybe<Scalars['String']>,
 };
 
@@ -647,7 +649,7 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   changeEmailPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationChangeEmailPasswordArgs, 'password' | 'newPassword'>>,
   createChannel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType, MutationCreateChannelArgs>,
   createGallery?: Resolver<Maybe<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<MutationCreateGalleryArgs, 'photoURL'>>,
-  createReaction?: Resolver<Maybe<ResolversTypes['Reaction']>, ParentType, ContextType, RequireFields<MutationCreateReactionArgs, 'type'>>,
+  createReaction?: Resolver<Maybe<ResolversTypes['Reaction']>, ParentType, ContextType, RequireFields<MutationCreateReactionArgs, 'messageId' | 'type'>>,
   deleteChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>,
   deleteFriend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteFriendArgs, 'friendId'>>,
   deleteGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteGalleryArgs, 'galleryId'>>,

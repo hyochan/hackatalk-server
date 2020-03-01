@@ -20,16 +20,6 @@ describe('Resolver - Reaction', () => {
     }
   `;
 
-  const reactions = /* GraphQL */`
-    query {
-      reactions(
-      ) {
-        id,
-        type,
-      }
-    }
-  `;
-
   beforeAll(async () => {
     const { signUp } = await request(testHost, signUpUser);
     client = new GraphQLClient(testHost, {
@@ -39,57 +29,60 @@ describe('Resolver - Reaction', () => {
     });
   });
 
-  it('should query reactions', async () => {
-    const response = await client.request(reactions);
+  // const reactions = /* GraphQL */`
+  //   query {
+  //     reactions(
+  //     ) {
+  //       id,
+  //       type,
+  //     }
+  //   }
+  // `;
 
-    expect(response).toHaveProperty('reactions');
-    expect(response.reactions).toEqual([]);
-  });
+  // it('should query reactions', async () => {
+  //   const response = await client.request(reactions);
+
+  //   expect(response).toHaveProperty('reactions');
+  //   expect(response.reactions).toEqual([]);
+  // });
+
+  const type = 'test59';
+  const messageId = 'testId';
 
   const createReaction = /* GraphQL */`
-    mutation createReaction(
-      $type: String!
-    ) {
-      createReaction(type: $type) {
-        type,
+      mutation createReaction(
+        $messageId: "${messageId}",
+        $type: "${type}",
+      ) {
+        createReaction(messageId: $messageId, type: $type) {
+          type,
+        }
       }
-    }
-  `;
+    `;
 
   it('should create reaction', async () => {
-    const variables = {
-      photoURL: 'http://',
-    };
-    const response = await client.request(createReaction, variables);
+    const response = await client.request(createReaction);
 
     expect(response).toHaveProperty('createReaction');
-    expect(response.createReaction).toEqual({ photoURL: variables.photoURL });
+    expect(response.createReaction).toEqual(type);
   });
 
-  const deleteReaction = /* GraphQL */`
-    mutation deleteReaction(
-      $reactionId: ID!
-    ) {
-      deleteReaction(reactionId: $reactionId)
-    }
-  `;
+  // const deleteReaction = /* GraphQL */`
+  //   mutation deleteReaction(
+  //     $reactionId: ID!
+  //   ) {
+  //     deleteReaction(reactionId: $reactionId)
+  //   }
+  // `;
 
-  it('should delete reaction', async () => {
-    const variables = {
-      reactionId: 'test',
-    };
-    const promise = client.request(deleteReaction, variables);
+  // it('should delete reaction', async () => {
+  //   const variables = {
+  //     reactionId: 'test',
+  //   };
+  //   const promise = client.request(deleteReaction, variables);
 
-    expect(promise).resolves.toEqual({
-      deleteReaction: 0,
-    });
-  });
-
-  it('should throw errors during when urls are not valid', () => {
-    const variables = {
-      photoURL: 'error://',
-    };
-    const promise = client.request(createReaction, variables);
-    expect(promise).rejects.toThrow(ErrorString.UrlNotValid);
-  });
+  //   expect(promise).resolves.toEqual({
+  //     deleteReaction: 0,
+  //   });
+  // });
 });
