@@ -315,7 +315,7 @@ export type Reaction = {
    __typename?: 'Reaction',
   createdAt?: Maybe<Scalars['DateTime']>,
   deletedAt?: Maybe<Scalars['DateTime']>,
-  id: Scalars['String'],
+  id: Scalars['ID'],
   type?: Maybe<Scalars['String']>,
   updatedAt?: Maybe<Scalars['DateTime']>,
 };
@@ -701,7 +701,7 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
 export type ReactionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Reaction'] = ResolversParentTypes['Reaction']> = {
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
