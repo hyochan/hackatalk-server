@@ -306,6 +306,7 @@ export type QueryUserArgs = {
 export type QueryUsersArgs = {
   user?: Maybe<UserQueryInput>,
   includeUser?: Maybe<Scalars['Boolean']>,
+  filter?: Maybe<Scalars['Boolean']>,
   pageSize?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>
 };

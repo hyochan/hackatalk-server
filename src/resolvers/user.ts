@@ -14,6 +14,7 @@ import {
   ErrorUserNotExists,
   ErrorUserNotSignedIn,
 } from '../utils/error';
+import { Op, WhereOptions } from 'sequelize';
 import {
   Role,
   checkAuth,
@@ -26,7 +27,6 @@ import {
 
 import { AuthType } from '../models/User';
 import { ModelType } from '../models';
-import { Op } from 'sequelize';
 import SendGridMail from '@sendgrid/mail';
 import jwt from 'jsonwebtoken';
 import paginateResults from '../utils/pagination';
@@ -100,14 +100,24 @@ const resolver: Resolvers = {
       const auth = verifyUser();
       checkAuth(auth);
 
-      // const { user, includeUser, filter, first, after } = args;
-      const { user, includeUser, pageSize = 20, after } = args;
-      let query: object = {};
+      const { filter, user, includeUser, pageSize = 20, after } = args;
+      let qryUser: object = {};
       let qryAfter: object = {};
       let qryIncludeUser: object = {};
-      if (after) {
-        qryAfter = {
-          createdAt: { [Op.lt]: after },
+
+      if (filter && user) {
+        const userOpConds: object = {};
+        for (const col in user) {
+          userOpConds[col] = {
+            [Op.like]: `%${user[col]}%`,
+          };
+        }
+        qryUser = {
+          [Op.or]: userOpConds,
+        };
+      } else if (user) {
+        qryUser = {
+          ...user,
         };
       }
       if (includeUser) {
@@ -117,9 +127,16 @@ const resolver: Resolvers = {
           },
         };
       }
-      query = {
+      if (after) {
+        qryAfter = {
+          createdAt: { [Op.lt]: Number(after) },
+        };
+      }
+      const where: WhereOptions = {
+        ...qryUser,
         ...qryAfter,
         ...qryIncludeUser,
+        verified: true,
       };
 
       let limit: number;
@@ -128,70 +145,28 @@ const resolver: Resolvers = {
       }
 
       const users = await userModel.findAll({
-        where: {
-          ...user,
-          ...query,
-          verified: true,
-        },
+        where,
         limit,
         order: [
           ['createdAt', 'DESC'],
         ],
       });
-      console.log({ users });
+      const lastRow = await userModel.findOne({
+        attributes: ['createdAt'],
+        where,
+        limit: 1,
+        order: [
+          ['createdAt', 'ASC'],
+        ],
+      });
       const usersConnection = paginateResults({
+        after,
         pageSize,
+        lastRow,
         results: users,
       });
 
       return Promise.resolve(usersConnection);
-
-      // if (includeUser === false) {
-      //   return userModel.findAll({
-      //     where: {
-      //       ...user,
-      //       ...query,
-      //       id: {
-      //         [Op.ne]: auth.userId,
-      //       },
-      //       verified: true,
-      //     },
-      //     limit,
-      //     order: [
-      //       ['id', 'ASC'],
-      //     ],
-      //   });
-      // }
-
-      // if (filter && user) {
-      //   return userModel.findAll({
-      //     where: {
-      //       ...query,
-      //       [Op.or]: {
-      //         nickname: { [Op.like]: user.nickname },
-      //         email: { [Op.like]: user.email },
-      //         name: { [Op.like]: user.name },
-      //       },
-      //       limit,
-      //       verified: true,
-      //     },
-      //     order: [
-      //       ['id', 'ASC'],
-      //     ],
-      //   });
-      // }
-
-      // return userModel.findAll({
-      //   where: {
-      //     ...user,
-      //     ...query,
-      //     verified: true,
-      //   },
-      //   limit,
-      //   order: [
-      //     ['id', 'ASC'],
-      //   ],
-      // });
     },
     user: (_, args, { models }): Promise<User> => {
       const { User } = models;
