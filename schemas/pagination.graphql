@@ -1,0 +1,13 @@
+
+union Schemas = User | Notification | Channel | Message | Friend | Membership | Photo | Gallery
+
+"""
+Simple wrapper around our list of launches that contains a cursor to the
+last item in the list. Pass this cursor to the launches query to fetch results
+after these.
+"""
+type ResultConnection {
+  cursor: String
+  hasMore: Boolean!
+  results: [Schemas]!
+}

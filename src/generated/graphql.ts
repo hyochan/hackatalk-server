@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+
 import { MyContext } from '../context';
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
@@ -283,7 +284,7 @@ export type Query = {
   friends: Array<User>,
   galleries: Array<Gallery>,
   me?: Maybe<User>,
-  messages: Array<Message>,
+  messages?: Maybe<MessagesConnection>,
   user?: Maybe<User>,
   /** 
  * If filter is true, it will filter user with email, nickname or name.
@@ -295,6 +296,14 @@ export type Query = {
 
 export type QueryGalleriesArgs = {
   userId: Scalars['String']
+};
+
+
+export type QueryMessagesArgs = {
+  message?: Maybe<Scalars['String']>,
+  channelId?: Maybe<Scalars['String']>,
+  pageSize?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['String']>
 };
 
 
@@ -418,7 +427,7 @@ export type UsersConnection = {
    __typename?: 'UsersConnection',
   cursor?: Maybe<Scalars['String']>,
   hasMore: Scalars['Boolean'],
-  users: Array<Maybe<User>>,
+  results: Array<Maybe<User>>,
 };
 
 
@@ -513,8 +522,9 @@ export type ResolversTypes = {
   Reply: ResolverTypeWrapper<Reply>,
   ChannelType: ChannelType,
   Gallery: ResolverTypeWrapper<Gallery>,
-  UserQueryInput: UserQueryInput,
   Int: ResolverTypeWrapper<Scalars['Int']>,
+  MessagesConnection: ResolverTypeWrapper<MessagesConnection>,
+  UserQueryInput: UserQueryInput,
   UsersConnection: ResolverTypeWrapper<UsersConnection>,
   Mutation: ResolverTypeWrapper<{}>,
   NotificationCreateInput: NotificationCreateInput,
@@ -551,8 +561,9 @@ export type ResolversParentTypes = {
   Reply: Reply,
   ChannelType: ChannelType,
   Gallery: Gallery,
-  UserQueryInput: UserQueryInput,
   Int: Scalars['Int'],
+  MessagesConnection: MessagesConnection,
+  UserQueryInput: UserQueryInput,
   UsersConnection: UsersConnection,
   Mutation: {},
   NotificationCreateInput: NotificationCreateInput,
@@ -701,7 +712,7 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
   friends?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>,
   galleries?: Resolver<Array<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<QueryGalleriesArgs, 'userId'>>,
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
-  messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
+  messages?: Resolver<Maybe<ResolversTypes['MessagesConnection']>, ParentType, ContextType, QueryMessagesArgs>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
   users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, QueryUsersArgs>,
 };
@@ -751,7 +762,7 @@ export type UserResolvers<ContextType = MyContext, ParentType extends ResolversP
 export type UsersConnectionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['UsersConnection'] = ResolversParentTypes['UsersConnection']> = {
   cursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   hasMore?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
-  users?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
+  results?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 

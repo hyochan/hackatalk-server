@@ -45,7 +45,7 @@ after these.
 type UsersConnection {
   cursor: String
   hasMore: Boolean!
-  users: [User]!
+  results: [User]!
 }
 
 input UserInput {

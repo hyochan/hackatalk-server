@@ -95,7 +95,11 @@ const resolver: Resolvers = {
       const auth = await getUser();
       return auth;
     },
-    users: async (_, args, { verifyUser, models }): Promise<UsersConnection> => {
+    users: async (
+      _,
+      args,
+      { verifyUser, models },
+    ): Promise<UsersConnection> => {
       const { User: userModel } = models;
       const auth = verifyUser();
       checkAuth(auth);
@@ -147,25 +151,20 @@ const resolver: Resolvers = {
       const users = await userModel.findAll({
         where,
         limit,
-        order: [
-          ['createdAt', 'DESC'],
-        ],
+        order: [['createdAt', 'DESC']],
       });
       const lastRow = await userModel.findOne({
         attributes: ['createdAt'],
         where,
         limit: 1,
-        order: [
-          ['createdAt', 'ASC'],
-        ],
+        order: [['createdAt', 'ASC']],
       });
-      const usersConnection = paginateResults({
+      const usersConnection = paginateResults<User, UsersConnection, 'UsersConnection'>({
         after,
         pageSize,
         lastRow,
         results: users,
       });
-
       return Promise.resolve(usersConnection);
     },
     user: (_, args, { models }): Promise<User> => {
@@ -175,7 +174,11 @@ const resolver: Resolvers = {
     },
   },
   Mutation: {
-    signInEmail: async (_, args, { models, appSecret, pubsub }): Promise<AuthPayload> => {
+    signInEmail: async (
+      _,
+      args,
+      { models, appSecret, pubsub },
+    ): Promise<AuthPayload> => {
       const { User: userModel } = models;
 
       const user = await userModel.findOne({
@@ -211,7 +214,8 @@ const resolver: Resolvers = {
     },
 
     signInWithSocialAccount: async (
-      _, { socialUser },
+      _,
+      { socialUser },
       { appSecret, models },
     ): Promise<AuthPayload> =>
       signInWithSocialAccount(socialUser, models, appSecret),
@@ -295,20 +299,21 @@ const resolver: Resolvers = {
         throw ErrorEmailSentFailed(err);
       }
     },
-    updateProfile: async (_, args, { verifyUser, models, pubsub }): Promise<User> => {
+    updateProfile: async (
+      _,
+      args,
+      { verifyUser, models, pubsub },
+    ): Promise<User> => {
       try {
         const auth = verifyUser();
         if (!auth) {
           throw ErrorUserNotSignedIn();
         }
-        await models.User.update(
-          args.user,
-          {
-            where: {
-              id: auth.userId,
-            },
+        await models.User.update(args.user, {
+          where: {
+            id: auth.userId,
           },
-        );
+        });
 
         const user = await models.User.findOne({
           where: {
@@ -323,10 +328,16 @@ const resolver: Resolvers = {
         throw new Error(err.message);
       }
     },
-    setOnlineStatus: async (_, args, { verifyUser, models, pubsub }): Promise<number> => {
+    setOnlineStatus: async (
+      _,
+      args,
+      { verifyUser, models, pubsub },
+    ): Promise<number> => {
       try {
         const auth = verifyUser();
-        if (!auth) { throw ErrorUserNotSignedIn(); }
+        if (!auth) {
+          throw ErrorUserNotSignedIn();
+        }
 
         const update = await models.User.update(
           {
@@ -347,7 +358,10 @@ const resolver: Resolvers = {
       }
     },
     changeEmailPassword: async (
-      _, { password, newPassword }, { verifyUser, models }): Promise<boolean> => {
+      _,
+      { password, newPassword },
+      { verifyUser, models },
+    ): Promise<boolean> => {
       try {
         const auth = verifyUser();
         checkAuth(auth);

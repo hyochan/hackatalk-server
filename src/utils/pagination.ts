@@ -1,21 +1,38 @@
-import { User, UsersConnection } from '../generated/graphql';
+// import { ResultConnection, Schemas } from '../generated/graphql';
+import {
+  Message,
+  MessagesConnection,
+  Scalars,
+  User,
+  UsersConnection,
+} from '../generated/graphql';
 
-const paginateResults = ({
+interface ResultConnection<Schema, TypeName> {
+  __typename?: TypeName;
+  cursor?: Scalars['String'];
+  hasMore: Scalars['Boolean'];
+  results: Array<Schema>;
+};
+function paginateResults<
+  Schema extends User | Message,
+  Connection extends UsersConnection | MessagesConnection,
+  TypeName
+>({
   after,
   pageSize = 20,
   lastRow,
   results,
 }: {
-  after: string;
-  pageSize: number;
-  lastRow: User;
-  results: User[];
-}): UsersConnection => {
+  after?: string;
+  pageSize?: number;
+  lastRow: Schema;
+  results: Array<Schema>;
+}): ResultConnection<Schema, TypeName> {
   if (results.length === 0) {
     return {
       cursor: null,
       hasMore: false,
-      users: results,
+      results,
     };
   }
   const resultLastRowCreatedAt = results[results.length - 1].createdAt;
@@ -29,8 +46,8 @@ const paginateResults = ({
   return {
     cursor,
     hasMore,
-    users: results,
+    results,
   };
-};
+}
 
 export default paginateResults;
