@@ -4,6 +4,7 @@ import {
   Resolvers,
   SocialUserInput,
   User,
+  UsersConnection,
 } from '../generated/graphql';
 import {
   ErrorEmailForUserExists,
@@ -28,6 +29,7 @@ import { ModelType } from '../models';
 import { Op } from 'sequelize';
 import SendGridMail from '@sendgrid/mail';
 import jwt from 'jsonwebtoken';
+import paginateResults from '../utils/pagination';
 import { withFilter } from 'apollo-server';
 
 const USER_SIGNED_IN = 'USER_SIGNED_IN';
@@ -93,61 +95,39 @@ const resolver: Resolvers = {
       const auth = await getUser();
       return auth;
     },
-    users: async (_, args, { verifyUser, models }): Promise<User[]> => {
+    users: async (_, args, { verifyUser, models }): Promise<UsersConnection> => {
       const { User: userModel } = models;
       const auth = verifyUser();
       checkAuth(auth);
 
-      const { user, includeUser, filter, first, after } = args;
-
+      // const { user, includeUser, filter, first, after } = args;
+      const { user, includeUser, pageSize = 20, after } = args;
       let query: object = {};
+      let qryAfter: object = {};
+      let qryIncludeUser: object = {};
       if (after) {
-        query = {
-          id: { [Op.gt]: after },
+        qryAfter = {
+          createdAt: { [Op.lt]: after },
         };
       }
+      if (includeUser) {
+        qryIncludeUser = {
+          id: {
+            [Op.ne]: auth.userId,
+          },
+        };
+      }
+      query = {
+        ...qryAfter,
+        ...qryIncludeUser,
+      };
 
       let limit: number;
-      if (first) {
-        limit = first;
+      if (pageSize) {
+        limit = pageSize;
       }
 
-      if (includeUser === false) {
-        return userModel.findAll({
-          where: {
-            ...user,
-            ...query,
-            id: {
-              [Op.ne]: auth.userId,
-            },
-            verified: true,
-          },
-          limit,
-          order: [
-            ['id', 'ASC'],
-          ],
-        });
-      }
-
-      if (filter && user) {
-        return userModel.findAll({
-          where: {
-            ...query,
-            [Op.or]: {
-              nickname: { [Op.like]: user.nickname },
-              email: { [Op.like]: user.email },
-              name: { [Op.like]: user.name },
-            },
-            limit,
-            verified: true,
-          },
-          order: [
-            ['id', 'ASC'],
-          ],
-        });
-      }
-
-      return userModel.findAll({
+      const users = await userModel.findAll({
         where: {
           ...user,
           ...query,
@@ -155,9 +135,63 @@ const resolver: Resolvers = {
         },
         limit,
         order: [
-          ['id', 'ASC'],
+          ['createdAt', 'DESC'],
         ],
       });
+      console.log({ users });
+      const usersConnection = paginateResults({
+        pageSize,
+        results: users,
+      });
+
+      return Promise.resolve(usersConnection);
+
+      // if (includeUser === false) {
+      //   return userModel.findAll({
+      //     where: {
+      //       ...user,
+      //       ...query,
+      //       id: {
+      //         [Op.ne]: auth.userId,
+      //       },
+      //       verified: true,
+      //     },
+      //     limit,
+      //     order: [
+      //       ['id', 'ASC'],
+      //     ],
+      //   });
+      // }
+
+      // if (filter && user) {
+      //   return userModel.findAll({
+      //     where: {
+      //       ...query,
+      //       [Op.or]: {
+      //         nickname: { [Op.like]: user.nickname },
+      //         email: { [Op.like]: user.email },
+      //         name: { [Op.like]: user.name },
+      //       },
+      //       limit,
+      //       verified: true,
+      //     },
+      //     order: [
+      //       ['id', 'ASC'],
+      //     ],
+      //   });
+      // }
+
+      // return userModel.findAll({
+      //   where: {
+      //     ...user,
+      //     ...query,
+      //     verified: true,
+      //   },
+      //   limit,
+      //   order: [
+      //     ['id', 'ASC'],
+      //   ],
+      // });
     },
     user: (_, args, { models }): Promise<User> => {
       const { User } = models;
@@ -406,25 +440,6 @@ const resolver: Resolvers = {
         },
       });
     },
-    // friendsConnection: (_, args, { models }): Promise<Notification[]> => {
-    //   console.log('_:', _);
-    //   console.log('args:', args);
-    //   const { User: userModel } = models;
-
-    //   return userModel.findAll({
-    //     where: {
-    //       ...query,
-    //       id: {
-    //         [Op.ne]: auth.userId,
-    //       },
-    //       verified: true,
-    //     },
-    //     limit,
-    //     order: [
-    //       ['id', 'ASC'],
-    //     ],
-    //   });
-    // },
   },
 };
 

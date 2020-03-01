@@ -62,12 +62,6 @@ export type Friend = {
   user?: Maybe<User>,
 };
 
-export type FriendsConnection = {
-   __typename?: 'FriendsConnection',
-  edges?: Maybe<UserEdge>,
-  pageInfo?: Maybe<PageInfo>,
-};
-
 export type FriendSub = {
    __typename?: 'FriendSub',
   user?: Maybe<User>,
@@ -273,14 +267,6 @@ export type NotificationCreateInput = {
   os?: Maybe<Scalars['String']>,
 };
 
-export type PageInfo = {
-   __typename?: 'PageInfo',
-  endCursor?: Maybe<Scalars['String']>,
-  hasNextPage?: Maybe<Scalars['Boolean']>,
-  startCursor?: Maybe<Scalars['String']>,
-  hasPreviousPage?: Maybe<Scalars['Boolean']>,
-};
-
 export type Photo = {
    __typename?: 'Photo',
   createdAt?: Maybe<Scalars['DateTime']>,
@@ -303,7 +289,7 @@ export type Query = {
  * If filter is true, it will filter user with email, nickname or name.
    * You can add pagination with first and after args.
  */
-  users: Array<User>,
+  users?: Maybe<UsersConnection>,
 };
 
 
@@ -320,8 +306,7 @@ export type QueryUserArgs = {
 export type QueryUsersArgs = {
   user?: Maybe<UserQueryInput>,
   includeUser?: Maybe<Scalars['Boolean']>,
-  filter?: Maybe<Scalars['Boolean']>,
-  first?: Maybe<Scalars['Int']>,
+  pageSize?: Maybe<Scalars['Int']>,
   after?: Maybe<Scalars['String']>
 };
 
@@ -370,7 +355,6 @@ export type User = {
   createdAt?: Maybe<Scalars['DateTime']>,
   deletedAt?: Maybe<Scalars['DateTime']>,
   email?: Maybe<Scalars['String']>,
-  friendsConnection?: Maybe<FriendsConnection>,
   gender?: Maybe<Gender>,
   id: Scalars['ID'],
   isOnline?: Maybe<Scalars['Boolean']>,
@@ -385,20 +369,6 @@ export type User = {
   thumbURL?: Maybe<Scalars['String']>,
   updatedAt?: Maybe<Scalars['DateTime']>,
   verified?: Maybe<Scalars['Boolean']>,
-};
-
-
-export type UserFriendsConnectionArgs = {
-  first?: Maybe<Scalars['Int']>,
-  after?: Maybe<Scalars['String']>,
-  last?: Maybe<Scalars['Int']>,
-  before?: Maybe<Scalars['String']>
-};
-
-export type UserEdge = {
-   __typename?: 'UserEdge',
-  node?: Maybe<User>,
-  cursor?: Maybe<Scalars['String']>,
 };
 
 export type UserInput = {
@@ -436,6 +406,18 @@ export type UserQueryInput = {
   birthday?: Maybe<Scalars['Date']>,
   gender?: Maybe<Gender>,
   phone?: Maybe<Scalars['String']>,
+};
+
+/** 
+ * Simple wrapper around our list of launches that contains a cursor to the
+ * last item in the list. Pass this cursor to the launches query to fetch results
+ * after these.
+ */
+export type UsersConnection = {
+   __typename?: 'UsersConnection',
+  cursor?: Maybe<Scalars['String']>,
+  hasMore: Scalars['Boolean'],
+  users: Array<Maybe<User>>,
 };
 
 
@@ -521,12 +503,8 @@ export type ResolversTypes = {
   AuthType: AuthType,
   Date: ResolverTypeWrapper<Scalars['Date']>,
   String: ResolverTypeWrapper<Scalars['String']>,
-  Int: ResolverTypeWrapper<Scalars['Int']>,
-  FriendsConnection: ResolverTypeWrapper<FriendsConnection>,
-  UserEdge: ResolverTypeWrapper<UserEdge>,
-  PageInfo: ResolverTypeWrapper<PageInfo>,
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   Gender: Gender,
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
   Notification: ResolverTypeWrapper<Notification>,
   UserModeType: UserModeType,
   Message: ResolverTypeWrapper<Message>,
@@ -535,6 +513,8 @@ export type ResolversTypes = {
   ChannelType: ChannelType,
   Gallery: ResolverTypeWrapper<Gallery>,
   UserQueryInput: UserQueryInput,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
+  UsersConnection: ResolverTypeWrapper<UsersConnection>,
   Mutation: ResolverTypeWrapper<{}>,
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
@@ -561,12 +541,8 @@ export type ResolversParentTypes = {
   AuthType: AuthType,
   Date: Scalars['Date'],
   String: Scalars['String'],
-  Int: Scalars['Int'],
-  FriendsConnection: FriendsConnection,
-  UserEdge: UserEdge,
-  PageInfo: PageInfo,
-  Boolean: Scalars['Boolean'],
   Gender: Gender,
+  Boolean: Scalars['Boolean'],
   Notification: Notification,
   UserModeType: UserModeType,
   Message: Message,
@@ -575,6 +551,8 @@ export type ResolversParentTypes = {
   ChannelType: ChannelType,
   Gallery: Gallery,
   UserQueryInput: UserQueryInput,
+  Int: Scalars['Int'],
+  UsersConnection: UsersConnection,
   Mutation: {},
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
@@ -623,12 +601,6 @@ export type FriendResolvers<ContextType = MyContext, ParentType extends Resolver
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn<ParentType>,
-};
-
-export type FriendsConnectionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['FriendsConnection'] = ResolversParentTypes['FriendsConnection']> = {
-  edges?: Resolver<Maybe<ResolversTypes['UserEdge']>, ParentType, ContextType>,
-  pageInfo?: Resolver<Maybe<ResolversTypes['PageInfo']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
@@ -713,14 +685,6 @@ export type NotificationResolvers<ContextType = MyContext, ParentType extends Re
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
-export type PageInfoResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
-  endCursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  hasNextPage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
-  startCursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  hasPreviousPage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
-  __isTypeOf?: isTypeOfResolverFn<ParentType>,
-};
-
 export type PhotoResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Photo'] = ResolversParentTypes['Photo']> = {
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
@@ -738,7 +702,7 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
-  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, QueryUsersArgs>,
+  users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, QueryUsersArgs>,
 };
 
 export type ReplyResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Reply'] = ResolversParentTypes['Reply']> = {
@@ -766,7 +730,6 @@ export type UserResolvers<ContextType = MyContext, ParentType extends ResolversP
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  friendsConnection?: Resolver<Maybe<ResolversTypes['FriendsConnection']>, ParentType, ContextType, UserFriendsConnectionArgs>,
   gender?: Resolver<Maybe<ResolversTypes['Gender']>, ParentType, ContextType>,
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   isOnline?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
@@ -784,9 +747,10 @@ export type UserResolvers<ContextType = MyContext, ParentType extends ResolversP
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
-export type UserEdgeResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['UserEdge'] = ResolversParentTypes['UserEdge']> = {
-  node?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
+export type UsersConnectionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['UsersConnection'] = ResolversParentTypes['UsersConnection']> = {
   cursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  hasMore?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
+  users?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
@@ -796,7 +760,6 @@ export type Resolvers<ContextType = MyContext> = {
   Date?: GraphQLScalarType,
   DateTime?: GraphQLScalarType,
   Friend?: FriendResolvers<ContextType>,
-  FriendsConnection?: FriendsConnectionResolvers<ContextType>,
   FriendSub?: FriendSubResolvers<ContextType>,
   Gallery?: GalleryResolvers<ContextType>,
   Membership?: MembershipResolvers<ContextType>,
@@ -804,13 +767,12 @@ export type Resolvers<ContextType = MyContext> = {
   MessagePayload?: MessagePayloadResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,
   Notification?: NotificationResolvers<ContextType>,
-  PageInfo?: PageInfoResolvers<ContextType>,
   Photo?: PhotoResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
   Reply?: ReplyResolvers<ContextType>,
   Subscription?: SubscriptionResolvers<ContextType>,
   User?: UserResolvers<ContextType>,
-  UserEdge?: UserEdgeResolvers<ContextType>,
+  UsersConnection?: UsersConnectionResolvers<ContextType>,
 };
 
 
