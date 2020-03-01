@@ -1,5 +1,6 @@
 # import Notification from "notification.graphql"
 # import Channel from "channel.graphql"
+# import Pagination from "pagination.graphql"
 
 scalar Date
 scalar DateTime
@@ -36,6 +37,16 @@ type User {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
+  friendsConnection(first: Int, after: String, last: Int, before: String): FriendsConnection
+}
+
+type FriendsConnection {
+  edges: UserEdge
+  pageInfo: PageInfo
+}
+type UserEdge {
+  node: User
+  cursor: String
 }
 
 input UserInput {

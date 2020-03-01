@@ -406,6 +406,25 @@ const resolver: Resolvers = {
         },
       });
     },
+    // friendsConnection: (_, args, { models }): Promise<Notification[]> => {
+    //   console.log('_:', _);
+    //   console.log('args:', args);
+    //   const { User: userModel } = models;
+
+    //   return userModel.findAll({
+    //     where: {
+    //       ...query,
+    //       id: {
+    //         [Op.ne]: auth.userId,
+    //       },
+    //       verified: true,
+    //     },
+    //     limit,
+    //     order: [
+    //       ['id', 'ASC'],
+    //     ],
+    //   });
+    // },
   },
 };
 
