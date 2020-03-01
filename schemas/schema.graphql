@@ -22,7 +22,6 @@ type Query {
   channels: [Channel!]!
   friends: [User!]!
   galleries(userId: String!): [Gallery!]!
-  reactions: [Reaction!]!  
 }
 
 type Mutation {
