@@ -1,5 +1,4 @@
 import { Resolvers } from '../generated/graphql';
-
 import { uploadFileToAzureBlobFromStream } from '../utils/azure';
 
 const resolver: Resolvers = {
@@ -9,11 +8,15 @@ const resolver: Resolvers = {
       const file = await args.file;
       const { filename } = file;
       const stream = file.createReadStream();
-      const resultUpload = await uploadFileToAzureBlobFromStream(
-        stream,
-        filename,
-        dir,
-      );
+      try {
+        await uploadFileToAzureBlobFromStream(
+          stream,
+          filename,
+          dir,
+        );
+      } catch (err) {
+        throw new Error(err);
+      }
 
       const { STORAGE_ENDPOINT } = process.env;
 
