@@ -179,7 +179,7 @@ export type MutationCreateGalleryArgs = {
 
 
 export type MutationCreateMessageArgs = {
-  users: Array<User>,
+  users: Array<Scalars['String']>,
   message: Scalars['String'],
   channelId?: Maybe<Scalars['String']>
 };

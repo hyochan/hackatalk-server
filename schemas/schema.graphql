@@ -39,7 +39,7 @@ type Mutation {
   """
   Create message and return channelId when meessage has successfully sent
   """
-  createMessage(users: [User!]! message: String! channelId: String): MessagePayload
+  createMessage(users: [String!]! message: String! channelId: String): MessagePayload
   setOnlineStatus(isOnline: Boolean): Int
   changeEmailPassword(password: String! newPassword: String!): Boolean
   createGallery(photoURL: String!): Gallery
