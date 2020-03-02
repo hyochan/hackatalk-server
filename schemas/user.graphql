@@ -32,7 +32,6 @@ type User {
   statusMessage: String
   isOnline: Boolean
   lastSignedIn: DateTime
-  virgilToken: String
   notifications: [Notification]
   createdAt: DateTime
   updatedAt: DateTime
