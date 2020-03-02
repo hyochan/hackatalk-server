@@ -36,6 +36,10 @@ type Mutation {
   createChannel(channel: ChannelInput): Channel
   updateChannel(channel: ChannelInput): Int
   deleteChannel(channelId: ID!): Int
+  """
+  Create message and return channelId when meessage has successfully sent
+  """
+  createMessage(users: [User!]! message: String! channelId: String): MessagePayload
   setOnlineStatus(isOnline: Boolean): Int
   changeEmailPassword(password: String! newPassword: String!): Boolean
   createGallery(photoURL: String!): Gallery

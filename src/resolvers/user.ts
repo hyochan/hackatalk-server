@@ -27,7 +27,6 @@ import { AuthType } from '../models/User';
 import { ModelType } from '../models';
 import { Op } from 'sequelize';
 import SendGridMail from '@sendgrid/mail';
-import createOrGetVirgilJwtGenerator from '../utils/virgil';
 import jwt from 'jsonwebtoken';
 import { withFilter } from 'apollo-server';
 

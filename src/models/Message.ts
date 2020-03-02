@@ -11,6 +11,11 @@ import Channel from './Channel';
 import User from './User';
 import sequelize from '../db';
 
+export enum MessageType {
+  Text = 'TEXT',
+  File = 'FILE',
+}
+
 class Message extends Model {
   public id!: string;
   public channelId!: string;
