@@ -96,10 +96,10 @@ User.init({
 
 User.hasMany(Friend, { foreignKey: 'userId' });
 User.hasMany(Friend, { foreignKey: 'friendId' });
-User.hasMany(Notification, { foreignKey: 'id' });
-User.hasMany(Gallery, { foreignKey: 'id' });
-User.hasMany(Message, { foreignKey: 'id' });
-User.hasMany(Membership, { foreignKey: 'id' });
+User.hasMany(Notification, { foreignKey: 'userId' });
+User.hasMany(Gallery, { foreignKey: 'userId' });
+User.hasMany(Message, { foreignKey: 'userId' });
+User.hasMany(Membership, { foreignKey: 'userId' });
 
 export const resetPassword = (email: string, password: string): Promise<[number, User[]]> => {
   return User.update(

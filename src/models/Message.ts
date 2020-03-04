@@ -52,8 +52,8 @@ Message.init({
 
 // Message.belongsTo(Channel, { as: 'channel' });
 // Message.belongsTo(User, { as: 'sender' });
-Message.hasMany(Reply, { foreignKey: 'id' });
-Message.hasMany(Photo, { foreignKey: 'id' });
+Message.hasMany(Reply, { foreignKey: 'messageId' });
+Message.hasMany(Photo, { foreignKey: 'messageId' });
 
 export type MessageModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Message;

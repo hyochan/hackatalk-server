@@ -46,8 +46,8 @@ Channel.init({
   paranoid: true,
 });
 
-Channel.hasMany(Membership, { foreignKey: 'id' });
-Channel.hasMany(Message, { foreignKey: 'id' });
+Channel.hasMany(Membership, { foreignKey: 'channelId' });
+Channel.hasMany(Message, { foreignKey: 'channelId' });
 
 export type ChannelModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Channel;
