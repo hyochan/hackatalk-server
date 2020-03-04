@@ -6,7 +6,7 @@ import {
   UUIDV4,
 } from 'sequelize';
 
-import Message from './Message';
+import { Message } from './Message';
 import sequelize from '../db';
 
 class Photo extends Model {
@@ -38,7 +38,7 @@ Photo.init({
   paranoid: true,
 });
 
-Photo.belongsTo(Message, { as: 'message' });
+// Photo.belongsTo(Message, { as: 'message' });
 
 export type PhotoModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Photo;

@@ -51,8 +51,8 @@ Membership.init({
   paranoid: true,
 });
 
-Membership.belongsTo(Channel, { as: 'channel' });
-Membership.belongsTo(User, { as: 'user' });
+// Membership.belongsTo(Channel, { as: 'channel' });
+// Membership.belongsTo(User, { as: 'user' });
 
 export type MembershipModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Membership;

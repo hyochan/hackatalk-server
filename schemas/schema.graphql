@@ -37,7 +37,8 @@ type Mutation {
   updateChannel(channel: ChannelInput): Int
   deleteChannel(channelId: ID!): Int
   """
-  Create message and return channelId when meessage has successfully sent
+  Create message and return channelId when meessage has successfully sent.
+  Do not pass current userId inside `users`.
   """
   createMessage(users: [String!]! message: String! channelId: String): MessagePayload
   setOnlineStatus(isOnline: Boolean): Int

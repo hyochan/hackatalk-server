@@ -31,7 +31,7 @@ Gallery.init({
   paranoid: true,
 });
 
-Gallery.belongsTo(User, { as: 'user' });
+// Gallery.belongsTo(User, { as: 'user' });
 
 export type GalleryModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Gallery;

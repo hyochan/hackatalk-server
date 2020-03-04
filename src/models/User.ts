@@ -1,5 +1,10 @@
 import { BuildOptions, DataTypes, Model } from 'sequelize';
 
+import Friend from './Friend';
+import Gallery from './Gallery';
+import Membership from './Membership';
+import Message from './Message';
+import Notification from './Notification';
 import moment from 'moment';
 import sequelize from '../db';
 
@@ -88,6 +93,13 @@ User.init({
   timestamps: true,
   paranoid: true,
 });
+
+User.hasMany(Friend, { foreignKey: 'userId' });
+User.hasMany(Friend, { foreignKey: 'friendId' });
+User.hasMany(Notification, { foreignKey: 'id' });
+User.hasMany(Gallery, { foreignKey: 'id' });
+User.hasMany(Message, { foreignKey: 'id' });
+User.hasMany(Membership, { foreignKey: 'id' });
 
 export const resetPassword = (email: string, password: string): Promise<[number, User[]]> => {
   return User.update(
