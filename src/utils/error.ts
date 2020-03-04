@@ -13,6 +13,8 @@ export enum ErrorString {
   EmailNotValid = 'Not a valid email address',
   FriendIdsRequired = 'FriendIds are required',
   UrlNotValid = 'Url is not a valid url. It should start with http.',
+  MesssageIsEmpty = 'Message is empty',
+  UsersAreEmpty = 'Users are empty',
 }
 
 export const ErrorUserNotExists =
