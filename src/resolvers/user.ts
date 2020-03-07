@@ -19,9 +19,7 @@ import {
 } from '../utils/error';
 import {
   Op,
-  OrOperator,
   Order,
-  WhereAttributeHash,
   WhereOptions,
 } from 'sequelize';
 import {
@@ -33,11 +31,12 @@ import {
   validateCredential,
   validateEmail,
 } from '../utils/auth';
-import { getPageInfo, paginateResults } from '../utils/pagination';
 
 import { AuthType } from '../models/User';
 import { ModelType } from '../models';
 import SendGridMail from '@sendgrid/mail';
+import createOrGetVirgilJwtGenerator from '../utils/virgil';
+import { getPageInfo } from '../utils/pagination';
 import jwt from 'jsonwebtoken';
 import { withFilter } from 'apollo-server';
 
@@ -118,6 +117,7 @@ const resolver: Resolvers = {
       if (first && last) throw ErrorFirstLastNotSupported();
 
       const where: WhereOptions = {};
+      const cursor: User['createdAt'] = 'createdAt';
 
       if (filter && user) {
         const userOrConditions: WhereOptions[] = Object.keys(user).map(
@@ -147,24 +147,22 @@ const resolver: Resolvers = {
       }
       if (before) {
         Object.assign(where, {
-          createdAt: { [Op.gt]: Number(after) },
+          createdAt: { [Op.gt]: Number(before) },
         });
       }
 
       let limit: number;
       let userOrderBy: Order;
-      let lastRowOrderBy: Order;
+      const firstRowOrderBy: Order = 'DESC';
+      const lastRowOrderBy: Order = 'ASC';
       if (first) {
         limit = first;
         userOrderBy = 'DESC';
-        lastRowOrderBy = 'ASC';
       } else if (last) {
         limit = last;
         userOrderBy = 'ASC';
-        lastRowOrderBy = 'DESC';
       } else {
         userOrderBy = 'DESC';
-        lastRowOrderBy = 'ASC';
       }
       Object.assign(where, {
         verified: true,
@@ -172,13 +170,26 @@ const resolver: Resolvers = {
       const users = await userModel.findAll({
         where,
         limit,
-        order: [['createdAt', userOrderBy]],
+        order: [[cursor, userOrderBy]],
       });
-      const lastRow = await userModel.findOne({
-        attributes: ['createdAt'],
+      if (last) {
+        users.sort((a, b) => {
+          const createdAtOfA = new Date(a.createdAt).getTime();
+          const createdAtOfB = new Date(b.createdAt).getTime();
+          return createdAtOfB - createdAtOfA;
+        });
+      }
+      const firstRow = await userModel.findOne({
+        attributes: [cursor],
         where,
         limit: 1,
-        order: [['createdAt', lastRowOrderBy]],
+        order: [[cursor, firstRowOrderBy]],
+      });
+      const lastRow = await userModel.findOne({
+        attributes: [cursor],
+        where,
+        limit: 1,
+        order: [[cursor, lastRowOrderBy]],
       });
       const edges: UserEdge[] = users.map((user) => ({
         node: user,
@@ -187,6 +198,9 @@ const resolver: Resolvers = {
       const pageInfo: PageInfo = getPageInfo({
         first,
         last,
+        after,
+        before,
+        firstRow,
         lastRow,
         results: users,
       });
