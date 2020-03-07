@@ -51,7 +51,7 @@ after these.
 type UsersConnection {
   totalCount: Int
   edges: [UserEdge]
-  pageInfo: pageInfo
+  pageInfo: PageInfo
 }
 
 input UserInput {

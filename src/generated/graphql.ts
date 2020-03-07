@@ -270,7 +270,7 @@ export type NotificationCreateInput = {
 
 /** Information about pagination in a connection. */
 export type PageInfo = {
-   __typename?: 'pageInfo',
+   __typename?: 'PageInfo',
   startCursor?: Maybe<Scalars['String']>,
   endCursor?: Maybe<Scalars['String']>,
   hasNextPage?: Maybe<Scalars['Boolean']>,
@@ -544,7 +544,7 @@ export type ResolversTypes = {
   UserQueryInput: UserQueryInput,
   UsersConnection: ResolverTypeWrapper<UsersConnection>,
   UserEdge: ResolverTypeWrapper<UserEdge>,
-  pageInfo: ResolverTypeWrapper<PageInfo>,
+  PageInfo: ResolverTypeWrapper<PageInfo>,
   Mutation: ResolverTypeWrapper<{}>,
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
@@ -585,7 +585,7 @@ export type ResolversParentTypes = {
   UserQueryInput: UserQueryInput,
   UsersConnection: UsersConnection,
   UserEdge: UserEdge,
-  pageInfo: PageInfo,
+  PageInfo: PageInfo,
   Mutation: {},
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
@@ -718,7 +718,7 @@ export type NotificationResolvers<ContextType = MyContext, ParentType extends Re
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
-export type PageInfoResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['pageInfo'] = ResolversParentTypes['pageInfo']> = {
+export type PageInfoResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
   startCursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   endCursor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   hasNextPage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
@@ -797,7 +797,7 @@ export type UserEdgeResolvers<ContextType = MyContext, ParentType extends Resolv
 export type UsersConnectionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['UsersConnection'] = ResolversParentTypes['UsersConnection']> = {
   totalCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
   edges?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserEdge']>>>, ParentType, ContextType>,
-  pageInfo?: Resolver<Maybe<ResolversTypes['pageInfo']>, ParentType, ContextType>,
+  pageInfo?: Resolver<Maybe<ResolversTypes['PageInfo']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
@@ -814,7 +814,7 @@ export type Resolvers<ContextType = MyContext> = {
   MessagePayload?: MessagePayloadResolvers<ContextType>,
   Mutation?: MutationResolvers<ContextType>,
   Notification?: NotificationResolvers<ContextType>,
-  pageInfo?: PageInfoResolvers<ContextType>,
+  PageInfo?: PageInfoResolvers<ContextType>,
   Photo?: PhotoResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
   Reply?: ReplyResolvers<ContextType>,

@@ -52,11 +52,17 @@ function paginateResults<
 function getPageInfo<Schema extends User | Message>({
   first,
   last,
+  after,
+  before,
+  firstRow,
   lastRow,
   results,
 }: {
   first: number;
   last: number;
+  after: string;
+  before: string;
+  firstRow: Schema;
   lastRow: Schema;
   results: Array<Schema>;
 }): PageInfo {
@@ -67,26 +73,24 @@ function getPageInfo<Schema extends User | Message>({
     hasNextPage: false,
   };
   if (results.length === 0) {
-    if (first) {
-      pageInfo.hasNextPage = true;
-    }
-    if (last) {
-      pageInfo.hasPreviousPage = true;
-    }
     return pageInfo;
   }
-  const startCursor = new Date(results[0].createdAt).getTime();
-  const endCursor = new Date(results[results.length - 1].createdAt).getTime();
-  const paramLastRowCreatedAtDt = new Date(lastRow.createdAt).getTime();
-  pageInfo.endCursor = endCursor;
-  pageInfo.startCursor = startCursor;
-  if (first) {
-    pageInfo.hasNextPage = endCursor !== paramLastRowCreatedAtDt;
-    pageInfo.hasPreviousPage = endCursor !== paramLastRowCreatedAtDt;
-  }
+  const startEdge = new Date(results[0].createdAt).getTime();
+  const endEdge = new Date(results[results.length - 1].createdAt).getTime();
+  const firstRowCreatedAtDt = new Date(firstRow.createdAt).getTime();
+  const lastRowCreatedAtDt = new Date(lastRow.createdAt).getTime();
+  pageInfo.startCursor = startEdge;
+  pageInfo.endCursor = endEdge;
   if (last) {
-    pageInfo.hasNextPage = endCursor !== paramLastRowCreatedAtDt;
-    pageInfo.hasPreviousPage = endCursor !== paramLastRowCreatedAtDt;
+    pageInfo.hasPreviousPage = startEdge < firstRowCreatedAtDt;
+    if (before) {
+      pageInfo.hasNextPage = endEdge > lastRowCreatedAtDt;
+    }
+  } else {
+    pageInfo.hasNextPage = endEdge > lastRowCreatedAtDt;
+    if (after) {
+      pageInfo.hasPreviousPage = startEdge < firstRowCreatedAtDt;
+    }
   }
 
   return pageInfo;

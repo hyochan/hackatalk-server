@@ -1,7 +1,7 @@
 """
 Information about pagination in a connection.
 """
-type pageInfo {
+type PageInfo {
   startCursor: String
   endCursor: String
   hasNextPage: Boolean
