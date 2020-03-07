@@ -39,18 +39,7 @@ type Query {
   ): UsersConnection
   user(id: ID!): User
   me: User
-  messages(
-    message: String
-    channelId: String
-    """
-    Pagination: The number of results to show. Must be >= 1. Default = 20
-    """
-    pageSize: Int
-    """
-    Pagination: If you add a cursor here, it will only return results `after` this cursor
-    """
-    after: String
-  ): MessagesConnection
+  messages: [Message!]!
   channels: [Channel!]!
   friends: [User!]!
   galleries(userId: String!): [Gallery!]!
