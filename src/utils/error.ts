@@ -15,6 +15,7 @@ export enum ErrorString {
   UrlNotValid = 'Url is not a valid url. It should start with http.',
   MesssageIsEmpty = 'Message is empty',
   UsersAreEmpty = 'Users are empty',
+  FirstLastNotSupported = 'Passing both `first` and `last` is not supported.',
 }
 
 export const ErrorUserNotExists =
@@ -45,3 +46,6 @@ export const ErrorFriendIdRequired =
 export const ErrorUrlNotValid =
   (): ValidationError =>
     new ValidationError(ErrorString.UrlNotValid);
+
+export const ErrorFirstLastNotSupported =
+  (): AuthenticationError => new AuthenticationError(ErrorString.FirstLastNotSupported);

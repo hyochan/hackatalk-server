@@ -1,20 +1,29 @@
 import {
   AuthPayload,
   Notification,
+  PageInfo,
   Resolvers,
   SocialUserInput,
   User,
+  UserEdge,
   UsersConnection,
 } from '../generated/graphql';
 import {
   ErrorEmailForUserExists,
   ErrorEmailNotValid,
   ErrorEmailSentFailed,
+  ErrorFirstLastNotSupported,
   ErrorPasswordIncorrect,
   ErrorUserNotExists,
   ErrorUserNotSignedIn,
 } from '../utils/error';
-import { Op, WhereOptions } from 'sequelize';
+import {
+  Op,
+  OrOperator,
+  Order,
+  WhereAttributeHash,
+  WhereOptions,
+} from 'sequelize';
 import {
   Role,
   checkAuth,
@@ -24,12 +33,12 @@ import {
   validateCredential,
   validateEmail,
 } from '../utils/auth';
+import { getPageInfo, paginateResults } from '../utils/pagination';
 
 import { AuthType } from '../models/User';
 import { ModelType } from '../models';
 import SendGridMail from '@sendgrid/mail';
 import jwt from 'jsonwebtoken';
-import paginateResults from '../utils/pagination';
 import { withFilter } from 'apollo-server';
 
 const USER_SIGNED_IN = 'USER_SIGNED_IN';
@@ -104,68 +113,88 @@ const resolver: Resolvers = {
       const auth = verifyUser();
       checkAuth(auth);
 
-      const { filter, user, includeUser, pageSize = 20, after } = args;
-      let qryUser: object = {};
-      let qryAfter: object = {};
-      let qryIncludeUser: object = {};
+      const { filter, user, includeUser, first, last, after, before } = args;
+
+      if (first && last) throw ErrorFirstLastNotSupported();
+
+      const where: WhereOptions = {};
 
       if (filter && user) {
-        const userOpConds: object = {};
-        for (const col in user) {
-          userOpConds[col] = {
-            [Op.like]: `%${user[col]}%`,
-          };
-        }
-        qryUser = {
-          [Op.or]: userOpConds,
-        };
+        const userOrConditions: WhereOptions[] = Object.keys(user).map(
+          (colName) => ({
+            [colName]: {
+              [Op.like]: `%${user[colName]}%`,
+            },
+          }),
+        );
+        Object.assign(where, {
+          [Op.or]: userOrConditions,
+        });
       } else if (user) {
-        qryUser = {
-          ...user,
-        };
+        Object.assign(where, user);
       }
       if (includeUser) {
-        qryIncludeUser = {
+        Object.assign(where, {
           id: {
             [Op.ne]: auth.userId,
           },
-        };
+        });
       }
       if (after) {
-        qryAfter = {
+        Object.assign(where, {
           createdAt: { [Op.lt]: Number(after) },
-        };
+        });
       }
-      const where: WhereOptions = {
-        ...qryUser,
-        ...qryAfter,
-        ...qryIncludeUser,
-        verified: true,
-      };
+      if (before) {
+        Object.assign(where, {
+          createdAt: { [Op.gt]: Number(after) },
+        });
+      }
 
       let limit: number;
-      if (pageSize) {
-        limit = pageSize;
+      let userOrderBy: Order;
+      let lastRowOrderBy: Order;
+      if (first) {
+        limit = first;
+        userOrderBy = 'DESC';
+        lastRowOrderBy = 'ASC';
+      } else if (last) {
+        limit = last;
+        userOrderBy = 'ASC';
+        lastRowOrderBy = 'DESC';
+      } else {
+        userOrderBy = 'DESC';
+        lastRowOrderBy = 'ASC';
       }
-
+      Object.assign(where, {
+        verified: true,
+      });
       const users = await userModel.findAll({
         where,
         limit,
-        order: [['createdAt', 'DESC']],
+        order: [['createdAt', userOrderBy]],
       });
       const lastRow = await userModel.findOne({
         attributes: ['createdAt'],
         where,
         limit: 1,
-        order: [['createdAt', 'ASC']],
+        order: [['createdAt', lastRowOrderBy]],
       });
-      const usersConnection = paginateResults<User, UsersConnection, 'UsersConnection'>({
-        after,
-        pageSize,
+      const edges: UserEdge[] = users.map((user) => ({
+        node: user,
+        cursor: new Date(user.createdAt).getTime().toString(),
+      }));
+      const pageInfo: PageInfo = getPageInfo({
+        first,
+        last,
         lastRow,
         results: users,
       });
-      return Promise.resolve(usersConnection);
+      return {
+        totalCount: users.length,
+        edges,
+        pageInfo,
+      };
     },
     user: (_, args, { models }): Promise<User> => {
       const { User } = models;

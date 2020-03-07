@@ -21,9 +21,17 @@ type Query {
     """
     filter: Boolean
     """
-    Pagination: The number of results to show. Must be >= 1. Default = 20
+    Pagination: The number of results to show. Must be >= 1
     """
-    pageSize: Int
+    first: Int
+    """
+    Pagination: The number of results to show. Must be >= 1
+    """
+    last: Int
+    """
+    Pagination: If you add a cursor here, it will only return results `before` this cursor
+    """
+    before: String
     """
     Pagination: If you add a cursor here, it will only return results `after` this cursor
     """
