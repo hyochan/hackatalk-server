@@ -4,7 +4,6 @@ import { ChannelType } from '../models/Channel';
 import { ErrorString } from '../../src/utils/error';
 import { MessageType } from '../models/Message';
 import { checkAuth } from '../utils/auth';
-import paginateResults from '../utils/pagination';
 
 const resolver: Resolvers = {
   Mutation: {
