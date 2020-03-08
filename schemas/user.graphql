@@ -1,5 +1,6 @@
 # import Notification from "notification.graphql"
 # import Channel from "channel.graphql"
+# import Pagination from "pagination.graphql"
 
 scalar Date
 scalar DateTime
@@ -36,6 +37,21 @@ type User {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
+}
+
+type UserEdge {
+  node: User
+  cursor: String
+}
+"""
+Simple wrapper around our list of launches that contains a cursor to the
+last item in the list. Pass this cursor to the launches query to fetch results
+after these.
+"""
+type UsersConnection {
+  totalCount: Int
+  edges: [UserEdge]
+  pageInfo: PageInfo
 }
 
 input UserInput {

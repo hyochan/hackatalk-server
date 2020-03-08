@@ -1,18 +1,23 @@
 import {
   AuthPayload,
   Notification,
+  PageInfo,
   Resolvers,
   SocialUserInput,
   User,
+  UserEdge,
+  UsersConnection,
 } from '../generated/graphql';
 import {
   ErrorEmailForUserExists,
   ErrorEmailNotValid,
   ErrorEmailSentFailed,
+  ErrorFirstLastNotSupported,
   ErrorPasswordIncorrect,
   ErrorUserNotExists,
   ErrorUserNotSignedIn,
 } from '../utils/error';
+import { Op, Order, WhereOptions } from 'sequelize';
 import {
   Role,
   checkAuth,
@@ -25,8 +30,8 @@ import {
 
 import { AuthType } from '../models/User';
 import { ModelType } from '../models';
-import { Op } from 'sequelize';
 import SendGridMail from '@sendgrid/mail';
+import { getPageInfo } from '../utils/pagination';
 import jwt from 'jsonwebtoken';
 import { withFilter } from 'apollo-server';
 
@@ -93,71 +98,103 @@ const resolver: Resolvers = {
       const auth = await getUser();
       return auth;
     },
-    users: async (_, args, { verifyUser, models }): Promise<User[]> => {
+    users: async (
+      _,
+      args,
+      { verifyUser, models },
+    ): Promise<UsersConnection> => {
       const { User: userModel } = models;
       const auth = verifyUser();
       checkAuth(auth);
 
-      const { user, includeUser, filter, first, after } = args;
+      const { filter, user, includeUser, first, last, after, before } = args;
 
-      let query: object = {};
+      if (first && last) throw ErrorFirstLastNotSupported();
+
+      let where: WhereOptions = {};
+      const cursor: User['createdAt'] = 'createdAt';
+
+      if (filter && user) {
+        const userOrConditions: WhereOptions[] = Object.keys(user).map(
+          (colName) => ({
+            [colName]: {
+              [Op.like]: `%${user[colName]}%`,
+            },
+          }),
+        );
+        where = { ...where, [Op.or]: userOrConditions };
+      } else if (user) {
+        where = { ...where, ...user };
+      }
+      if (includeUser) {
+        where = { ...where, id: { [Op.ne]: auth.userId } };
+      }
       if (after) {
-        query = {
-          id: { [Op.gt]: after },
-        };
+        where = { ...where, createdAt: { [Op.lt]: Number(after) } };
+      }
+      if (before) {
+        where = { ...where, createdAt: { [Op.gt]: Number(before) } };
       }
 
       let limit: number;
+      let userOrderBy: Order;
+      const firstRowOrderBy: Order = 'DESC';
+      const lastRowOrderBy: Order = 'ASC';
       if (first) {
         limit = first;
+        userOrderBy = 'DESC';
+      } else if (last) {
+        limit = last;
+        userOrderBy = 'ASC';
+      } else {
+        userOrderBy = 'DESC';
       }
-
-      if (includeUser === false) {
-        return userModel.findAll({
-          where: {
-            ...user,
-            ...query,
-            id: {
-              [Op.ne]: auth.userId,
-            },
-            verified: true,
-          },
-          limit,
-          order: [
-            ['id', 'ASC'],
-          ],
-        });
-      }
-
-      if (filter && user) {
-        return userModel.findAll({
-          where: {
-            ...query,
-            [Op.or]: {
-              nickname: { [Op.like]: user.nickname },
-              email: { [Op.like]: user.email },
-              name: { [Op.like]: user.name },
-            },
-            limit,
-            verified: true,
-          },
-          order: [
-            ['id', 'ASC'],
-          ],
-        });
-      }
-
-      return userModel.findAll({
-        where: {
-          ...user,
-          ...query,
-          verified: true,
-        },
+      where = {
+        ...where,
+        verified: true,
+      };
+      const users = await userModel.findAll({
+        where,
         limit,
-        order: [
-          ['id', 'ASC'],
-        ],
+        order: [[cursor, userOrderBy]],
       });
+      if (last) {
+        users.sort((a, b) => {
+          const createdAtOfA = new Date(a.createdAt).getTime();
+          const createdAtOfB = new Date(b.createdAt).getTime();
+          return createdAtOfB - createdAtOfA;
+        });
+      }
+      const firstRow = await userModel.findOne({
+        attributes: [cursor],
+        where,
+        limit: 1,
+        order: [[cursor, firstRowOrderBy]],
+      });
+      const lastRow = await userModel.findOne({
+        attributes: [cursor],
+        where,
+        limit: 1,
+        order: [[cursor, lastRowOrderBy]],
+      });
+      const edges: UserEdge[] = users.map((user) => ({
+        node: user,
+        cursor: new Date(user.createdAt).getTime().toString(),
+      }));
+      const pageInfo: PageInfo = getPageInfo({
+        first,
+        last,
+        after,
+        before,
+        firstRow,
+        lastRow,
+        results: users,
+      });
+      return {
+        totalCount: users.length,
+        edges,
+        pageInfo,
+      };
     },
     user: (_, args, { models }): Promise<User> => {
       const { User } = models;
@@ -166,7 +203,11 @@ const resolver: Resolvers = {
     },
   },
   Mutation: {
-    signInEmail: async (_, args, { models, appSecret, pubsub }): Promise<AuthPayload> => {
+    signInEmail: async (
+      _,
+      args,
+      { models, appSecret, pubsub },
+    ): Promise<AuthPayload> => {
       const { User: userModel } = models;
 
       const user = await userModel.findOne({
@@ -202,7 +243,8 @@ const resolver: Resolvers = {
     },
 
     signInWithSocialAccount: async (
-      _, { socialUser },
+      _,
+      { socialUser },
       { appSecret, models },
     ): Promise<AuthPayload> =>
       signInWithSocialAccount(socialUser, models, appSecret),
@@ -286,20 +328,21 @@ const resolver: Resolvers = {
         throw ErrorEmailSentFailed(err);
       }
     },
-    updateProfile: async (_, args, { verifyUser, models, pubsub }): Promise<User> => {
+    updateProfile: async (
+      _,
+      args,
+      { verifyUser, models, pubsub },
+    ): Promise<User> => {
       try {
         const auth = verifyUser();
         if (!auth) {
           throw ErrorUserNotSignedIn();
         }
-        await models.User.update(
-          args.user,
-          {
-            where: {
-              id: auth.userId,
-            },
+        await models.User.update(args.user, {
+          where: {
+            id: auth.userId,
           },
-        );
+        });
 
         const user = await models.User.findOne({
           where: {
@@ -314,10 +357,16 @@ const resolver: Resolvers = {
         throw new Error(err.message);
       }
     },
-    setOnlineStatus: async (_, args, { verifyUser, models, pubsub }): Promise<number> => {
+    setOnlineStatus: async (
+      _,
+      args,
+      { verifyUser, models, pubsub },
+    ): Promise<number> => {
       try {
         const auth = verifyUser();
-        if (!auth) { throw ErrorUserNotSignedIn(); }
+        if (!auth) {
+          throw ErrorUserNotSignedIn();
+        }
 
         const update = await models.User.update(
           {
@@ -338,7 +387,10 @@ const resolver: Resolvers = {
       }
     },
     changeEmailPassword: async (
-      _, { password, newPassword }, { verifyUser, models }): Promise<boolean> => {
+      _,
+      { password, newPassword },
+      { verifyUser, models },
+    ): Promise<boolean> => {
       try {
         const auth = verifyUser();
         checkAuth(auth);

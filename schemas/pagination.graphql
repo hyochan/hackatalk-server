@@ -1,0 +1,9 @@
+"""
+Information about pagination in a connection.
+"""
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+}
