@@ -4,6 +4,44 @@ import { testHost } from './testSetup';
 
 describe('Resolver - Channel', () => {
   let client: GraphQLClient;
+  const testUserIds = [];
+  const signUpUser = /* GraphQL */`
+  mutation signUp($user: UserInput!) {
+    signUp(user: $user) {
+      token,
+      user {
+        id
+        email
+      }
+    }
+  }
+`;
+
+  beforeAll(async () => {
+    const { signUp } = await request(testHost, signUpUser, {
+      user: {
+        email: 'test-1@dooboolab.com',
+        password: 'password',
+        name: 'test-1',
+      },
+    });
+    client = new GraphQLClient(testHost, {
+      headers: {
+        authorization: signUp.token,
+      },
+    });
+
+    const { signUp: signUpUser2 } = await request(testHost, signUpUser, {
+      user: {
+        email: 'test-2@dooboolab.com',
+        password: 'password',
+        name: 'test-2',
+      },
+    });
+
+    testUserIds.push(signUpUser2.user.id);
+  });
+
   const mutation = /* GraphQL */`
     mutation createChannel($channel: ChannelInput){
       createChannel(channel: $channel) {
@@ -13,47 +51,6 @@ describe('Resolver - Channel', () => {
       }
     }
   `;
-
-  const signUpMutationUser1 = /* GraphQL */`
-    mutation {
-      signUp(user: {
-        email: "test-1@dooboo.com"
-        password: "test-1"
-        name: "test-1"
-      }) {
-        token,
-        user {
-          id
-          email
-        }
-      }
-    }
-  `;
-
-  const signUpMutationUser2 = /* GraphQL */`
-    mutation {
-      signUp(user: {
-        email: "test-2@dooboo.com"
-        password: "test-2"
-        name: "test-2"
-      }) {
-        token,
-        user {
-          id
-          email
-        }
-      }
-    }
-  `;
-
-  beforeAll(async () => {
-    const { signUp } = await request(testHost, signUpMutationUser1);
-    client = new GraphQLClient(testHost, {
-      headers: {
-        authorization: signUp.token,
-      },
-    });
-  });
 
   it('should throw Error "User is not signed in"', async () => {
     const variables = {
@@ -80,10 +77,9 @@ describe('Resolver - Channel', () => {
   });
 
   it('should return channel id and name', async () => {
-    const { signUp } = await request(testHost, signUpMutationUser2);
     const variables = {
       channel: {
-        friendIds: [signUp.user.id],
+        friendIds: testUserIds,
         name: 'test-channel',
       },
     };
