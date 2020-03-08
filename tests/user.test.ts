@@ -53,8 +53,7 @@ describe('Resolver - User', () => {
         }
       }
     }
-  }
-`;
+  `;
 
   it('Mutation-signUp: should signUp user', async () => {
     const response = await request(testHost, signUp);
