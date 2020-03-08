@@ -17,11 +17,7 @@ import {
   ErrorUserNotExists,
   ErrorUserNotSignedIn,
 } from '../utils/error';
-import {
-  Op,
-  Order,
-  WhereOptions,
-} from 'sequelize';
+import { Op, Order, WhereOptions } from 'sequelize';
 import {
   Role,
   checkAuth,
@@ -35,7 +31,6 @@ import {
 import { AuthType } from '../models/User';
 import { ModelType } from '../models';
 import SendGridMail from '@sendgrid/mail';
-import createOrGetVirgilJwtGenerator from '../utils/virgil';
 import { getPageInfo } from '../utils/pagination';
 import jwt from 'jsonwebtoken';
 import { withFilter } from 'apollo-server';
@@ -116,7 +111,7 @@ const resolver: Resolvers = {
 
       if (first && last) throw ErrorFirstLastNotSupported();
 
-      const where: WhereOptions = {};
+      let where: WhereOptions = {};
       const cursor: User['createdAt'] = 'createdAt';
 
       if (filter && user) {
@@ -127,28 +122,18 @@ const resolver: Resolvers = {
             },
           }),
         );
-        Object.assign(where, {
-          [Op.or]: userOrConditions,
-        });
+        where = { ...where, [Op.or]: userOrConditions };
       } else if (user) {
-        Object.assign(where, user);
+        where = { ...where, ...user };
       }
       if (includeUser) {
-        Object.assign(where, {
-          id: {
-            [Op.ne]: auth.userId,
-          },
-        });
+        where = { ...where, id: { [Op.ne]: auth.userId } };
       }
       if (after) {
-        Object.assign(where, {
-          createdAt: { [Op.lt]: Number(after) },
-        });
+        where = { ...where, createdAt: { [Op.lt]: Number(after) } };
       }
       if (before) {
-        Object.assign(where, {
-          createdAt: { [Op.gt]: Number(before) },
-        });
+        where = { ...where, createdAt: { [Op.gt]: Number(before) } };
       }
 
       let limit: number;
@@ -164,9 +149,10 @@ const resolver: Resolvers = {
       } else {
         userOrderBy = 'DESC';
       }
-      Object.assign(where, {
+      where = {
+        ...where,
         verified: true,
-      });
+      };
       const users = await userModel.findAll({
         where,
         limit,
