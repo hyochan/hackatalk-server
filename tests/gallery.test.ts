@@ -5,20 +5,18 @@ import { testHost } from './testSetup';
 
 describe('Resolver - Gallery', () => {
   let client: GraphQLClient;
+  const testUserIds = [];
   const signUpUser = /* GraphQL */`
-    mutation {
-      signUp(user: {
-        email: "test-2@dooboo.com"
-        password: "test-2"
-        name: "test-2"
-      }) {
-        token,
-        user {
-          email
-        }
+  mutation signUp($user: UserInput!) {
+    signUp(user: $user) {
+      token,
+      user {
+        id
+        email
       }
     }
-  `;
+  }
+`;
 
   const galleries = /* GraphQL */`
     query {
@@ -32,7 +30,13 @@ describe('Resolver - Gallery', () => {
   `;
 
   beforeAll(async () => {
-    const { signUp } = await request(testHost, signUpUser);
+    const { signUp } = await request(testHost, signUpUser, {
+      user: {
+        email: 'test-1@dooboolab.com',
+        password: 'password',
+        name: 'test-1',
+      },
+    });
     client = new GraphQLClient(testHost, {
       headers: {
         authorization: signUp.token,
