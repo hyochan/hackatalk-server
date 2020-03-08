@@ -9,25 +9,26 @@ jest.mock('../src/utils/virgil', () => {
 describe('Resolver - User', () => {
   const name = 'dooboo1';
   const email = `${name}@dooboo.com`;
-  const password = 'password';
-
-  const signUp = /* GraphQL */`
-    mutation {
-      signUp(user: {
-        email: "${email}"
-        password: "${password}"
-        name: "${name}"
-      }) {
-        token,
-        user {
-          email
-        }
+  const signUpUser = /* GraphQL */`
+  mutation signUp($user: UserInput!) {
+    signUp(user: $user) {
+      token,
+      user {
+        id
+        email
       }
     }
-  `;
+  }
+`;
 
   it('should signUp user', async () => {
-    const response = await request(testHost, signUp);
+    const response = await request(testHost, signUpUser, {
+      user: {
+        email,
+        password: 'password',
+        name: 'test-1',
+      },
+    });
 
     expect(response).toHaveProperty('signUp');
     expect(response.signUp).toHaveProperty('token');
