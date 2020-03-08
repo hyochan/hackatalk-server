@@ -4,6 +4,7 @@ import { ChannelType } from '../models/Channel';
 import { ErrorString } from '../../src/utils/error';
 import { MessageType } from '../models/Message';
 import { checkAuth } from '../utils/auth';
+import sequelize from 'sequelize';
 
 const resolver: Resolvers = {
   Mutation: {
@@ -39,22 +40,22 @@ const resolver: Resolvers = {
         }
 
         const authUsers = [...users, auth.userId];
-        const channel = await channelModel.findOne({
-          include: [
-            {
-              model: membershipModel,
-              as: 'memberships',
-              where: {
-                userId: authUsers,
-              },
-              attributes: [
-                'channelId', 'userId',
-              ],
-            },
+        const memberships = await membershipModel.findAll({
+          attributes: [
+            'channelId',
+            [sequelize.fn('count', sequelize.fn('DISTINCT', sequelize.col('userId'))), 'memberCnt'],
           ],
+          where: {
+            userId: authUsers,
+          },
+          group: ['channelId'],
+          raw: true,
         });
 
-        let retrievedChannelId = channel?.getDataValue('id') || undefined;
+        const retrievedChannel =
+          memberships.find((membership) => membership.memberCnt === authUsers.length);
+
+        let retrievedChannelId = retrievedChannel ? retrievedChannel.channelId : undefined;
 
         if (!retrievedChannelId) {
           const channel = await channelModel.create(

@@ -22,6 +22,7 @@ class Membership extends Model {
   public userId!: string;
   public type: MemberType;
   public alert: boolean;
+  public memberCnt?: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
