@@ -38,8 +38,8 @@ Reply.init({
   paranoid: true,
 });
 
-Reply.belongsTo(Message, { as: 'message' });
-Reply.belongsTo(User, { as: 'user' });
+// Reply.belongsTo(Message, { as: 'message' });
+// Reply.belongsTo(User, { as: 'user' });
 
 export type ReplyModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Reply;

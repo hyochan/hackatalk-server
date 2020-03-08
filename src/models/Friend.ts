@@ -32,8 +32,8 @@ Friend.init({
   paranoid: true,
 });
 
-Friend.belongsTo(User, { as: 'friend' });
-Friend.belongsTo(User, { as: 'user' });
+// Friend.belongsTo(User, { as: 'friend' });
+// Friend.belongsTo(User, { as: 'user' });
 
 export type FriendModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Friend;

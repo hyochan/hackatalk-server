@@ -8,10 +8,17 @@ import {
 } from 'sequelize';
 
 import Channel from './Channel';
+import Photo from './Photo';
+import Reply from './Reply';
 import User from './User';
 import sequelize from '../db';
 
-class Message extends Model {
+export enum MessageType {
+  Text = 'TEXT',
+  File = 'FILE',
+}
+
+export class Message extends Model {
   public id!: string;
   public channelId!: string;
   public senderId!: string;
@@ -43,8 +50,10 @@ Message.init({
   timestamps: true,
 });
 
-Message.belongsTo(Channel, { as: 'channel' });
-Message.belongsTo(User, { as: 'sender' });
+// Message.belongsTo(Channel, { as: 'channel' });
+// Message.belongsTo(User, { as: 'sender' });
+Message.hasMany(Reply, { foreignKey: 'messageId' });
+Message.hasMany(Photo, { foreignKey: 'messageId' });
 
 export type MessageModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Message;

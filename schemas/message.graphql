@@ -5,6 +5,11 @@
 
 scalar DateTime
 
+enum MessageType {
+  TEXT,
+  FILE,
+}
+
 type Message {
   id: String!
   channel: Channel
@@ -17,4 +22,9 @@ type Message {
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime
+}
+
+type MessagePayload {
+  channelId: String!
+  message: Message
 }

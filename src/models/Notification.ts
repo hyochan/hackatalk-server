@@ -37,7 +37,7 @@ Notification.init({
   timestamps: true,
 });
 
-Notification.belongsTo(User, { as: 'user' });
+// Notification.belongsTo(User, { as: 'user' });
 
 export type NotificationModelStatic = typeof Model & {
   new (values?: object, options?: BuildOptions): Notification;
