@@ -1,10 +1,10 @@
 import { Message, MessagePayload, Resolvers } from '../generated/graphql';
+import sequelize, { Op } from 'sequelize';
 
 import { ChannelType } from '../models/Channel';
 import { ErrorString } from '../../src/utils/error';
 import { MessageType } from '../models/Message';
 import { checkAuth } from '../utils/auth';
-import sequelize from 'sequelize';
 
 const resolver: Resolvers = {
   Mutation: {
@@ -40,22 +40,55 @@ const resolver: Resolvers = {
         }
 
         const authUsers = [...users, auth.userId];
-        const memberships = await membershipModel.findAll({
-          attributes: [
-            'channelId',
-            [sequelize.fn('count', sequelize.fn('DISTINCT', sequelize.col('userId'))), 'memberCnt'],
-          ],
-          where: {
-            userId: authUsers,
-          },
+        const channels = await channelModel.findAll({
           group: ['channelId'],
+          having: sequelize.where(
+            sequelize.fn('COUNT', sequelize.col('channelId')),
+            { [Op.in]: [authUsers.length] },
+          ),
+          include: [
+            {
+              model: membershipModel,
+              as: 'memberships',
+              where: {
+                userId: authUsers,
+              },
+              attributes: [
+                'channelId',
+              ],
+            },
+          ],
           raw: true,
         });
 
-        const retrievedChannel =
-          memberships.find((membership) => membership.memberCnt === authUsers.length);
+        let retrievedChannelId: string;
+        const channelPromises = [];
 
-        let retrievedChannelId = retrievedChannel ? retrievedChannel.channelId : undefined;
+        channels.forEach((channel, index) => {
+          channelPromises[index++] = channelModel.findOne({
+            attributes: [[sequelize.fn('COUNT', sequelize.col('channelId')), 'numOfMemberships']],
+            where: {
+              id: channel.id,
+            },
+            group: ['channelId'],
+            include: [
+              {
+                model: membershipModel,
+                as: 'memberships',
+                attributes: [
+                  'channelId',
+                ],
+              },
+            ],
+            raw: true,
+          }).then((foundChannel) => {
+            if (foundChannel.numOfMemberships === authUsers.length) {
+              retrievedChannelId = channel.id;
+            }
+          });
+        });
+
+        await Promise.all(channelPromises);
 
         if (!retrievedChannelId) {
           const channel = await channelModel.create(

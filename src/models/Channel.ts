@@ -20,6 +20,7 @@ class Channel extends Model {
   public id!: string;
   public type!: ChannelType;
   public name: string;
+  public numOfMemberships?: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
