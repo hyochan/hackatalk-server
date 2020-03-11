@@ -39,7 +39,7 @@ const resolver: Resolvers = {
           };
         }
 
-        const authUsers = [...users, auth.userId];
+        const authUsers = [...new Set([...users, auth.userId])];
         const channels = await channelModel.findAll({
           group: ['channelId'],
           having: sequelize.where(
