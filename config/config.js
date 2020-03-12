@@ -2,7 +2,9 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const initDotEnv = require('./initDotEnv');
 
-initDotEnv();
+if (!process.env.AZURE_ENV) {
+  initDotEnv();
+}
 
 let config = {
   username: process.env.DB_USER,
