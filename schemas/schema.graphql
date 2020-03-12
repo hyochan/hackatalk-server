@@ -9,7 +9,6 @@
 # import Gallery from "gallery.graphql"
 # import File from "file.graphql"
 
-
 scalar Upload
 type Query {
   """

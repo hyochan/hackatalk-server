@@ -1,5 +1,5 @@
+import { ApolloServer, gql } from 'apollo-server-express';
 import { JWT_SECRET, JwtUser, getToken, verifyUser } from './utils/auth';
-import { ApolloServer } from 'apollo-server-express';
 import { Http2Server } from 'http2';
 import { MyContext } from './context';
 import { PubSub } from 'graphql-subscriptions';

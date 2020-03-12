@@ -16,6 +16,7 @@ const resolver: Resolvers = {
       }
 
       const { STORAGE_ENDPOINT } = process.env;
+
       return `${STORAGE_ENDPOINT}/${dir}/${filename}`;
     },
   },
