@@ -21,6 +21,7 @@ require('dotenv').config();
 
 const {
   STORAGE_ENDPOINT,
+  NODE_ENV,
 } = process.env;
 
 i18next
@@ -142,7 +143,7 @@ export const createApp = (): express.Application => {
   });
 
   app.get('/', (req, res) => {
-    res.send(`${req.t('IT_WORKS')} - Version 0.0.1`);
+    res.send(`${req.t('IT_WORKS')} - Version 0.0.1\nENV: ${NODE_ENV}`);
   });
 
   return app;
