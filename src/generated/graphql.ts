@@ -1,7 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-
 import { MyContext } from '../context';
-
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -144,7 +142,10 @@ export type Mutation = {
   changeEmailPassword?: Maybe<Scalars['Boolean']>,
   createChannel?: Maybe<Channel>,
   createGallery?: Maybe<Gallery>,
-  /** Create message and return channelId when meessage has successfully sent */
+  /** 
+ * Create message and return channelId when meessage has successfully sent.
+   * Do not pass current userId inside `users`.
+ */
   createMessage?: Maybe<MessagePayload>,
   deleteChannel?: Maybe<Scalars['Int']>,
   deleteFriend?: Maybe<User>,
@@ -156,7 +157,7 @@ export type Mutation = {
   signInEmail: AuthPayload,
   signInWithSocialAccount: AuthPayload,
   signUp: AuthPayload,
-  singleUpload: File,
+  singleUpload: Scalars['String'],
   updateChannel?: Maybe<Scalars['Int']>,
   updateGallery?: Maybe<Scalars['Int']>,
   updateProfile?: Maybe<User>,
@@ -248,7 +249,8 @@ export type MutationSignUpArgs = {
 
 
 export type MutationSingleUploadArgs = {
-  file: Scalars['Upload']
+  file: Scalars['Upload'],
+  dir?: Maybe<Scalars['String']>
 };
 
 
@@ -414,6 +416,8 @@ export type UserInput = {
   birthday?: Maybe<Scalars['Date']>,
   gender?: Maybe<Gender>,
   phone?: Maybe<Scalars['String']>,
+  thumbURL?: Maybe<Scalars['String']>,
+  photoURL?: Maybe<Scalars['String']>,
   statusMessage?: Maybe<Scalars['String']>,
 };
 
@@ -429,8 +433,6 @@ export type UserProfileInput = {
   birthday?: Maybe<Scalars['Date']>,
   gender?: Maybe<Gender>,
   phone?: Maybe<Scalars['String']>,
-  thumbURL?: Maybe<Scalars['String']>,
-  photoURL?: Maybe<Scalars['String']>,
   statusMessage?: Maybe<Scalars['String']>,
 };
 
@@ -560,12 +562,12 @@ export type ResolversTypes = {
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
   Upload: ResolverTypeWrapper<Scalars['Upload']>,
-  File: ResolverTypeWrapper<File>,
   UserProfileInput: UserProfileInput,
   Subscription: ResolverTypeWrapper<{}>,
   FriendSub: ResolverTypeWrapper<FriendSub>,
   FriendSubAction: FriendSubAction,
   Friend: ResolverTypeWrapper<Friend>,
+  File: ResolverTypeWrapper<File>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -602,12 +604,12 @@ export type ResolversParentTypes = {
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
   Upload: Scalars['Upload'],
-  File: File,
   UserProfileInput: UserProfileInput,
   Subscription: {},
   FriendSub: FriendSub,
   FriendSubAction: FriendSubAction,
   Friend: Friend,
+  File: File,
 };
 
 export type AuthPayloadResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = {
@@ -720,7 +722,7 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInEmailArgs, 'email' | 'password'>>,
   signInWithSocialAccount?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInWithSocialAccountArgs, 'socialUser'>>,
   signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>,
-  singleUpload?: Resolver<ResolversTypes['File'], ParentType, ContextType, RequireFields<MutationSingleUploadArgs, 'file'>>,
+  singleUpload?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSingleUploadArgs, 'file'>>,
   updateChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, MutationUpdateChannelArgs>,
   updateGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationUpdateGalleryArgs, 'galleryId' | 'photoURL'>>,
   updateProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'user'>>,

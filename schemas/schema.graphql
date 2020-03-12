@@ -9,6 +9,8 @@
 # import Gallery from "gallery.graphql"
 # import File from "file.graphql"
 
+
+scalar Upload
 type Query {
   """
   If filter is true, it will filter user with email, nickname or name.
