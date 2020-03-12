@@ -8,3 +8,5 @@ package-lock.json
 
 dotenv/.env
 dotenv/prod.env
+
+.idea/

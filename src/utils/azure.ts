@@ -1,38 +1,34 @@
 import AzureStorage, { BlobService } from 'azure-storage';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import stream from 'stream';
 
 require('dotenv').config();
 
-const {
-  STORAGE_ACCOUNT,
-  STORAGE_KEY,
-} = process.env;
+const { STORAGE_ACCOUNT, STORAGE_KEY } = process.env;
 
 const blobService = STORAGE_ACCOUNT
-  ? AzureStorage.createBlobService(
-    STORAGE_ACCOUNT,
-    STORAGE_KEY,
-  )
+  ? AzureStorage.createBlobService(STORAGE_ACCOUNT, STORAGE_KEY)
   : undefined;
 
 export const uploadFileToAzureBlobFromStream = (
   stream: stream.Readable,
   destFile: string,
   destDir: string,
-  streamLength: number,
 ): Promise<BlobService.BlobResult> => {
   return new Promise(function(resolve, reject) {
-    blobService.createBlockBlobFromStream(destDir, destFile, stream, streamLength, function(
-      error,
-      resultUpload,
-    ) {
-      if (!error) {
-        resolve(resultUpload);
-        return;
-      }
-      reject(error);
-    });
+    stream.pipe(
+      blobService.createWriteStreamToBlockBlob(destDir, destFile, function(
+        error,
+        resultUpload,
+      ) {
+        if (!error) {
+          resolve(resultUpload);
+          return;
+        }
+        reject(error);
+      }),
+    );
   });
 };
 

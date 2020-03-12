@@ -7,7 +7,9 @@
 # import Membership from "membership.graphql"
 # import Photo from "photo.graphql"
 # import Gallery from "gallery.graphql"
+# import File from "file.graphql"
 
+scalar Upload
 type Query {
   """
   If filter is true, it will filter user with email, nickname or name.
@@ -69,6 +71,7 @@ type Mutation {
   createGallery(photoURL: String!): Gallery
   updateGallery(galleryId: ID!, photoURL: String!): Int
   deleteGallery(galleryId: ID!): Int
+  singleUpload(file: Upload!, dir: String): String!
 }
 
 type Subscription {
