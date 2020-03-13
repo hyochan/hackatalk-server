@@ -9,7 +9,7 @@ const sequelize = new Sequelize(
   {
     dialect: config.dialect as Dialect,
     define: config.define,
-    dialectOptions: config.dialectOption,
+    dialectOptions: config.dialectOptions,
     pool: config.pool,
     logging: false,
   },
