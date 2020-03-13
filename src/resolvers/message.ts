@@ -1,10 +1,10 @@
-import { Message, MessagePayload, Resolvers } from '../generated/graphql';
-import sequelize, { Op } from 'sequelize';
-
+import { Channel, Message, MessagePayload, Resolvers } from '../generated/graphql';
 import { ChannelType } from '../models/Channel';
 import { ErrorString } from '../../src/utils/error';
 import { MessageType } from '../models/Message';
+import { QueryTypes } from 'sequelize';
 import { checkAuth } from '../utils/auth';
+import sequelize from '../db';
 
 const resolver: Resolvers = {
   Mutation: {
@@ -40,55 +40,28 @@ const resolver: Resolvers = {
         }
 
         const authUsers = [...new Set([...users, auth.userId])];
-        const channels = await channelModel.findAll({
-          group: ['channelId'],
-          having: sequelize.where(
-            sequelize.fn('COUNT', sequelize.col('channelId')),
-            { [Op.in]: [authUsers.length] },
-          ),
-          include: [
-            {
-              model: membershipModel,
-              as: 'memberships',
-              where: {
-                userId: authUsers,
-              },
-              attributes: [
-                'channelId',
-              ],
-            },
-          ],
-          raw: true,
-        });
-
-        let retrievedChannelId: string;
-        const channelPromises = [];
-
-        channels.forEach((channel, index) => {
-          channelPromises[index++] = channelModel.findOne({
-            attributes: [[sequelize.fn('COUNT', sequelize.col('channelId')), 'numOfMemberships']],
-            where: {
-              id: channel.id,
-            },
-            group: ['channelId'],
-            include: [
-              {
-                model: membershipModel,
-                as: 'memberships',
-                attributes: [
-                  'channelId',
-                ],
-              },
-            ],
-            raw: true,
-          }).then((foundChannel) => {
-            if (foundChannel.numOfMemberships === authUsers.length) {
-              retrievedChannelId = channel.id;
-            }
-          });
-        });
-
-        await Promise.all(channelPromises);
+        const channels: Array<Channel> = await sequelize.query(`
+            SELECT DISTINCT c.id, COUNT(c.id) FROM channels c
+            INNER JOIN memberships m ON c.id = m.channelId
+              AND m.deletedAt IS NULL
+              AND m.userId IN (:authUsers)
+              AND (
+                SELECT COUNT(m2.channelId)
+                FROM channels c2
+                INNER JOIN memberships m2 ON c2.id = m2.channelId
+                WHERE c2.id = c.id
+                GROUP BY m2.channelId
+              ) = :authUserNum
+            WHERE c.deletedAt IS NULL
+            GROUP BY c.id
+            HAVING COUNT(c.id) = :authUserNum
+          `,
+        {
+          replacements: { authUsers: authUsers, authUserNum: authUsers.length },
+          type: QueryTypes.SELECT,
+        },
+        );
+        let retrievedChannelId = channels[0] ? channels[0].id : null;
 
         if (!retrievedChannelId) {
           const channel = await channelModel.create(
