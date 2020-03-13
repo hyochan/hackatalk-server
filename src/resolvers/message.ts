@@ -55,6 +55,7 @@ const resolver: Resolvers = {
             WHERE c.deletedAt IS NULL
             GROUP BY c.id
             HAVING COUNT(c.id) = :authUserNum
+            ORDER BY c.updatedAt DESC
           `,
         {
           replacements: { authUsers: authUsers, authUserNum: authUsers.length },
