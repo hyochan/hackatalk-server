@@ -72,9 +72,6 @@ User.init({
   photoURL: STRING,
   birthday: {
     type: DATEONLY,
-    get: function(): string {
-      return moment.utc(this.getDataValue('regDate')).format('YYYY-MM-DD');
-    },
   },
   gender: ENUM('MALE', 'FEMALE'),
   phone: STRING,

@@ -135,7 +135,7 @@ export const createApp = (): express.Application => {
     },
   );
 
-  app.get('/virgil-jwt/:identity', async (req: express.Request, res: express.Response) => {
+  app.get('/virgil-jwt/:identity', async (req: express.Request, res) => {
     const jwtGenerator = await createOrGetVirgilJwtGenerator();
     // @ts-ignore
     const jwt = jwtGenerator.generateToken(req.params.identity);
