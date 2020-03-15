@@ -75,6 +75,8 @@ type Mutation {
   updateGallery(galleryId: ID!, photoURL: String!): Int
   deleteGallery(galleryId: ID!): Int
   singleUpload(file: Upload!, dir: String): String!
+  createReaction(messageId: ID!, type: String!): Reaction
+  deleteReaction(reactionId: ID!): Int
 }
 
 type Subscription {
