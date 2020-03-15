@@ -11,10 +11,7 @@ export enum ErrorString {
   EmailForUserExists = 'Email for current user is already signed up.',
   EmailSentFailed = 'Email sent failed',
   EmailNotValid = 'Not a valid email address',
-  FriendIdsRequired = 'FriendIds are required',
   UrlNotValid = 'Url is not a valid url. It should start with http.',
-  MesssageIsEmpty = 'Message is empty',
-  UsersAreEmpty = 'Users are empty',
   FirstLastNotSupported = 'Passing both `first` and `last` is not supported.',
 }
 
@@ -38,10 +35,6 @@ export const ErrorEmailSentFailed =
 export const ErrorEmailNotValid =
   (): ValidationError =>
     new ValidationError(ErrorString.EmailNotValid);
-
-export const ErrorFriendIdRequired =
-  (): UserInputError =>
-    new UserInputError(ErrorString.FriendIdsRequired);
 
 export const ErrorUrlNotValid =
   (): ValidationError =>

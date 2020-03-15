@@ -64,19 +64,7 @@ describe('Resolver - Channel', () => {
     expect(promise).rejects.toThrow();
   });
 
-  it('should throw Error "friendIds is required"', async () => {
-    const variables = {
-      channel: {
-        friendIds: [],
-        name: 'test-channel',
-      },
-    };
-
-    const promise = client.request(mutation, variables);
-    expect(promise).rejects.toThrow();
-  });
-
-  it('should return channel id and name', async () => {
+  it('should resolve channel properties', async () => {
     const variables = {
       channel: {
         friendIds: testUserIds,
@@ -87,5 +75,75 @@ describe('Resolver - Channel', () => {
     expect(promise).resolves.toHaveProperty('createChannel.id');
     expect(promise).resolves.toHaveProperty('createChannel.name');
     expect(promise).resolves.toHaveProperty('createChannel.type');
+  });
+
+  it('should return same channel id when same friends are provided', async () => {
+    const variables = {
+      channel: {
+        friendIds: testUserIds,
+        name: 'test-channel',
+      },
+    };
+
+    const response1 = await client.request(mutation, variables);
+    const channelId = response1.createChannel.id;
+
+    const response2 = await client.request(mutation, variables);
+    expect(channelId).toEqual(response2.createChannel.id);
+  });
+
+  it('should return different channel id when different friends are provided', async () => {
+    const variables = {
+      channel: {
+        friendIds: testUserIds,
+        name: 'test-channel',
+      },
+    };
+
+    const response1 = await client.request(mutation, variables);
+    const channelId = response1.createChannel.id;
+
+    const { signUp: signUpUser1 } = await request(testHost, signUpUser, {
+      user: {
+        email: 'test-3@dooboolab.com',
+        password: 'password',
+        name: 'test-3',
+      },
+    });
+
+    const diffVariables = {
+      channel: {
+        friendIds: [testUserIds[0], signUpUser1.user.id],
+        name: 'test-channel',
+      },
+    };
+
+    const response2 = await client.request(mutation, diffVariables);
+    expect(channelId === response2.createChannel.id).toBeFalsy();
+  });
+
+  it('should always resolve different channel id when members are more than 2', async () => {
+    const { signUp: signUpUser3 } = await request(testHost, signUpUser, {
+      user: {
+        email: 'test-4@dooboolab.com',
+        password: 'password',
+        name: 'test-4',
+      },
+    });
+
+    testUserIds.push(signUpUser3.user.id);
+
+    const variables = {
+      channel: {
+        friendIds: testUserIds,
+        name: 'test-channel',
+      },
+    };
+
+    const response1 = await client.request(mutation, variables);
+    const channelId = response1.createChannel.id;
+
+    const response2 = await client.request(mutation, variables);
+    expect(channelId === response2.createChannel.id).toBeFalsy();
   });
 });
