@@ -78,9 +78,17 @@ describe('Resolver - Channel', () => {
   });
 
   it('should return same channel id when same friends are provided', async () => {
+    const { signUp: signUpUser3 } = await request(testHost, signUpUser, {
+      user: {
+        email: 'dooboo3@dooboolab.com',
+        password: 'password',
+        name: 'dooboo3',
+      },
+    });
+
     const variables = {
       channel: {
-        friendIds: testUserIds,
+        friendIds: [signUpUser3.user.id],
         name: 'test-channel',
       },
     };
