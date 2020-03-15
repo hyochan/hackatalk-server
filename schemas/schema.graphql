@@ -58,6 +58,9 @@ type Mutation {
   updateProfile(user: UserProfileInput!): User
   addFriend(friendId: ID!): User
   deleteFriend(friendId: ID!): User
+  """
+  `friendIds` in Channel should exclude userid.
+  """
   createChannel(channel: ChannelInput): Channel
   updateChannel(channel: ChannelInput): Int
   deleteChannel(channelId: ID!): Int
@@ -65,7 +68,7 @@ type Mutation {
   Create message and return channelId when meessage has successfully sent.
   Do not pass current userId inside `users`.
   """
-  createMessage(users: [String!]! message: String! channelId: String): MessagePayload
+  createMessage(message: String! channelId: String!): MessagePayload
   setOnlineStatus(isOnline: Boolean): Int
   changeEmailPassword(password: String! newPassword: String!): Boolean
   createGallery(photoURL: String!): Gallery

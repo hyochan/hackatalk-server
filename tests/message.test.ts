@@ -1,6 +1,5 @@
 import { GraphQLClient, request } from 'graphql-request';
 
-import { ErrorString } from '../src/utils/error';
 import { testHost } from './testSetup';
 
 describe('Resolver - Message', () => {
@@ -52,12 +51,20 @@ describe('Resolver - Message', () => {
     testUserIds.push(signUpUser3.user.id);
   });
 
-  let firstReturedChannelId = '';
+  const createChannel = /* GraphQL */`
+    mutation createChannel($channel: ChannelInput){
+      createChannel(channel: $channel) {
+        id
+        type
+        name
+      }
+    }
+  `;
+
   const createMessage = /* GraphQL */`
-    mutation createMessage($message: String!, $users: [String!]!, $channelId: String) {
+    mutation createMessage($message: String!, $channelId: String!) {
       createMessage(
         message: $message
-        users: $users
         channelId: $channelId
       ) {
         channelId
@@ -65,40 +72,24 @@ describe('Resolver - Message', () => {
     }
   `;
 
-  it('should createMessage and get new channelId', async () => {
-    const variables = {
-      message: 'hello!!',
-      users: testUserIds,
+  it('should createMessage directly with channelId provided', async () => {
+    const channelVariables = {
+      channel: {
+        friendIds: testUserIds,
+        name: 'test-channel',
+      },
     };
-    const response = await client.request(createMessage, variables);
-    expect(response).toHaveProperty('createMessage');
-    expect(response.createMessage).toHaveProperty('channelId');
-    firstReturedChannelId = response.createMessage.channelId;
-  });
 
-  it('should createMessage and get same channelId', async () => {
-    const variables = {
+    const channelResponse = await client.request(createChannel, channelVariables);
+
+    const messageVariables = {
       message: 'hello hello!!',
-      users: testUserIds,
+      channelId: channelResponse.createChannel.id,
     };
-
-    const response = await client.request(createMessage, variables);
+    const response = await client.request(createMessage, messageVariables);
     expect(response).toHaveProperty('createMessage');
     expect(response.createMessage).toHaveProperty('channelId');
-    expect(response.createMessage.channelId).toEqual(firstReturedChannelId);
-  });
-
-  it('should createMessage directly when channelId is provided', async () => {
-    const variables = {
-      message: 'hello hello!!',
-      users: testUserIds,
-      channelId: firstReturedChannelId,
-    };
-
-    const response = await client.request(createMessage, variables);
-    expect(response).toHaveProperty('createMessage');
-    expect(response.createMessage).toHaveProperty('channelId');
-    expect(response.createMessage.channelId).toEqual(firstReturedChannelId);
+    expect(response.createMessage.channelId).toEqual(channelResponse.createChannel.id);
   });
 
   it('should throw errors when message is empty', () => {
@@ -108,16 +99,6 @@ describe('Resolver - Message', () => {
     };
 
     const promise = client.request(createMessage, variables);
-    expect(promise).rejects.toThrow(ErrorString.MesssageIsEmpty);
-  });
-
-  it('should throw errors when users is empty', () => {
-    const variables = {
-      message: 'test',
-      users: [],
-    };
-
-    const promise = client.request(createMessage, variables);
-    expect(promise).rejects.toThrow(ErrorString.UsersAreEmpty);
+    expect(promise).rejects.toThrow();
   });
 });

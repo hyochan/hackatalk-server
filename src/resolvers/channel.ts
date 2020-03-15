@@ -1,8 +1,5 @@
 import { Channel, Membership, Message, Resolvers } from '../generated/graphql';
 
-import {
-  ErrorFriendIdRequired,
-} from '../utils/error';
 import { MemberType } from '../models/Membership';
 import { Op } from 'sequelize';
 import { checkAuth } from '../utils/auth';
@@ -41,9 +38,24 @@ const resolver: Resolvers = {
       const { Membership: membershipModel, Channel: channelModel } = models;
       const { name, type, friendIds } = args.channel;
 
-      if (!friendIds || friendIds.length === 0) throw ErrorFriendIdRequired();
-
       const channelMembers = [auth.userId, ...friendIds];
+
+      if (channelMembers.length === 2) {
+        const channel = await channelModel.findOne({
+          include: [
+            {
+              model: membershipModel,
+              as: 'memberships',
+              where: {
+                userId: channelMembers,
+              },
+            },
+          ],
+        });
+
+        if (channel) return channel;
+      }
+
       const channel = await channelModel.create({
         name,
         type,
@@ -53,9 +65,9 @@ const resolver: Resolvers = {
         return {
           userId,
           channelId: channel.id,
-          ...((userId === auth.userId || channelMembers.length === 2) && {
-            type: MemberType.Owner,
-          }),
+          type: userId === auth.userId || channelMembers.length === 2
+            ? MemberType.Owner
+            : MemberType.Member,
         };
       });
       await membershipModel.bulkCreate(membershipData);
