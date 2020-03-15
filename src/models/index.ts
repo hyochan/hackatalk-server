@@ -5,6 +5,7 @@ import Membership, { MembershipModelStatic } from './Membership';
 import Message, { MessageModelStatic } from './Message';
 import Notification, { NotificationModelStatic } from './Notification';
 import Photo, { PhotoModelStatic } from './Photo';
+import Reaction, { ReactionModelStatic } from './Reaction';
 import Reply, { ReplyModelStatic } from './Reply';
 import User, { UserModelStatic } from './User';
 
@@ -18,6 +19,7 @@ export default {
   Photo,
   Reply,
   Gallery,
+  Reaction,
 };
 
 export interface ModelType {
@@ -30,4 +32,5 @@ export interface ModelType {
   Notification: NotificationModelStatic;
   Photo: PhotoModelStatic;
   Gallery: GalleryModelStatic;
+  Reaction: ReactionModelStatic;
 };
