@@ -6,16 +6,16 @@ describe('Resolver - Channel', () => {
   let client: GraphQLClient;
   const testUserIds = [];
   const signUpUser = /* GraphQL */`
-  mutation signUp($user: UserInput!) {
-    signUp(user: $user) {
-      token,
-      user {
-        id
-        email
+    mutation signUp($user: UserInput!) {
+      signUp(user: $user) {
+        token,
+        user {
+          id
+          email
+        }
       }
     }
-  }
-`;
+  `;
 
   beforeAll(async () => {
     const { signUp } = await request(testHost, signUpUser, {
@@ -42,7 +42,7 @@ describe('Resolver - Channel', () => {
     testUserIds.push(signUpUser2.user.id);
   });
 
-  const mutation = /* GraphQL */`
+  const createChannel = /* GraphQL */`
     mutation createChannel($channel: ChannelInput){
       createChannel(channel: $channel) {
         id
@@ -60,7 +60,7 @@ describe('Resolver - Channel', () => {
       },
     };
 
-    const promise = request(testHost, mutation, variables);
+    const promise = request(testHost, createChannel, variables);
     expect(promise).rejects.toThrow();
   });
 
@@ -71,7 +71,7 @@ describe('Resolver - Channel', () => {
         name: 'test-channel',
       },
     };
-    const promise = client.request(mutation, variables);
+    const promise = client.request(createChannel, variables);
     expect(promise).resolves.toHaveProperty('createChannel.id');
     expect(promise).resolves.toHaveProperty('createChannel.name');
     expect(promise).resolves.toHaveProperty('createChannel.type');
@@ -93,10 +93,10 @@ describe('Resolver - Channel', () => {
       },
     };
 
-    const response1 = await client.request(mutation, variables);
+    const response1 = await client.request(createChannel, variables);
     const channelId = response1.createChannel.id;
 
-    const response2 = await client.request(mutation, variables);
+    const response2 = await client.request(createChannel, variables);
     expect(channelId).toEqual(response2.createChannel.id);
   });
 
@@ -108,7 +108,7 @@ describe('Resolver - Channel', () => {
       },
     };
 
-    const response1 = await client.request(mutation, variables);
+    const response1 = await client.request(createChannel, variables);
     const channelId = response1.createChannel.id;
 
     const { signUp: signUpUser1 } = await request(testHost, signUpUser, {
@@ -126,7 +126,7 @@ describe('Resolver - Channel', () => {
       },
     };
 
-    const response2 = await client.request(mutation, diffVariables);
+    const response2 = await client.request(createChannel, diffVariables);
     expect(channelId === response2.createChannel.id).toBeFalsy();
   });
 
@@ -148,10 +148,10 @@ describe('Resolver - Channel', () => {
       },
     };
 
-    const response1 = await client.request(mutation, variables);
+    const response1 = await client.request(createChannel, variables);
     const channelId = response1.createChannel.id;
 
-    const response2 = await client.request(mutation, variables);
+    const response2 = await client.request(createChannel, variables);
     expect(channelId === response2.createChannel.id).toBeFalsy();
   });
 });
