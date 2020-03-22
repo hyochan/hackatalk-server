@@ -1,21 +1,20 @@
 import { GraphQLClient, request } from 'graphql-request';
 
 import { testHost } from './testSetup';
-import { Json } from 'sequelize/types/lib/utils';
 
 describe('Resolver - Reaction', () => {
   let client: GraphQLClient;
   const testUserIds = [];
-  const signUpUser = /* GraphQL */`
-  mutation signUp($user: UserInput!) {
+  const signUpUser = /* GraphQL */ `
+    mutation signUp($user: UserInput!) {
       signUp(user: $user) {
-        token,
+        token
         user {
-            id
-            email
+          id
+          email
         }
       }
-  }
+    }
   `;
 
   beforeAll(async () => {
@@ -41,11 +40,10 @@ describe('Resolver - Reaction', () => {
     });
 
     testUserIds.push(signUpUser2.user.id);
-
   });
 
-  const createChannel = /* GraphQL */`
-    mutation createChannel($channel: ChannelInput){
+  const createChannel = /* GraphQL */ `
+    mutation createChannel($channel: ChannelInput) {
       createChannel(channel: $channel) {
         id
         type
@@ -54,12 +52,9 @@ describe('Resolver - Reaction', () => {
     }
   `;
 
-  const createMessage = /* GraphQL */`
+  const createMessage = /* GraphQL */ `
     mutation createMessage($message: String!, $channelId: String!) {
-      createMessage(
-        message: $message
-        channelId: $channelId
-      ) {
+      createMessage(message: $message, channelId: $channelId) {
         channelId
         message {
           id
@@ -68,15 +63,12 @@ describe('Resolver - Reaction', () => {
     }
   `;
 
-  const createReaction = /* GraphQL */`
+  const createReaction = /* GraphQL */ `
     mutation createReaction($type: String!, $messageId: ID!) {
-      createReaction(
-        messageId: $messageId 
-        type: $type
-      ) {
+      createReaction(messageId: $messageId, type: $type) {
         id
       }
-    } 
+    }
   `;
 
   it('should create reaction', async () => {
@@ -86,13 +78,19 @@ describe('Resolver - Reaction', () => {
         name: 'test-channel',
       },
     };
-    const channelResponse = await client.request(createChannel, channelVariables);
+    const channelResponse = await client.request(
+      createChannel,
+      channelVariables,
+    );
 
     const messageVariables = {
       message: 'hello hello!!',
       channelId: channelResponse.createChannel.id,
     };
-    const messageResponse = await client.request(createMessage, messageVariables);
+    const messageResponse = await client.request(
+      createMessage,
+      messageVariables,
+    );
 
     const reactionVariables = {
       messageId: messageResponse.createMessage.message.id,
@@ -103,17 +101,15 @@ describe('Resolver - Reaction', () => {
     expect(response).toHaveProperty('createReaction');
     expect(response.createReaction).toHaveProperty('id');
     expect(response.createReaction.id).not.toBeNull();
-
   });
 
-
-  const deleteReaction = /* GraphQL */`
+  const deleteReaction = /* GraphQL */ `
     mutation deleteReaction($reactionId: ID!) {
-      deleteReaction(reactionId: $reactionId) 
+      deleteReaction(reactionId: $reactionId)
     }
   `;
 
-  it('should delete reaction', async () => {    
+  it('should delete reaction', async () => {
     const variables = {
       reactionId: 'test',
     };
@@ -121,6 +117,5 @@ describe('Resolver - Reaction', () => {
 
     expect(response).toHaveProperty('deleteReaction');
     expect(response.deleteReaction).toBe(0);
-
   });
 });

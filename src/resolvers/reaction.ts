@@ -3,9 +3,12 @@ import { Reaction, Resolvers } from '../generated/graphql';
 import { checkAuth } from '../utils/auth';
 
 const resolver: Resolvers = {
-
   Mutation: {
-    createReaction: async (_, { messageId, type }, { verifyUser, models }): Promise<Reaction> => {
+    createReaction: async (
+      _,
+      { messageId, type },
+      { verifyUser, models },
+    ): Promise<Reaction> => {
       const auth = verifyUser();
       checkAuth(auth);
 
@@ -19,7 +22,11 @@ const resolver: Resolvers = {
 
       return reaction;
     },
-    deleteReaction: async (_, { reactionId }, { verifyUser, models }): Promise<number> => {
+    deleteReaction: async (
+      _,
+      { reactionId },
+      { verifyUser, models },
+    ): Promise<number> => {
       const auth = verifyUser();
       checkAuth(auth);
 
@@ -30,7 +37,7 @@ const resolver: Resolvers = {
           id: reactionId,
         },
       });
-      
+
       return result;
     },
   },
