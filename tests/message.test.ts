@@ -1,3 +1,4 @@
+import { Channel, Message } from '../src/generated/graphql';
 import { GraphQLClient, request } from 'graphql-request';
 
 import { testHost } from './testSetup';
@@ -68,6 +69,12 @@ describe('Resolver - Message', () => {
         channelId: $channelId
       ) {
         channelId
+        message {
+          id
+          type
+          text
+          filePath
+        }
       }
     }
   `;
@@ -100,5 +107,51 @@ describe('Resolver - Message', () => {
 
     const promise = client.request(createMessage, variables);
     expect(promise).rejects.toThrow();
+  });
+
+  const channels = /* GraphQL */`
+    query {
+      channels {
+        id
+        name
+        messages {
+          id
+          type
+          text
+        }
+      }
+    }
+  `;
+
+  it("should have message data in channel's query after creating message", async () => {
+    const channelVariables = {
+      channel: {
+        friendIds: testUserIds,
+        name: 'test-channel2',
+      },
+    };
+
+    const channelResponse = await client.request(createChannel, channelVariables);
+
+    const messageVariables = {
+      message: 'Do you like kimchi?',
+      channelId: channelResponse.createChannel.id,
+    };
+    const messageResponse = await client.request(createMessage, messageVariables);
+    expect(messageResponse).toHaveProperty('createMessage');
+    expect(messageResponse.createMessage).toHaveProperty('channelId');
+    expect(messageResponse.createMessage.channelId).toEqual(channelResponse.createChannel.id);
+
+    const response = await client.request(channels);
+
+    response.channels.forEach((channel: Channel) => {
+      if (channel.id === channelResponse.createChannel.id) {
+        channel.messages.forEach((message: Message) => {
+          if (message.id === messageResponse.createMessage.message.id) {
+            expect(message.text).toEqual(messageVariables.message);
+          }
+        });
+      }
+    });
   });
 });
