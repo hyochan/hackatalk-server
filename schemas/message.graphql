@@ -2,7 +2,7 @@
 # import User from "user.graphql"
 # import Channel from "channel.graphql"
 # import Photo from "photo.graphql"
-# import Reaction from "Reaction.graphql"
+# import Reaction from "reaction.graphql"
 
 scalar DateTime
 
