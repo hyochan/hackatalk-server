@@ -389,23 +389,10 @@ const resolver: Resolvers = {
     changeEmailPassword: async (
       _,
       { password, newPassword },
-      { verifyUser, models },
+      { getUser, models },
     ): Promise<boolean> => {
       try {
-        const auth = verifyUser();
-        checkAuth(auth);
-
-        const { User: userModel } = models;
-
-        const user = await userModel.findOne({
-          where: {
-            id: auth.userId,
-          },
-          raw: true,
-        });
-
-        if (!user) throw ErrorUserNotExists();
-
+        const user = await getUser();
         const validate = await validateCredential(password, user.password);
 
         if (!validate) throw ErrorPasswordIncorrect();
@@ -418,7 +405,7 @@ const resolver: Resolvers = {
           },
           {
             where: {
-              id: auth.userId,
+              id: user.id,
             },
           },
         );
