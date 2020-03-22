@@ -457,4 +457,19 @@ describe('Resolver - User', () => {
       expect.arrayContaining(responseBefore.users.edges),
     );
   });
+  it('Mutation-changeEmailPassword : should user password updated after user sign-in', async () => {
+    const client = await getClientUserSignedIn(testHost, signInEmail);
+    const changeEmailPassword = /* GraphQL */ `
+    mutation changeEmailPassword($password: String!, $newPassword: String!) {
+      changeEmailPassword(password: $password, newPassword: $newPassword)
+    }
+  `;
+    const variables = {
+      password: 'password',
+      newPassword: 'newPassword',
+    };
+    const mutationRes = await client.request(changeEmailPassword, variables);
+    expect(mutationRes).toHaveProperty('changeEmailPassword');
+    expect(mutationRes.changeEmailPassword).toEqual(true);
+  });
 });
