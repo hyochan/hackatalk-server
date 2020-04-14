@@ -15,6 +15,12 @@ type Friend {
   deletedAt: DateTime
 }
 
+type FriendPayload {
+  user: User!
+  added: Boolean
+  deleted: Int
+}
+
 type FriendSub {
   user: User
   action: FriendSubAction

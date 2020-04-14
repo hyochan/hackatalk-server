@@ -56,8 +56,8 @@ type Mutation {
   addNotificationToken(notification: NotificationCreateInput!): Notification
   removeNotificationToken(token: String!): Int
   updateProfile(user: UserProfileInput!): User
-  addFriend(friendId: ID!): User
-  deleteFriend(friendId: ID!): User
+  addFriend(friendId: ID!): FriendPayload
+  deleteFriend(friendId: ID!): FriendPayload
   """
   `friendIds` in Channel should exclude userid.
   """

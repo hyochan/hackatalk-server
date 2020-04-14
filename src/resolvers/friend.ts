@@ -1,4 +1,4 @@
-import { FriendSubAction, Resolvers, User } from '../generated/graphql';
+import { FriendPayload, FriendSubAction, Resolvers, User } from '../generated/graphql';
 
 import {
   ErrorUserNotSignedIn,
@@ -35,7 +35,7 @@ const resolver: Resolvers = {
   },
   Mutation: {
     addFriend: async (_, { friendId }, { verifyUser, models, pubsub }):
-      Promise<User> => {
+      Promise<FriendPayload> => {
       const auth = verifyUser();
       checkAuth(auth);
 
@@ -46,13 +46,23 @@ const resolver: Resolvers = {
           where: { id: friendId },
         });
 
-        await friendModel.upsert(
-          {
+        const result = await friendModel.findOrCreate({
+          where: {
             userId: auth.userId,
             friendId,
-            deletedAt: null,
           },
-        );
+          defaults: {
+            userId: auth.userId,
+            friendId,
+          },
+        });
+
+        if (!result || (result && result[1] === false)) {
+          return {
+            user,
+            added: false,
+          };
+        }
 
         pubsub.publish(FRIENDS_CHANGED, {
           friendChanged: {
@@ -60,13 +70,16 @@ const resolver: Resolvers = {
             action: FriendSubAction.Added,
           },
         });
-        return user;
+        return {
+          user,
+          added: true,
+        };
       } catch (err) {
         throw new Error(err.message);
       }
     },
     deleteFriend: async (_, { friendId }, { verifyUser, models, pubsub }):
-      Promise<User> => {
+      Promise<FriendPayload> => {
       const auth = verifyUser();
       checkAuth(auth);
 
@@ -80,7 +93,7 @@ const resolver: Resolvers = {
           raw: true,
         });
 
-        await friendModel.destroy(
+        const deleted = await friendModel.destroy(
           {
             where: {
               userId: auth.userId,
@@ -95,7 +108,10 @@ const resolver: Resolvers = {
             action: FriendSubAction.Deleted,
           },
         });
-        return user;
+        return {
+          user,
+          deleted,
+        };
       } catch (err) {
         throw new Error(err.message);
       }
