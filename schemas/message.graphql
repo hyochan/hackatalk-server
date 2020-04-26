@@ -2,6 +2,7 @@
 # import User from "user.graphql"
 # import Channel from "channel.graphql"
 # import Photo from "photo.graphql"
+# import Reaction from "reaction.graphql"
 
 scalar DateTime
 
@@ -19,6 +20,7 @@ type Message {
   picture: [Photo]
   filePath: String
   replies: [Reply]
+  reactions: [Reaction]
   createdAt: DateTime
   updatedAt: DateTime
   deletedAt: DateTime

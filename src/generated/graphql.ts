@@ -129,6 +129,7 @@ export type Message = {
   filePath?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   picture?: Maybe<Array<Maybe<Photo>>>;
+  reactions?: Maybe<Array<Maybe<Reaction>>>;
   replies?: Maybe<Array<Maybe<Reply>>>;
   sender?: Maybe<User>;
   text?: Maybe<Scalars['String']>;
@@ -155,9 +156,11 @@ export type Mutation = {
    * Do not pass current userId inside `users`.
  */
   createMessage?: Maybe<MessagePayload>;
+  createReaction?: Maybe<Reaction>;
   deleteChannel?: Maybe<Scalars['Int']>;
   deleteFriend?: Maybe<FriendPayload>;
   deleteGallery?: Maybe<Scalars['Int']>;
+  deleteReaction?: Maybe<Scalars['Int']>;
   findPassword?: Maybe<Scalars['Boolean']>;
   removeNotificationToken?: Maybe<Scalars['Int']>;
   sendVerification?: Maybe<Scalars['Boolean']>;
@@ -204,6 +207,12 @@ export type MutationCreateMessageArgs = {
 };
 
 
+export type MutationCreateReactionArgs = {
+  messageId: Scalars['ID'];
+  type: Scalars['String'];
+};
+
+
 export type MutationDeleteChannelArgs = {
   channelId: Scalars['ID'];
 };
@@ -216,6 +225,11 @@ export type MutationDeleteFriendArgs = {
 
 export type MutationDeleteGalleryArgs = {
   galleryId: Scalars['ID'];
+};
+
+
+export type MutationDeleteReactionArgs = {
+  reactionId: Scalars['ID'];
 };
 
 
@@ -345,6 +359,15 @@ export type QueryUsersArgs = {
   last?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['String']>;
   after?: Maybe<Scalars['String']>;
+};
+
+export type Reaction = {
+   __typename?: 'Reaction';
+  createdAt?: Maybe<Scalars['DateTime']>;
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  type?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type Reply = {
@@ -553,6 +576,7 @@ export type ResolversTypes = {
   UserModeType: UserModeType,
   Message: ResolverTypeWrapper<Message>,
   Photo: ResolverTypeWrapper<Photo>,
+  Reaction: ResolverTypeWrapper<Reaction>,
   Reply: ResolverTypeWrapper<Reply>,
   ChannelType: ChannelType,
   Gallery: ResolverTypeWrapper<Gallery>,
@@ -596,6 +620,7 @@ export type ResolversParentTypes = {
   UserModeType: UserModeType,
   Message: Message,
   Photo: Photo,
+  Reaction: Reaction,
   Reply: Reply,
   ChannelType: ChannelType,
   Gallery: Gallery,
@@ -707,6 +732,7 @@ export type MessageResolvers<ContextType = MyContext, ParentType extends Resolve
   filePath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   picture?: Resolver<Maybe<Array<Maybe<ResolversTypes['Photo']>>>, ParentType, ContextType>,
+  reactions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reaction']>>>, ParentType, ContextType>,
   replies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reply']>>>, ParentType, ContextType>,
   sender?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
@@ -728,9 +754,11 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   createChannel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType, RequireFields<MutationCreateChannelArgs, never>>,
   createGallery?: Resolver<Maybe<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<MutationCreateGalleryArgs, 'photoURL'>>,
   createMessage?: Resolver<Maybe<ResolversTypes['MessagePayload']>, ParentType, ContextType, RequireFields<MutationCreateMessageArgs, 'message' | 'channelId'>>,
+  createReaction?: Resolver<Maybe<ResolversTypes['Reaction']>, ParentType, ContextType, RequireFields<MutationCreateReactionArgs, 'messageId' | 'type'>>,
   deleteChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>,
   deleteFriend?: Resolver<Maybe<ResolversTypes['FriendPayload']>, ParentType, ContextType, RequireFields<MutationDeleteFriendArgs, 'friendId'>>,
   deleteGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteGalleryArgs, 'galleryId'>>,
+  deleteReaction?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteReactionArgs, 'reactionId'>>,
   findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationFindPasswordArgs, 'email'>>,
   removeNotificationToken?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationRemoveNotificationTokenArgs, 'token'>>,
   sendVerification?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSendVerificationArgs, 'email'>>,
@@ -780,6 +808,15 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
   users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, RequireFields<QueryUsersArgs, never>>,
+};
+
+export type ReactionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Reaction'] = ResolversParentTypes['Reaction']> = {
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
 export type ReplyResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Reply'] = ResolversParentTypes['Reply']> = {
@@ -859,6 +896,7 @@ export type Resolvers<ContextType = MyContext> = {
   PageInfo?: PageInfoResolvers<ContextType>,
   Photo?: PhotoResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
+  Reaction?: ReactionResolvers<ContextType>,
   Reply?: ReplyResolvers<ContextType>,
   Subscription?: SubscriptionResolvers<ContextType>,
   Upload?: GraphQLScalarType,

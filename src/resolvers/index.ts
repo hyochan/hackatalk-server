@@ -4,6 +4,7 @@ import File from './file';
 import Friend from './friend';
 import Gallery from './gallery';
 import Notification from './notification';
+import Reaction from './reaction';
 import User from './user';
 
 export const allResolvers = [
@@ -14,6 +15,7 @@ export const allResolvers = [
   Channel,
   Gallery,
   File,
+  Reaction,
 ];
 
 export default {
@@ -24,4 +26,5 @@ export default {
   Channel,
   Gallery,
   File,
+  Reaction,
 };
