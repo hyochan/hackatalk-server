@@ -55,8 +55,10 @@ const createApolloServer = (): ApolloServer =>
       pubsub,
       appSecret: JWT_SECRET,
     }),
-    introspection: !!(process.env.NODE_ENV !== 'production'),
-    playground: !!(process.env.NODE_ENV !== 'production'),
+    // introspection: !!(process.env.NODE_ENV !== 'production'),
+    // playground: !!(process.env.NODE_ENV !== 'production'),
+    introspection: true,
+    playground: true,
     resolvers: allResolvers,
     subscriptions: {
       onConnect: (): void => {

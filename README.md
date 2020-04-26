@@ -13,13 +13,26 @@
 - [apollo-server](https://www.apollographql.com/docs/apollo-server)
 - [jest](https://jestjs.io)
 
+> Setup Dev env
+
+- Create user in local mysql server account.
+- Give appropriate name to `dev.env`.
+  ```
+  DB_CONNECTOR=mysql
+  DB_HOST=127.0.0.1
+  DB_USER=hackatalk
+  DB_PASSWORD=hackatalk!
+  DB_PORT=3306
+  DB_DATABASE=hackatalk_dev
+  ```
+
 ### Test Apis
 
-- [stage.hackatalk.dev](https://stage.hackatalk.dev)
+- [hackatalk.azurewebsites.net](https://hackatalk.azurewebsites.net)
 
 ### Test Graphql Apis
 
-- [stage.hackatalk.dev/graphql](https://stage.hackatalk.dev/graphql)
+- [hackatalk.azurewebsites.net/graphql](https://hackatalk.azurewebsites.net/graphql)
 
 ### Migration
 
