@@ -1,4 +1,5 @@
 import { ErrorUserNotSignedIn } from '../utils/error';
+import { MyContext } from '../context';
 import bcrypt from 'bcrypt-nodejs';
 import jwt from 'jsonwebtoken';
 import qs from 'querystring';
@@ -24,7 +25,7 @@ export interface Auth {
 }
 
 // eslint-disable-next-line
-export const getToken = (req: Express.Request & any): string => {
+export const getToken = (req: Request & any): string => {
   const authHeader = req.get('Authorization');
 
   if (!authHeader) {
