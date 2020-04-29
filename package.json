@@ -38,6 +38,8 @@
     "form-data": "^3.0.0",
     "graphql": "^14.6.0",
     "graphql-import": "^0.7.1",
+    "graphql-middleware": "^4.0.2",
+    "graphql-tools": "^5.0.0",
     "http": "^0.0.0",
     "i18next": "^19.3.2",
     "i18next-express-middleware": "^1.9.1",

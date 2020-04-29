@@ -1,16 +1,18 @@
-import { ApolloServer, gql } from 'apollo-server-express';
 import { JWT_SECRET, JwtUser, getToken, verifyUser } from './utils/auth';
 
+import { ApolloServer } from 'apollo-server-express';
 import { Http2Server } from 'http2';
 import { MyContext } from './context';
 import { PubSub } from 'graphql-subscriptions';
 import SendGridMail from '@sendgrid/mail';
 import { User } from './models/User';
 import { allResolvers } from './resolvers';
+import { applyMiddleware } from 'graphql-middleware';
 import { createApp } from './app';
 import { createServer as createHttpServer } from 'http';
 import express from 'express';
 import { importSchema } from 'graphql-import';
+import { makeExecutableSchema } from 'graphql-tools';
 import models from './models';
 
 SendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -18,14 +20,18 @@ SendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 const { PORT = 4000 } = process.env;
 const pubsub = new PubSub();
 
-const typeDefs = importSchema('schemas/schema.graphql').replace(
-  'scalar Upload',
-  '',
+const typeDefs = importSchema('schemas/schema.graphql');
+
+const schema = applyMiddleware(
+  makeExecutableSchema({
+    typeDefs,
+    resolvers: allResolvers,
+  }),
 );
 
 const createApolloServer = (): ApolloServer =>
   new ApolloServer({
-    typeDefs,
+    schema,
     context: ({ req }): MyContext => ({
       verifyUser: (): JwtUser => {
         const token = getToken(req);
@@ -59,7 +65,6 @@ const createApolloServer = (): ApolloServer =>
     // playground: !!(process.env.NODE_ENV !== 'production'),
     introspection: true,
     playground: true,
-    resolvers: allResolvers,
     subscriptions: {
       onConnect: (): void => {
         process.stdout.write('Connected to websocket\n');
