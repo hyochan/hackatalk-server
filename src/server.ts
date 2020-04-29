@@ -14,7 +14,6 @@ import express from 'express';
 import { importSchema } from 'graphql-import';
 import { makeExecutableSchema } from 'graphql-tools';
 import models from './models';
-import { permissions } from './permissions';
 
 SendGridMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -28,7 +27,6 @@ const schema = applyMiddleware(
     typeDefs,
     resolvers: allResolvers,
   }),
-  permissions,
 );
 
 const createApolloServer = (): ApolloServer =>
