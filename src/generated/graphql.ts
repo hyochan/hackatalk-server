@@ -332,6 +332,7 @@ export type Query = {
   galleries: Array<Gallery>;
   me?: Maybe<User>;
   messages: Array<Message>;
+  reactions: Array<ReactionGroup>;
   user?: Maybe<User>;
   /** 
  * If filter is true, it will filter user with email, nickname or name.
@@ -343,6 +344,11 @@ export type Query = {
 
 export type QueryGalleriesArgs = {
   userId: Scalars['String'];
+};
+
+
+export type QueryReactionsArgs = {
+  messageId: Scalars['String'];
 };
 
 
@@ -368,6 +374,19 @@ export type Reaction = {
   id: Scalars['ID'];
   type?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ReactionGroup = {
+   __typename?: 'ReactionGroup';
+  type?: Maybe<Scalars['String']>;
+  reactions?: Maybe<Array<Maybe<Reactions>>>;
+};
+
+export type Reactions = {
+   __typename?: 'Reactions';
+  id?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type Reply = {
@@ -580,6 +599,8 @@ export type ResolversTypes = {
   Reply: ResolverTypeWrapper<Reply>,
   ChannelType: ChannelType,
   Gallery: ResolverTypeWrapper<Gallery>,
+  ReactionGroup: ResolverTypeWrapper<ReactionGroup>,
+  Reactions: ResolverTypeWrapper<Reactions>,
   UserQueryInput: UserQueryInput,
   Int: ResolverTypeWrapper<Scalars['Int']>,
   UsersConnection: ResolverTypeWrapper<UsersConnection>,
@@ -624,6 +645,8 @@ export type ResolversParentTypes = {
   Reply: Reply,
   ChannelType: ChannelType,
   Gallery: Gallery,
+  ReactionGroup: ReactionGroup,
+  Reactions: Reactions,
   UserQueryInput: UserQueryInput,
   Int: Scalars['Int'],
   UsersConnection: UsersConnection,
@@ -806,6 +829,7 @@ export type QueryResolvers<ContextType = MyContext, ParentType extends Resolvers
   galleries?: Resolver<Array<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<QueryGalleriesArgs, 'userId'>>,
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>,
+  reactions?: Resolver<Array<ResolversTypes['ReactionGroup']>, ParentType, ContextType, RequireFields<QueryReactionsArgs, 'messageId'>>,
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>,
   users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, RequireFields<QueryUsersArgs, never>>,
 };
@@ -816,6 +840,19 @@ export type ReactionResolvers<ContextType = MyContext, ParentType extends Resolv
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+};
+
+export type ReactionGroupResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['ReactionGroup'] = ResolversParentTypes['ReactionGroup']> = {
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  reactions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reactions']>>>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+};
+
+export type ReactionsResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Reactions'] = ResolversParentTypes['Reactions']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
@@ -897,6 +934,8 @@ export type Resolvers<ContextType = MyContext> = {
   Photo?: PhotoResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
   Reaction?: ReactionResolvers<ContextType>,
+  ReactionGroup?: ReactionGroupResolvers<ContextType>,
+  Reactions?: ReactionsResolvers<ContextType>,
   Reply?: ReplyResolvers<ContextType>,
   Subscription?: SubscriptionResolvers<ContextType>,
   Upload?: GraphQLScalarType,

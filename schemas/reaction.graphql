@@ -7,3 +7,13 @@ type Reaction {
   updatedAt: DateTime
   deletedAt: DateTime
 }
+
+type Reactions {
+  id: String
+  userId: String
+}
+
+type ReactionGroup {
+  type: String
+  reactions: [Reactions]
+}
