@@ -45,6 +45,7 @@ type Query {
   channels: [Channel!]!
   friends: [User!]!
   galleries(userId: String!): [Gallery!]!
+  reactions(messageId: String!): [ReactionGroup!]!
 }
 
 type Mutation {
