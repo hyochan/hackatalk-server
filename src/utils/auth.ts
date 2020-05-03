@@ -1,37 +1,16 @@
 import { ErrorUserNotSignedIn } from '../utils/error';
-import { MyContext } from '../context';
+import { JwtUser } from '../types';
 import bcrypt from 'bcrypt-nodejs';
-import jwt from 'jsonwebtoken';
 import qs from 'querystring';
 
 const SALT_ROUND = 10;
 
 export const { JWT_SECRET = 'undefined' } = process.env;
-export type Token = string;
-
-export interface JwtUser {
-  userId: string;
-  role: number;
-  iat: number;
-}
-export enum Role {
-  User,
-  Admin,
-}
-
-export interface Auth {
-  id: string;
-  role: Role;
-}
 
 export const validateEmail = (email: string): boolean => {
   // eslint-disable-next-line max-len
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
-};
-
-export const verifyUser = (token: string): JwtUser => {
-  return jwt.verify(token, JWT_SECRET) as JwtUser;
 };
 
 export const encryptCredential = async (password: string): Promise<string> =>

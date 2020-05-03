@@ -19,7 +19,6 @@ import {
 } from '../utils/error';
 import { Op, Order, WhereOptions } from 'sequelize';
 import {
-  Role,
   checkAuth,
   encryptCredential,
   getEmailVerificationHTML,
@@ -30,6 +29,7 @@ import {
 
 import { AuthType } from '../models/User';
 import { ModelType } from '../models';
+import { Role } from '../types';
 import SendGridMail from '@sendgrid/mail';
 import { getPageInfo } from '../utils/pagination';
 import jwt from 'jsonwebtoken';
