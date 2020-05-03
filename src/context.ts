@@ -1,6 +1,7 @@
 import { JwtUser, verifyUser as verifyAuth } from './utils/auth';
 import models, { ModelType } from './models';
 
+import { ExpressContext } from 'apollo-server-express/src/ApolloServer';
 import { PubSub } from 'graphql-subscriptions';
 import { Request } from 'apollo-server';
 import { User } from './models/User';
@@ -28,7 +29,9 @@ export const getToken = (req: Request & any): string => {
   return authHeader.replace('Bearer ', '');
 };
 
-export function createContext(request: Request): MyContext {
+export function createContext(ctx: ExpressContext): MyContext {
+  const request = ctx.req;
+
   return {
     getUser: (): Promise<User> => {
       const { User: userModel } = models;

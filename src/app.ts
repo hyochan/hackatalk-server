@@ -1,6 +1,5 @@
 import {
   encryptCredential,
-  getToken,
   validateCredential,
 } from './utils/auth';
 import { resetPassword, verifyEmail } from './models/User';
@@ -10,6 +9,7 @@ import cors from 'cors';
 import createOrGetVirgilJwtGenerator from './utils/virgil';
 import express from 'express';
 import fs from 'fs';
+import { getToken } from './context';
 import i18next from 'i18next';
 import middleware from 'i18next-express-middleware';
 import multer from 'multer';
