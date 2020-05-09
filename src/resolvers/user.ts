@@ -3,6 +3,7 @@ import {
   Notification,
   PageInfo,
   Resolvers,
+  Scalars,
   SocialUserInput,
   User,
   UserEdge,
@@ -31,9 +32,12 @@ import { AuthType } from '../models/User';
 import { ModelType } from '../models';
 import { Role } from '../types';
 import SendGridMail from '@sendgrid/mail';
+import axios from 'axios';
 import { getPageInfo } from '../utils/pagination';
 import jwt from 'jsonwebtoken';
 import { withFilter } from 'apollo-server';
+
+const { FACEBOOK_APP_ID, FACEBOOK_APP_SECRET_CODE } = process.env;
 
 const USER_SIGNED_IN = 'USER_SIGNED_IN';
 const USER_UPDATED = 'USER_UPDATED';
@@ -241,14 +245,74 @@ const resolver: Resolvers = {
         throw new Error(err);
       }
     },
-
     signInWithSocialAccount: async (
       _,
       { socialUser },
       { appSecret, models },
     ): Promise<AuthPayload> =>
       signInWithSocialAccount(socialUser, models, appSecret),
+    signInWithFacebook: async (
+      _,
+      { accessToken },
+      { appSecret, models },
+    ): Promise<AuthPayload> => {
+      try {
+        /**
+         *  access_token 검증을 위한 app_access_token 생성
+         */
+        const appAccessTokenRes = await axios.get(
+          'https://graph.facebook.com/oauth/access_token',
+          {
+            params: {
+              client_id: FACEBOOK_APP_ID,
+              client_secret: FACEBOOK_APP_SECRET_CODE,
+              grant_type: 'client_credentials',
+            },
+          },
+        );
+        const appAccessToken = appAccessTokenRes.data.access_token;
 
+        /**
+         *  access_token 검증
+         */
+        const debugTokenRes = await axios.get(
+          'https://graph.facebook.com/debug_token',
+          {
+            params: {
+              input_token: accessToken,
+              access_token: appAccessToken,
+            },
+          },
+        );
+        const userId = debugTokenRes.data.data.user_id;
+
+        if (!userId) {
+          throw new Error(`Invalid accessToken. (${accessToken})`);
+        }
+
+        const userRes = await axios.get(
+          `https://graph.facebook.com/v7.0/${userId}/`,
+          {
+            params: {
+              access_token: accessToken,
+              fields: 'email',
+            },
+          },
+        );
+
+        return signInWithSocialAccount(
+          {
+            socialId: userId,
+            authType: AuthType.Facebook,
+            email: userRes.data.email,
+          },
+          models,
+          appSecret,
+        );
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
     signUp: async (_, args, { appSecret, models }): Promise<AuthPayload> => {
       const { User: userModel } = models;
       const { email } = args.user;
