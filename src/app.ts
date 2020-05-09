@@ -143,6 +143,7 @@ export const createApp = (): express.Application => {
   });
 
   app.get('/', (req, res) => {
+    // @ts-ignore
     res.send(`${req.t('IT_WORKS')} - Version 0.0.1\nENV: ${NODE_ENV}`);
   });
 
