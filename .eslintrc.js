@@ -22,6 +22,7 @@ module.exports = {
     'no-console': 'error',
     'max-len': ['error', { code: 100 }],
     'comma-dangle': ['error', 'always-multiline'],
+    '@typescript-eslint/camelcase': 0,
     semi: [2, 'always'],
     'arrow-parens': ['error', 'always'],
     'space-before-function-paren': ['error', 'never'],
