@@ -163,22 +163,25 @@ const resolver: Resolvers = {
           return createdAtOfB - createdAtOfA;
         });
       }
+
       const firstRow = await userModel.findOne({
         attributes: [cursor],
-        where,
+        where: { verified: true },
         limit: 1,
         order: [[cursor, firstRowOrderBy]],
       });
       const lastRow = await userModel.findOne({
         attributes: [cursor],
-        where,
+        where: { verified: true },
         limit: 1,
         order: [[cursor, lastRowOrderBy]],
       });
+
       const edges: UserEdge[] = users.map((user) => ({
         node: user,
         cursor: new Date(user.createdAt).getTime().toString(),
       }));
+
       const pageInfo: PageInfo = getPageInfo({
         first,
         last,
