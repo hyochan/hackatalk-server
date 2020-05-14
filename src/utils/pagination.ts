@@ -26,12 +26,16 @@ function getPageInfo<Schema extends User | Message>({
   if (results.length === 0) {
     return pageInfo;
   }
+
   const startEdge = new Date(Number(results[0].createdAt)).getTime();
-  const endEdge = new Date(Number(results[results.length - 1].createdAt)).getTime();
-  const firstRowCreatedAtDt = new Date(Number(firstRow.createdAt)).getTime();
-  const lastRowCreatedAtDt = new Date(Number(lastRow.createdAt)).getTime();
+  const endEdge = new Date(
+    Number(results[results.length - 1].createdAt),
+  ).getTime();
+  const firstRowCreatedAtDt = new Date(firstRow.createdAt).getTime();
+  const lastRowCreatedAtDt = new Date(lastRow.createdAt).getTime();
   pageInfo.startCursor = startEdge;
   pageInfo.endCursor = endEdge;
+
   if (last) {
     pageInfo.hasPreviousPage = startEdge < firstRowCreatedAtDt;
     if (before) {
