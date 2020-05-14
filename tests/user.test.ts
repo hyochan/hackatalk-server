@@ -1,25 +1,14 @@
-import { getClientUserSignedIn, testHost } from './testSetup';
+import { GraphQLClient, request } from 'graphql-request';
 
 import { ErrorString } from '../src/utils/error';
 import models from '../src/models';
-import { request } from 'graphql-request';
+import { testHost } from './testSetup';
 
 jest.mock('../src/utils/virgil', () => {
   return jest.fn();
 });
 
-const signInEmail = /* GraphQL */ `
-  mutation {
-    signInEmail(email: "dooboo1@dooboo.com", password: "password") {
-      token
-      user {
-        email
-      }
-    }
-  }
-`;
-
-const verifyUsers = async (): Promise<void> => {
+const verifyUser = async (): Promise<void> => {
   /* Verify Users */
   const { User: userModel } = models;
   await userModel.update(
@@ -35,35 +24,79 @@ const verifyUsers = async (): Promise<void> => {
 };
 
 describe('Resolver - User', () => {
+  let client: GraphQLClient;
+
   const name = 'dooboo1';
-  const email = `${name}@dooboo.com`;
+  const email = 'dooboo1@dooboolab.com';
   const password = 'password';
   const updateName = 'geoseong';
 
-  const signUp = /* GraphQL */ `
+  const nameTwo = 'dooboo2';
+  const emailTwo = 'dooboo2@dooboolab.com';
+  const passwordTwo = 'password';
+
+  const signInEmail = /* GraphQL */ `
     mutation {
-      signUp(user: {
-        email: "${email}"
-        password: "${password}"
-        name: "${name}"
-      }) {
-        token,
+      signInEmail(email: "${email}", password: "${password}") {
+        token
         user {
           email
         }
       }
     }
   `;
+  const signUpUser = /* GraphQL */`
+    mutation signUp($user: UserInput!) {
+      signUp(user: $user) {
+        token,
+        user {
+          id
+          email
+        }
+      }
+    }
+  `;
 
-  it('Mutation-signUp: should signUp user', async () => {
-    const response = await request(testHost, signUp);
+  beforeAll(async () => {
+    const { signUp } = await request(testHost, signUpUser, {
+      user: {
+        name,
+        email,
+        password,
+      },
+    });
+    const { signUp: signUpTwo } = await request(testHost, signUpUser, {
+      user: {
+        name: nameTwo,
+        email: emailTwo,
+        password: passwordTwo,
+      },
+    });
+    await verifyUser();
+    client = new GraphQLClient(testHost, {
+      headers: {
+        authorization: `Bearer ${signUp.token}`,
+      },
+    });
+  });
+
+  it('should signUp user', async () => {
+    const email = 'dooboo3@dooboolab.com';
+    const response = await request(testHost, signUpUser, {
+      user: {
+        name: 'dooboo3',
+        email,
+        password: 'password',
+      },
+    });
 
     expect(response).toHaveProperty('signUp');
     expect(response.signUp).toHaveProperty('token');
     expect(response.signUp).toHaveProperty('user');
     expect(response.signUp.user.email).toEqual(email);
   });
-  it('Mutation-signInEmail: should signIn email user', async () => {
+
+  it('should signIn email user', async () => {
     const response = await request(testHost, signInEmail);
     expect(response).toHaveProperty('signInEmail');
     expect(response.signInEmail).toHaveProperty('token');
@@ -71,8 +104,7 @@ describe('Resolver - User', () => {
     expect(response.signInEmail.user.email).toEqual(email);
   });
 
-  it('Mutation-updateProfile: should user profile updated after user sign-in', async () => {
-    const client = await getClientUserSignedIn(testHost, signInEmail);
+  it('should user profile updated after user sign-in', async () => {
     const updateProfile = /* GraphQL */ `
       mutation updateProfile(
         $name: String!
@@ -128,88 +160,8 @@ describe('Resolver - User', () => {
       expect(mutationRes.updateProfile[column]).toEqual(variables[column]);
     }
   });
-  it('Query-users: should get users with "first" argument', async () => {
-    const email = 'parkopp@gmail.com';
-    const password = 'password';
-    const name = 'parkopp';
-    const signUp = /* GraphQL */ `
-      mutation {
-        signUp(user: {
-          email: "${email}"
-          password: "${password}"
-          name: "${name}"
-        }) {
-          token,
-          user {
-            email
-          }
-        }
-      }
-    `;
-    await request(testHost, signUp);
-    await verifyUsers();
 
-    const client = await getClientUserSignedIn(testHost, signInEmail);
-    const queryFirst = /* GraphQL */ `
-      query user($first: Int) {
-        users(first: $first) {
-          totalCount
-          edges {
-            node {
-              id
-              name
-              birthday
-              email
-            }
-            cursor
-          }
-          pageInfo {
-            endCursor
-            hasNextPage
-            startCursor
-            hasPreviousPage
-          }
-        }
-      }
-    `;
-    const variables = {
-      first: 2,
-    };
-    const response = await client.request(queryFirst, variables);
-    expect(response.users.totalCount).toEqual(variables.first);
-  });
-  it('Query-users: should get users with "last" argument', async () => {
-    const client = await getClientUserSignedIn(testHost, signInEmail);
-    const queryLast = /* GraphQL */ `
-      query user($last: Int) {
-        users(last: $last) {
-          totalCount
-          edges {
-            node {
-              id
-              name
-              birthday
-              email
-            }
-            cursor
-          }
-          pageInfo {
-            endCursor
-            hasNextPage
-            startCursor
-            hasPreviousPage
-          }
-        }
-      }
-    `;
-    const variables = {
-      last: 2,
-    };
-    const response = await client.request(queryLast, variables);
-    expect(response.users.totalCount).toEqual(variables.last);
-  });
-
-  it('Query-users: should error thrown when "first" and "last" arguments entered', async () => {
+  it('should error thrown when "first" and "last" arguments entered', async () => {
     const qryFirstLast = /* GraphQL */ `
       query {
         users(first: 1, last: 1) {
@@ -232,24 +184,22 @@ describe('Resolver - User', () => {
         }
       }
     `;
-    const client = await getClientUserSignedIn(testHost, signInEmail);
     const promise = client.request(qryFirstLast);
     expect(promise).rejects.toThrow(ErrorString.FirstLastNotSupported);
   });
-  it('Query-users: should get user with "filter" and "user" argument', async () => {
-    const client = await getClientUserSignedIn(testHost, signInEmail);
+
+  it('should get user with "filter" and "user" argument', async () => {
     const queryFilterAndUser = /* GraphQL */ `
       query users($user: UserQueryInput) {
         users(filter: true, user: $user) {
           totalCount
           edges {
             node {
-              id
+              # id
+              # birthday
               name
-              birthday
               email
             }
-            cursor
           }
           pageInfo {
             endCursor
@@ -262,17 +212,23 @@ describe('Resolver - User', () => {
     `;
     const variables = {
       user: {
-        name: updateName,
-        email,
+        name: nameTwo,
+        email: emailTwo,
       },
     };
     const response = await client.request(queryFilterAndUser, variables);
-    expect(response.users.totalCount).toEqual(1);
-    expect(response.users.edges[0].node.name).toEqual(variables.user.name);
-    expect(response.users.edges[0].node.email).toEqual(variables.user.email);
+
+    expect(response.users.edges).toEqual(
+      expect.arrayContaining([{
+        node: {
+          name: nameTwo,
+          email: emailTwo,
+        },
+      }]),
+    );
   });
-  it('Query-users: should get user with "user" argument', async () => {
-    const client = await getClientUserSignedIn(testHost, signInEmail);
+
+  it('should get user with "user" argument', async () => {
     const queryUser = /* GraphQL */ `
       query users($user: UserQueryInput) {
         users(user: $user) {
@@ -280,10 +236,8 @@ describe('Resolver - User', () => {
           edges {
             node {
               name
-              birthday
               email
             }
-            cursor
           }
           pageInfo {
             endCursor
@@ -296,17 +250,23 @@ describe('Resolver - User', () => {
     `;
     const variables = {
       user: {
-        name: updateName,
-        email,
+        name: nameTwo,
+        email: emailTwo,
       },
     };
     const response = await client.request(queryUser, variables);
-    expect(response.users.totalCount).toEqual(1);
-    expect(response.users.edges[0].node.name).toEqual(variables.user.name);
-    expect(response.users.edges[0].node.email).toEqual(variables.user.email);
+
+    expect(response.users.edges).toEqual(
+      expect.arrayContaining([{
+        node: {
+          name: nameTwo,
+          email: emailTwo,
+        },
+      }]),
+    );
   });
-  it('Query-users: should get user with "includeUser" argument', async () => {
-    const client = await getClientUserSignedIn(testHost, signInEmail);
+
+  it('should get user with "includeUser" argument', async () => {
     const queryIncludeUser = /* GraphQL */ `
       query users {
         users(includeUser: true) {
@@ -316,7 +276,6 @@ describe('Resolver - User', () => {
               name
               email
             }
-            cursor
           }
           pageInfo {
             endCursor
@@ -328,17 +287,26 @@ describe('Resolver - User', () => {
       }
     `;
     const response = await client.request(queryIncludeUser);
+
     expect(response.users.edges).toEqual(
-      expect.not.arrayContaining([{
-        node: {
-          name: updateName,
-          email,
+      expect.arrayContaining([
+        {
+          node: {
+            name: updateName,
+            email,
+          },
         },
-      }]),
+        {
+          node: {
+            name: nameTwo,
+            email: emailTwo,
+          },
+        },
+      ]),
     );
   });
-  it('Query-users: should get users after cursor of argument "after"', async () => {
-    const client = await getClientUserSignedIn(testHost, signInEmail);
+
+  it('should get users of "after" argument with cursor of result of argument "first"', async () => {
     const queryFirst = /* GraphQL */ `
       query user($first: Int) {
         users(first: $first) {
@@ -365,7 +333,7 @@ describe('Resolver - User', () => {
       first: 2,
     };
     const response = await client.request(queryFirst, variables);
-    // /* after cursor of argument "after" */
+
     const queryAfter = /* GraphQL */ `
       query user($after: String) {
         users(after: $after) {
@@ -396,11 +364,11 @@ describe('Resolver - User', () => {
       expect.arrayContaining(responseAfter.users.edges),
     );
   });
-  it('Query-users: should get users after cursor of argument "before"', async () => {
-    const client = await getClientUserSignedIn(testHost, signInEmail);
-    const queryFirst = /* GraphQL */ `
-      query user($first: Int) {
-        users(first: $first) {
+
+  it('should get users of "before" argument with cursor of result of argument "last"', async () => {
+    const queryLast = /* GraphQL */ `
+      query user($last: Int) {
+        users(last: $last) {
           totalCount
           edges {
             node {
@@ -421,13 +389,13 @@ describe('Resolver - User', () => {
       }
     `;
     const variables = {
-      first: 5,
+      last: 5,
     };
-    const response = await client.request(queryFirst, variables);
+    const response = await client.request(queryLast, variables);
     expect(response.users.pageInfo.hasNextPage).toBeFalsy();
     expect(response.users.pageInfo.hasPreviousPage).toBeFalsy();
-    // /* after cursor of argument "after" */
-    const queryAfter = /* GraphQL */ `
+
+    const queryBefore = /* GraphQL */ `
       query user($before: String) {
         users(before: $before) {
           totalCount
@@ -452,13 +420,13 @@ describe('Resolver - User', () => {
     const variablesBefore = {
       before: response.users.pageInfo.endCursor.toString(),
     };
-    const responseBefore = await client.request(queryAfter, variablesBefore);
+    const responseBefore = await client.request(queryBefore, variablesBefore);
     expect(response.users.edges).toEqual(
       expect.arrayContaining(responseBefore.users.edges),
     );
   });
-  it('Mutation-changeEmailPassword : should user password updated after user sign-in', async () => {
-    const client = await getClientUserSignedIn(testHost, signInEmail);
+
+  it('should user password updated after user sign-in', async () => {
     const changeEmailPassword = /* GraphQL */ `
     mutation changeEmailPassword($password: String!, $newPassword: String!) {
       changeEmailPassword(password: $password, newPassword: $newPassword)

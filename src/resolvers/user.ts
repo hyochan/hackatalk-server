@@ -115,7 +115,9 @@ const resolver: Resolvers = {
 
       if (first && last) throw ErrorFirstLastNotSupported();
 
-      let where: WhereOptions = {};
+      let where: WhereOptions = {
+        verified: true,
+      };
       const cursor: User['createdAt'] = 'createdAt';
 
       if (filter && user) {
@@ -130,7 +132,7 @@ const resolver: Resolvers = {
       } else if (user) {
         where = { ...where, ...user };
       }
-      if (includeUser) {
+      if (!includeUser) {
         where = { ...where, id: { [Op.ne]: auth.userId } };
       }
       if (after) {
@@ -153,10 +155,6 @@ const resolver: Resolvers = {
       } else {
         userOrderBy = 'DESC';
       }
-      where = {
-        ...where,
-        verified: true,
-      };
       const users = await userModel.findAll({
         where,
         limit,
