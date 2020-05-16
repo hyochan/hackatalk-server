@@ -490,7 +490,13 @@ const resolver: Resolvers = {
     userSignedIn: {
       // issue: https://github.com/apollographql/graphql-subscriptions/issues/192
       // eslint-disable-next-line
-      subscribe: (_, args, { pubsub }) => pubsub.asyncIterator(USER_SIGNED_IN),
+      subscribe: withFilter(
+        (_, args, { pubsub }) => pubsub.asyncIterator(USER_SIGNED_IN),
+        (payload, { userId }) => {
+          const { userSignedIn } = payload;
+          return userSignedIn.id === userId;
+        },
+      ),
     },
     userUpdated: {
       subscribe: withFilter(
