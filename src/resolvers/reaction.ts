@@ -10,22 +10,32 @@ const resolver: Resolvers = {
 
       const { Reaction: reactionModel } = models;
 
-      const reactions = await reactionModel.findAll({
-        attributes: ['id', 'type', 'userId', 'createdAt'],
+      const reactionTypes = await reactionModel.findAll({
+        attributes: ['type'],
         where: {
           messageId: messageId,
         },
         order: [['createdAt', 'ASC']],
+        paranoid: false,
         raw: true,
       });
 
       const types = [];
-      reactions.map((item) => types.push(item.type));
+      reactionTypes.map((item) => types.push(item.type));
 
       const typesWithoutOverlap = types.reduce(function(a, b) {
         if (a.indexOf(b) < 0) a.push(b);
         return a;
       }, []);
+
+      const reactions = await reactionModel.findAll({
+        attributes: ['id', 'type', 'userId'],
+        where: {
+          [Op.and]: [{ messageId: messageId }, { deletedAt: null }],
+        },
+        order: [['createdAt', 'ASC']],
+        raw: true,
+      });
 
       const reactionGroups: ReactionGroup[] = [];
       typesWithoutOverlap.forEach((type) => {

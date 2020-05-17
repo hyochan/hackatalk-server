@@ -129,7 +129,6 @@ export type Message = {
   filePath?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   picture?: Maybe<Array<Maybe<Photo>>>;
-  reactions?: Maybe<Array<Maybe<Reaction>>>;
   replies?: Maybe<Array<Maybe<Reply>>>;
   sender?: Maybe<User>;
   text?: Maybe<Scalars['String']>;
@@ -387,6 +386,7 @@ export type Reactions = {
   id?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['DateTime']>;
+  deletedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type Reply = {
@@ -595,7 +595,6 @@ export type ResolversTypes = {
   UserModeType: UserModeType,
   Message: ResolverTypeWrapper<Message>,
   Photo: ResolverTypeWrapper<Photo>,
-  Reaction: ResolverTypeWrapper<Reaction>,
   Reply: ResolverTypeWrapper<Reply>,
   ChannelType: ChannelType,
   Gallery: ResolverTypeWrapper<Gallery>,
@@ -611,6 +610,7 @@ export type ResolversTypes = {
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
   MessagePayload: ResolverTypeWrapper<MessagePayload>,
+  Reaction: ResolverTypeWrapper<Reaction>,
   AuthPayload: ResolverTypeWrapper<AuthPayload>,
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
@@ -641,7 +641,6 @@ export type ResolversParentTypes = {
   UserModeType: UserModeType,
   Message: Message,
   Photo: Photo,
-  Reaction: Reaction,
   Reply: Reply,
   ChannelType: ChannelType,
   Gallery: Gallery,
@@ -657,6 +656,7 @@ export type ResolversParentTypes = {
   NotificationCreateInput: NotificationCreateInput,
   ChannelInput: ChannelInput,
   MessagePayload: MessagePayload,
+  Reaction: Reaction,
   AuthPayload: AuthPayload,
   SocialUserInput: SocialUserInput,
   UserInput: UserInput,
@@ -755,7 +755,6 @@ export type MessageResolvers<ContextType = MyContext, ParentType extends Resolve
   filePath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   picture?: Resolver<Maybe<Array<Maybe<ResolversTypes['Photo']>>>, ParentType, ContextType>,
-  reactions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reaction']>>>, ParentType, ContextType>,
   replies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reply']>>>, ParentType, ContextType>,
   sender?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
@@ -853,6 +852,7 @@ export type ReactionsResolvers<ContextType = MyContext, ParentType extends Resol
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
