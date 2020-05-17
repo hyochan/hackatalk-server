@@ -17,6 +17,17 @@ describe('Resolver - Reaction', () => {
     }
   `;
 
+  const reactions = /* GraphQL */`
+    query {
+      reactions(
+        messageId: "message_id"
+      ) {
+        id,
+        type,
+      }
+    }
+  `;
+
   beforeAll(async () => {
     const { signUp } = await request(testHost, signUpUser, {
       user: {
@@ -62,6 +73,13 @@ describe('Resolver - Reaction', () => {
       }
     }
   `;
+
+  it('should query reactions', async () => {
+    const response = await client.request(reactions);
+
+    expect(response).toHaveProperty('reactions');
+    expect(response.reactions).toEqual([]);
+  });
 
   const createReaction = /* GraphQL */ `
     mutation createReaction($type: String!, $messageId: ID!) {
