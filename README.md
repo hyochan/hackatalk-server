@@ -39,3 +39,19 @@
 ```
 yarn migrate
 ```
+
+### Running in local environment
+
+1. Create mysql database 
+
+   ```
+   CREATE DATABASE hackatalk CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ```
+
+2. Start the server
+
+   ```
+   yarn start
+   ```
+
+   > Above will just run the server with migration.
