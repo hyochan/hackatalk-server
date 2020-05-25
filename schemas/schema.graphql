@@ -50,6 +50,7 @@ type Query {
 type Mutation {
   signInEmail(email: String! password: String!): AuthPayload!
   signInWithSocialAccount(socialUser: SocialUserInput!): AuthPayload!
+  signInWithFacebook(accessToken: String!): AuthPayload!
   signUp(user: UserInput!): AuthPayload!
   findPassword(email: String!): Boolean
   sendVerification(email: String!): Boolean

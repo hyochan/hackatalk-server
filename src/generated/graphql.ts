@@ -166,6 +166,7 @@ export type Mutation = {
   sendVerification?: Maybe<Scalars['Boolean']>;
   setOnlineStatus?: Maybe<Scalars['Int']>;
   signInEmail: AuthPayload;
+  signInWithFacebook: AuthPayload;
   signInWithSocialAccount: AuthPayload;
   signUp: AuthPayload;
   singleUpload: Scalars['String'];
@@ -256,6 +257,11 @@ export type MutationSetOnlineStatusArgs = {
 export type MutationSignInEmailArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type MutationSignInWithFacebookArgs = {
+  accessToken: Scalars['String'];
 };
 
 
@@ -764,6 +770,7 @@ export type MutationResolvers<ContextType = MyContext, ParentType extends Resolv
   sendVerification?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSendVerificationArgs, 'email'>>,
   setOnlineStatus?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationSetOnlineStatusArgs, never>>,
   signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInEmailArgs, 'email' | 'password'>>,
+  signInWithFacebook?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInWithFacebookArgs, 'accessToken'>>,
   signInWithSocialAccount?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInWithSocialAccountArgs, 'socialUser'>>,
   signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>,
   singleUpload?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSingleUploadArgs, 'file'>>,
