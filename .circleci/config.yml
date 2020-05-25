@@ -13,8 +13,6 @@ jobs:
           MYSQL_DATABASE: test_db
           MYSQL_USER: hackatalk
           MYSQL_PASSWORD: hackatalk!
-        security_opt:
-          - seccomp:unconfined
     working_directory: ~/app
     steps:
       - checkout
