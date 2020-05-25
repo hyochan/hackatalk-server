@@ -117,7 +117,7 @@ export const verifyEmail = (email: string): Promise<[number, User[]]> => {
 };
 
 export type UserModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): User;
+  new (values?: Record<string, unknown>, options?: BuildOptions): User;
 }
 
 export default User as UserModelStatic;

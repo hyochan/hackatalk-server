@@ -40,7 +40,7 @@ const resolver: Resolvers = {
         return deleted;
       } catch (err) {
         throw new Error(err.message);
-      };
+      }
     },
   },
 };

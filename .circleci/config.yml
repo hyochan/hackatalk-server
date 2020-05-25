@@ -6,8 +6,8 @@ jobs:
     # machine: true
     docker:
       - image: circleci/node:12
-      - image: mysql:5.7
-        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --innodb-large-prefix=true --innodb-file-format=Barracuda
+      - image: mysql:8.0.4
+        command: [--default-authentication-plugin=mysql_native_password]
         environment:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: test_db
@@ -29,24 +29,13 @@ jobs:
             echo Failed waiting for MySQL && exit 
 
       - run:
+          name: Install MySQL CLI; Import dummy data; run an example query
+          command: |
+            sudo apt-get install default-mysql-client
+
+      - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
-
-      # - run:
-      #     name: Install MySQL CLI
-      #     command: |
-      #       sudo apt install -y mysql-client
-
-      # - run:
-      #     name: Install Node Version Manager
-      #     command: |
-      #       curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-      #       export NVM_DIR="/opt/circleci/.nvm"
-      #       [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-      #       nvm install v10.16.0
-      #       nvm alias default v10.16.0
-      #       echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
-      #       echo "[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"" >> $BASH_ENV
 
       - run:
           name: Install packages

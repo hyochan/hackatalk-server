@@ -34,7 +34,7 @@ Gallery.init({
 // Gallery.belongsTo(User, { as: 'user' });
 
 export type GalleryModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): Gallery;
+  new (values?: Record<string, unknown>, options?: BuildOptions): Gallery;
 }
 
 export default Gallery as GalleryModelStatic;

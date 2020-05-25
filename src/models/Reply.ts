@@ -42,7 +42,7 @@ Reply.init({
 // Reply.belongsTo(User, { as: 'user' });
 
 export type ReplyModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): Reply;
+  new (values?: Record<string, unknown>, options?: BuildOptions): Reply;
 }
 
 export default Reply as ReplyModelStatic;

@@ -55,7 +55,7 @@ Membership.init({
 // Membership.belongsTo(User, { as: 'user' });
 
 export type MembershipModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): Membership;
+  new (values?: Record<string, unknown>, options?: BuildOptions): Membership;
 }
 
 export default Membership as MembershipModelStatic;

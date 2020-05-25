@@ -33,4 +33,4 @@ export interface ModelType {
   Photo: PhotoModelStatic;
   Gallery: GalleryModelStatic;
   Reaction: ReactionModelStatic;
-};
+}

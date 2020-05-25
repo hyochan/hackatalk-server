@@ -56,7 +56,7 @@ Message.hasMany(Reply, { foreignKey: 'messageId' });
 Message.hasMany(Photo, { foreignKey: 'messageId' });
 
 export type MessageModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): Message;
+  new (values?: Record<string, unknown>, options?: BuildOptions): Message;
 }
 
 export default Message as MessageModelStatic;
