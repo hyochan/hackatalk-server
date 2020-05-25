@@ -36,7 +36,7 @@ Friend.init({
 // Friend.belongsTo(User, { as: 'user' });
 
 export type FriendModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): Friend;
+  new (values?: Record<string, unknown>, options?: BuildOptions): Friend;
 }
 
 export default Friend as FriendModelStatic;

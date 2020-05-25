@@ -41,7 +41,7 @@ Photo.init({
 // Photo.belongsTo(Message, { as: 'message' });
 
 export type PhotoModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): Photo;
+  new (values?: Record<string, unknown>, options?: BuildOptions): Photo;
 }
 
 export default Photo as PhotoModelStatic;

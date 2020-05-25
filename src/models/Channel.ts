@@ -50,7 +50,7 @@ Channel.hasMany(Membership, { foreignKey: 'channelId' });
 Channel.hasMany(Message, { foreignKey: 'channelId' });
 
 export type ChannelModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): Channel;
+  new (values?: Record<string, unknown>, options?: BuildOptions): Channel;
 }
 
 export default Channel as ChannelModelStatic;

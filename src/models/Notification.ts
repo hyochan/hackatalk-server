@@ -40,7 +40,7 @@ Notification.init({
 // Notification.belongsTo(User, { as: 'user' });
 
 export type NotificationModelStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): Notification;
+  new (values?: Record<string, unknown>, options?: BuildOptions): Notification;
 }
 
 export default Notification as NotificationModelStatic;

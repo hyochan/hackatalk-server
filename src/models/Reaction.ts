@@ -38,7 +38,7 @@ Reaction.belongsTo(Message, { as: 'message' });
 Reaction.belongsTo(User, { as: 'user' });
 
 export type ReactionModelStatic = typeof Model & {
-    new (values?: object, options?: BuildOptions): Reaction;
+    new (values?: Record<string, unknown>, options?: BuildOptions): Reaction;
   }
 
 export default Reaction as ReactionModelStatic;
