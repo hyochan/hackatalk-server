@@ -81,7 +81,7 @@ type Mutation {
 }
 
 type Subscription {
-  userSignedIn: User
-  userUpdated: User
+  userSignedIn(userId: ID!): User
+  userUpdated(userId: ID!): User
   friendChanged(userId: ID!): FriendSub
 }

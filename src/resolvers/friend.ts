@@ -123,7 +123,7 @@ const resolver: Resolvers = {
         (_, args, { pubsub }) => pubsub.asyncIterator(FRIENDS_CHANGED),
         (payload, { userId }) => {
           const { friendChanged } = payload;
-          return friendChanged.userId === userId;
+          return friendChanged.user.id === userId;
         },
       ),
     },

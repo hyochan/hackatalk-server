@@ -416,7 +416,9 @@ const resolver: Resolvers = {
           raw: true,
         });
 
-        pubsub.publish(USER_UPDATED, { user });
+        pubsub.publish(USER_UPDATED, {
+          userUpdated: user,
+        });
         return user;
       } catch (err) {
         throw new Error(err.message);
@@ -425,7 +427,7 @@ const resolver: Resolvers = {
     setOnlineStatus: async (
       _,
       args,
-      { verifyUser, models, pubsub },
+      { getUser, verifyUser, models, pubsub },
     ): Promise<number> => {
       try {
         const auth = verifyUser();
@@ -444,7 +446,10 @@ const resolver: Resolvers = {
           },
         );
 
-        pubsub.publish(USER_UPDATED, { user: auth });
+        const user = await getUser();
+        pubsub.publish(USER_UPDATED, {
+          userUpdated: user,
+        });
 
         return update[0];
       } catch (err) {
@@ -485,16 +490,20 @@ const resolver: Resolvers = {
     userSignedIn: {
       // issue: https://github.com/apollographql/graphql-subscriptions/issues/192
       // eslint-disable-next-line
-      subscribe: (_, args, { pubsub }) => pubsub.asyncIterator(USER_SIGNED_IN),
+      subscribe: withFilter(
+        (_, args, { pubsub }) => pubsub.asyncIterator(USER_SIGNED_IN),
+        (payload, { userId }) => {
+          const { userSignedIn } = payload;
+          return userSignedIn.id === userId;
+        },
+      ),
     },
     userUpdated: {
       subscribe: withFilter(
-        (_, args, { pubsub }) => {
-          return pubsub.asyncIterator(USER_UPDATED, { user: args.user });
-        },
+        (_, args, { pubsub }) => pubsub.asyncIterator(USER_UPDATED),
         (payload, { userId }) => {
-          const { userUpdated: updatedUser } = payload;
-          return updatedUser.id === userId;
+          const { userUpdated } = payload;
+          return userUpdated.id === userId;
         },
       ),
     },
