@@ -21,7 +21,7 @@ describe('Resolver - Gallery', () => {
   const galleries = /* GraphQL */`
     query {
       galleries(
-        userId: "user_id"
+        userId: "a0000000-0000-0000-0000-000000000000"
       ) {
         id,
         photoURL,
@@ -82,7 +82,7 @@ describe('Resolver - Gallery', () => {
 
   it('should update gallery', async () => {
     const variables = {
-      galleryId: 'test',
+      galleryId: 'a0000000-0000-0000-0000-000000000000',
       photoURL: 'http://',
     };
     const promise = client.request(updateGallery, variables);
@@ -102,7 +102,7 @@ describe('Resolver - Gallery', () => {
 
   it('should delete gallery', async () => {
     const variables = {
-      galleryId: 'test',
+      galleryId: 'a0000000-0000-0000-0000-000000000000',
     };
     const promise = client.request(deleteGallery, variables);
 
