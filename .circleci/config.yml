@@ -5,33 +5,15 @@ jobs:
   build:
     # machine: true
     docker:
-      - image: circleci/node:12
-      - image: mysql:8.0.4
-        command: [--default-authentication-plugin=mysql_native_password]
+      - image: circleci/node:12.12.0
+      - image: circleci/postgres:11
         environment:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test_db
-          MYSQL_USER: hackatalk
-          MYSQL_PASSWORD: hackatalk!
+          POSTGRES_DB: test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test!
     working_directory: ~/app
     steps:
       - checkout
-      - run:
-          # Our primary container isn't MYSQL so run a sleep command until it's ready.
-          name: Waiting for MySQL to be ready
-          command: |
-            for i in `seq 1 10`;
-            do
-              nc -z 127.0.0.1 3306 && echo Success && exit 0
-              echo -n .
-              sleep 1
-            done
-            echo Failed waiting for MySQL && exit 
-
-      - run:
-          name: Install MySQL CLI; Import dummy data; run an example query
-          command: |
-            sudo apt-get install default-mysql-client
 
       - run:
           name: update-npm

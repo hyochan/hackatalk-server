@@ -111,7 +111,7 @@ describe('Resolver - Reaction', () => {
 
   it('should delete reaction', async () => {
     const variables = {
-      reactionId: 'test',
+      reactionId: 'a0000000-0000-0000-0000-000000000000',
     };
     const response = await client.request(deleteReaction, variables);
 

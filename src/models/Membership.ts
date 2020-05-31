@@ -12,8 +12,8 @@ import User from './User';
 import sequelize from '../db';
 
 export enum MemberType {
-  Owner = 'Owner',
-  Member = 'Member'
+  Owner = 'OWNER',
+  Member = 'MEMBER'
 }
 
 class Membership extends Model {
