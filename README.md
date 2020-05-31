@@ -18,12 +18,12 @@
 - Create user in local mysql server account.
 - Give appropriate name to `dev.env`.
   ```
-  DB_CONNECTOR=mysql
-  DB_HOST=127.0.0.1
-  DB_USER=hackatalk
-  DB_PASSWORD=hackatalk!
-  DB_PORT=3306
-  DB_DATABASE=hackatalk_dev
+  DB_CONNECTOR=postgres
+  DB_HOST=localhost
+  DB_USER=postgres
+  DB_DATABASE=hackatalk
+  DB_PORT=5432
+  DB_PASSWORD=dooboolab0!
   ```
 
 ### Test Apis
@@ -42,10 +42,15 @@ yarn migrate
 
 ### Running in local environment
 
-1. Create mysql database 
-
+1. Create postgres database and give privileges (You can use `mysql` if you wish)
    ```
-   CREATE DATABASE hackatalk CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   CREATE DATABASE hackatalk;
+
+   CREATE ROLE `postgres` WITH LOGIN NOSUPERUSER INHERIT CREATEDB NOCREATEROLE NOREPLICATION PASSWORD 'dooboolab0!';
+
+   GRANT CONNECT ON DATABASE `hackatalk` TO `postgres`;
+
+   GRANT ALL PRIVILEGES ON DATABASE `hackatalk` TO `postgres`;
    ```
 
 2. Start the server
