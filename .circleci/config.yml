@@ -5,14 +5,12 @@ jobs:
   build:
     # machine: true
     docker:
-      - image: circleci/node:12
-      - image: mysql:8.0.4
-        command: [--default-authentication-plugin=mysql_native_password]
+      - image: circleci/node:12.12.0
+      - image: circleci/postgres:9.6.2-alpine
         environment:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: test_db
-          MYSQL_USER: hackatalk
-          MYSQL_PASSWORD: hackatalk!
+          POSTGRES_DB: postgres
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test!
     working_directory: ~/app
     steps:
       - checkout
