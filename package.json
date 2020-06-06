@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^7.1.1",
-    "apollo-server": "^2.14.1",
+    "apollo-server": "^2.14.2",
     "apollo-server-express": "^2.14.1",
     "axios": "^0.19.2",
     "azure-storage": "^2.10.3",
