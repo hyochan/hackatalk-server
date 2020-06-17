@@ -13,7 +13,7 @@
     "pm2": "cross-env NODE_ENV=local pm2 start ts-node -- -P tsconfig.json ./src/server.ts --node-args='--local' --watch",
     "pm2:prod": "cross-env pm2 start ts-node -- -P tsconfig.json ./src/server.ts --node-args='--production'",
     "watch": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts",
-    "lint": "eslint src/**/**/*.ts && eslint tests/**/**/*.ts",
+    "lint": "eslint src/**/**/*.ts tests/**/**/*.ts",
     "tsc": "tsc",
     "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
     "test:watch": "jest --watch",
