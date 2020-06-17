@@ -21,6 +21,7 @@ export const encryptCredential = async (password: string): Promise<string> =>
       if (err) {
         return reject(err);
       }
+      hash = hash.replace(/\//g, 'slash');
       resolve(hash);
     });
   });
@@ -29,6 +30,7 @@ export const validateCredential = async (
   value: string,
   hashedValue: string,
 ): Promise<boolean> => new Promise<boolean>((resolve, reject) => {
+  hashedValue = hashedValue.replace(/slash/g, '/');
   bcrypt.compare(value, hashedValue, (err, res) => {
     if (err) {
       return reject(err);
