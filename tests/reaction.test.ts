@@ -17,6 +17,17 @@ describe('Resolver - Reaction', () => {
     }
   `;
 
+  const reactions = /* GraphQL */`
+    query {
+      reactions(
+        messageId: "a0000000-0000-0000-0000-000000000000"
+      ) {
+        id,
+        type,
+      }
+    }
+  `;
+
   beforeAll(async () => {
     const { signUp } = await request(testHost, signUpUser, {
       user: {
@@ -70,6 +81,12 @@ describe('Resolver - Reaction', () => {
       }
     }
   `;
+
+  it('should query reactions', async () => {
+    const response = await client.request(reactions);
+    expect(response).toHaveProperty('reactions');
+    expect(response.reactions).toEqual([]);
+  });
 
   it('should create reaction', async () => {
     const channelVariables = {
