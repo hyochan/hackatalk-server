@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 
 import { MyContext } from '../context';
+
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
@@ -22,10 +23,10 @@ export type AuthPayload = {
 };
 
 export enum AuthType {
-  Email = 'EMAIL',
-  Facebook = 'FACEBOOK',
-  Google = 'GOOGLE',
-  Apple = 'APPLE'
+  Email = 'email',
+  Facebook = 'facebook',
+  Google = 'google',
+  Apple = 'apple'
 }
 
 export type Channel = {
