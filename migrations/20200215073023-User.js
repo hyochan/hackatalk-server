@@ -54,7 +54,7 @@ module.exports = {
         socialId: {
           type: STRING,
         },
-        authType: ENUM('EMAIL', 'FACEBOOK', 'GOOGLE', 'APPLE'),
+        authType: ENUM('email', 'facebook', 'google', 'apple'),
         verified: {
           type: BOOLEAN,
           defaultValue: false,

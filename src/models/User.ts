@@ -25,10 +25,10 @@ export enum Gender {
 }
 
 export enum AuthType {
-  Email = 'EMAIL',
-  Facebook = 'FACEBOOK',
-  Google = 'GOOGLE',
-  Apple = 'APPLE',
+  Email = 'email',
+  Facebook = 'facebook',
+  Google = 'google',
+  Apple = 'apple',
 }
 
 export class User extends Model {

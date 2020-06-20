@@ -1,6 +1,5 @@
 {
   "name": "hackatalk-server",
-  "version": "0.0.1",
   "description": "Hackatalk Server",
   "main": "src/server.ts",
   "repository": "https://github.com/dooboolab/hackatalk-server",
