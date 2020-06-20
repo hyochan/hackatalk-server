@@ -76,7 +76,7 @@ User.init({
   gender: ENUM('MALE', 'FEMALE'),
   phone: STRING,
   socialId: STRING,
-  authType: ENUM('EMAIL', 'FACEBOOK', 'GOOGLE', 'APPLE'),
+  authType: ENUM('email', 'facebook', 'google', 'apple'),
   verified: {
     type: BOOLEAN,
     defaultValue: false,

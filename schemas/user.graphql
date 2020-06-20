@@ -11,10 +11,10 @@ enum Gender {
 }
 
 enum AuthType {
-  EMAIL,
-  FACEBOOK,
-  GOOGLE,
-  APPLE
+  email,
+  facebook,
+  google,
+  apple
 }
 
 type User {
