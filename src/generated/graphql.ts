@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { MyContext } from '../context';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -629,23 +630,18 @@ export type ResolversParentTypes = {
   UserQueryInput: UserQueryInput;
   String: Scalars['String'];
   Date: Scalars['Date'];
-  Gender: Gender;
   Boolean: Scalars['Boolean'];
   Int: Scalars['Int'];
   UsersConnection: UsersConnection;
   UserEdge: UserEdge;
   User: User;
   ID: Scalars['ID'];
-  AuthType: AuthType;
   DateTime: Scalars['DateTime'];
   Notification: Notification;
   PageInfo: PageInfo;
   Message: Message;
   Channel: Channel;
-  ChannelType: ChannelType;
   Membership: Membership;
-  MemberType: MemberType;
-  UserModeType: UserModeType;
   Photo: Photo;
   Reply: Reply;
   Reaction: Reaction;
@@ -662,7 +658,6 @@ export type ResolversParentTypes = {
   Upload: Scalars['Upload'];
   Subscription: {};
   FriendSub: FriendSub;
-  FriendSubAction: FriendSubAction;
   Friend: Friend;
   File: File;
 };
