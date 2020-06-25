@@ -1,3 +1,5 @@
+# import User from "user.graphql"
+
 scalar DateTime
 
 enum FriendSubAction {

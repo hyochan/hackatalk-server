@@ -10,8 +10,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Date: any;
   DateTime: any;
+  Date: any;
   Upload: any;
 };
 
@@ -30,21 +30,21 @@ export enum AuthType {
 
 export type Channel = {
   __typename?: 'Channel';
-  id: Scalars['ID'];
-  type?: Maybe<ChannelType>;
-  name?: Maybe<Scalars['String']>;
-  messages?: Maybe<Array<Maybe<Message>>>;
-  memberships?: Maybe<Array<Maybe<Membership>>>;
-  myMembership?: Maybe<Membership>;
   createdAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
   deletedAt?: Maybe<Scalars['DateTime']>;
+  id: Scalars['ID'];
+  memberships?: Maybe<Array<Maybe<Membership>>>;
+  messages?: Maybe<Array<Maybe<Message>>>;
+  myMembership?: Maybe<Membership>;
+  name?: Maybe<Scalars['String']>;
+  type?: Maybe<ChannelType>;
+  updatedAt: Scalars['DateTime'];
 };
 
 export type ChannelInput = {
-  type?: Maybe<ChannelType>;
-  name?: Maybe<Scalars['String']>;
   friendIds: Array<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  type?: Maybe<ChannelType>;
 };
 
 export enum ChannelType {
@@ -54,34 +54,17 @@ export enum ChannelType {
 
 
 
-export type File = {
-  __typename?: 'File';
-  filename: Scalars['String'];
-  mimetype: Scalars['String'];
-  encoding: Scalars['String'];
-};
-
-export type Friend = {
-  __typename?: 'Friend';
-  id: Scalars['ID'];
-  user?: Maybe<User>;
-  friend?: Maybe<User>;
-  createdAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
-  deletedAt?: Maybe<Scalars['DateTime']>;
-};
-
 export type FriendPayload = {
   __typename?: 'FriendPayload';
-  user: User;
   added?: Maybe<Scalars['Boolean']>;
   deleted?: Maybe<Scalars['Int']>;
+  user: User;
 };
 
 export type FriendSub = {
   __typename?: 'FriendSub';
-  user?: Maybe<User>;
   action?: Maybe<FriendSubAction>;
+  user?: Maybe<User>;
 };
 
 export enum FriendSubAction {
@@ -92,11 +75,11 @@ export enum FriendSubAction {
 
 export type Gallery = {
   __typename?: 'Gallery';
+  createdAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   photoURL: Scalars['String'];
-  createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
-  deletedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export enum Gender {
@@ -124,18 +107,18 @@ export enum MemberType {
 
 export type Message = {
   __typename?: 'Message';
-  id: Scalars['String'];
   channel?: Maybe<Channel>;
-  sender?: Maybe<User>;
-  type?: Maybe<Scalars['String']>;
-  text?: Maybe<Scalars['String']>;
-  picture?: Maybe<Array<Maybe<Photo>>>;
-  filePath?: Maybe<Scalars['String']>;
-  replies?: Maybe<Array<Maybe<Reply>>>;
-  reactions?: Maybe<Array<Maybe<Reaction>>>;
   createdAt?: Maybe<Scalars['DateTime']>;
-  updatedAt?: Maybe<Scalars['DateTime']>;
   deletedAt?: Maybe<Scalars['DateTime']>;
+  filePath?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  picture?: Maybe<Array<Maybe<Photo>>>;
+  reactions?: Maybe<Array<Maybe<Reaction>>>;
+  replies?: Maybe<Array<Maybe<Reply>>>;
+  sender?: Maybe<User>;
+  text?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type MessagePayload = {
@@ -146,80 +129,34 @@ export type MessagePayload = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  signInEmail: AuthPayload;
-  signInWithSocialAccount: AuthPayload;
-  signInWithFacebook: AuthPayload;
-  signUp: AuthPayload;
-  findPassword?: Maybe<Scalars['Boolean']>;
-  sendVerification?: Maybe<Scalars['Boolean']>;
-  addNotificationToken?: Maybe<Notification>;
-  removeNotificationToken?: Maybe<Scalars['Int']>;
-  updateProfile?: Maybe<User>;
   addFriend?: Maybe<FriendPayload>;
-  deleteFriend?: Maybe<FriendPayload>;
+  addNotificationToken?: Maybe<Notification>;
+  changeEmailPassword?: Maybe<Scalars['Boolean']>;
   /** `friendIds` in Channel should exclude userid. */
   createChannel?: Maybe<Channel>;
-  updateChannel?: Maybe<Scalars['Int']>;
-  deleteChannel?: Maybe<Scalars['Int']>;
+  createGallery?: Maybe<Gallery>;
   /**
    * Create message and return channelId when meessage has successfully sent.
    * Do not pass current userId inside `users`.
    */
   createMessage?: Maybe<MessagePayload>;
-  setOnlineStatus?: Maybe<Scalars['Int']>;
-  changeEmailPassword?: Maybe<Scalars['Boolean']>;
-  createGallery?: Maybe<Gallery>;
-  updateGallery?: Maybe<Scalars['Int']>;
-  deleteGallery?: Maybe<Scalars['Int']>;
-  singleUpload: Scalars['String'];
   createReaction?: Maybe<Reaction>;
+  deleteChannel?: Maybe<Scalars['Int']>;
+  deleteFriend?: Maybe<FriendPayload>;
+  deleteGallery?: Maybe<Scalars['Int']>;
   deleteReaction?: Maybe<Scalars['Int']>;
-};
-
-
-export type MutationSignInEmailArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
-
-export type MutationSignInWithSocialAccountArgs = {
-  socialUser: SocialUserInput;
-};
-
-
-export type MutationSignInWithFacebookArgs = {
-  accessToken: Scalars['String'];
-};
-
-
-export type MutationSignUpArgs = {
-  user: UserInput;
-};
-
-
-export type MutationFindPasswordArgs = {
-  email: Scalars['String'];
-};
-
-
-export type MutationSendVerificationArgs = {
-  email: Scalars['String'];
-};
-
-
-export type MutationAddNotificationTokenArgs = {
-  notification: NotificationCreateInput;
-};
-
-
-export type MutationRemoveNotificationTokenArgs = {
-  token: Scalars['String'];
-};
-
-
-export type MutationUpdateProfileArgs = {
-  user: UserProfileInput;
+  findPassword?: Maybe<Scalars['Boolean']>;
+  removeNotificationToken?: Maybe<Scalars['Int']>;
+  sendVerification?: Maybe<Scalars['Boolean']>;
+  setOnlineStatus?: Maybe<Scalars['Int']>;
+  signInEmail: AuthPayload;
+  signInWithFacebook: AuthPayload;
+  signInWithSocialAccount: AuthPayload;
+  signUp: AuthPayload;
+  singleUpload: Scalars['String'];
+  updateChannel?: Maybe<Scalars['Int']>;
+  updateGallery?: Maybe<Scalars['Int']>;
+  updateProfile?: Maybe<User>;
 };
 
 
@@ -228,8 +165,14 @@ export type MutationAddFriendArgs = {
 };
 
 
-export type MutationDeleteFriendArgs = {
-  friendId: Scalars['ID'];
+export type MutationAddNotificationTokenArgs = {
+  notification: NotificationCreateInput;
+};
+
+
+export type MutationChangeEmailPasswordArgs = {
+  newPassword: Scalars['String'];
+  password: Scalars['String'];
 };
 
 
@@ -238,52 +181,14 @@ export type MutationCreateChannelArgs = {
 };
 
 
-export type MutationUpdateChannelArgs = {
-  channel?: Maybe<ChannelInput>;
-};
-
-
-export type MutationDeleteChannelArgs = {
-  channelId: Scalars['ID'];
-};
-
-
-export type MutationCreateMessageArgs = {
-  message: Scalars['String'];
-  channelId: Scalars['String'];
-};
-
-
-export type MutationSetOnlineStatusArgs = {
-  isOnline?: Maybe<Scalars['Boolean']>;
-};
-
-
-export type MutationChangeEmailPasswordArgs = {
-  password: Scalars['String'];
-  newPassword: Scalars['String'];
-};
-
-
 export type MutationCreateGalleryArgs = {
   photoURL: Scalars['String'];
 };
 
 
-export type MutationUpdateGalleryArgs = {
-  galleryId: Scalars['ID'];
-  photoURL: Scalars['String'];
-};
-
-
-export type MutationDeleteGalleryArgs = {
-  galleryId: Scalars['ID'];
-};
-
-
-export type MutationSingleUploadArgs = {
-  file: Scalars['Upload'];
-  dir?: Maybe<Scalars['String']>;
+export type MutationCreateMessageArgs = {
+  channelId: Scalars['String'];
+  message: Scalars['String'];
 };
 
 
@@ -293,24 +198,102 @@ export type MutationCreateReactionArgs = {
 };
 
 
+export type MutationDeleteChannelArgs = {
+  channelId: Scalars['ID'];
+};
+
+
+export type MutationDeleteFriendArgs = {
+  friendId: Scalars['ID'];
+};
+
+
+export type MutationDeleteGalleryArgs = {
+  galleryId: Scalars['ID'];
+};
+
+
 export type MutationDeleteReactionArgs = {
   reactionId: Scalars['ID'];
 };
 
+
+export type MutationFindPasswordArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationRemoveNotificationTokenArgs = {
+  token: Scalars['String'];
+};
+
+
+export type MutationSendVerificationArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationSetOnlineStatusArgs = {
+  isOnline?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type MutationSignInEmailArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type MutationSignInWithFacebookArgs = {
+  accessToken: Scalars['String'];
+};
+
+
+export type MutationSignInWithSocialAccountArgs = {
+  socialUser: SocialUserInput;
+};
+
+
+export type MutationSignUpArgs = {
+  user: UserInput;
+};
+
+
+export type MutationSingleUploadArgs = {
+  dir?: Maybe<Scalars['String']>;
+  file: Scalars['Upload'];
+};
+
+
+export type MutationUpdateChannelArgs = {
+  channel?: Maybe<ChannelInput>;
+};
+
+
+export type MutationUpdateGalleryArgs = {
+  galleryId: Scalars['ID'];
+  photoURL: Scalars['String'];
+};
+
+
+export type MutationUpdateProfileArgs = {
+  user: UserProfileInput;
+};
+
 export type Notification = {
   __typename?: 'Notification';
-  id: Scalars['ID'];
-  token?: Maybe<Scalars['String']>;
-  device?: Maybe<Scalars['String']>;
-  os?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['DateTime']>;
+  device?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  os?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type NotificationCreateInput = {
-  token: Scalars['String'];
   device?: Maybe<Scalars['String']>;
   os?: Maybe<Scalars['String']>;
+  token: Scalars['String'];
 };
 
 /** Information about pagination in a connection. */
@@ -334,28 +317,22 @@ export type Photo = {
 
 export type Query = {
   __typename?: 'Query';
+  channels: Array<Channel>;
+  friends: Array<User>;
+  galleries: Array<Gallery>;
+  me?: Maybe<User>;
+  messages: Array<Message>;
+  user?: Maybe<User>;
   /**
    * If filter is true, it will filter user with email, nickname or name.
    * You can add pagination with first and after args.
    */
   users?: Maybe<UsersConnection>;
-  user?: Maybe<User>;
-  me?: Maybe<User>;
-  messages: Array<Message>;
-  channels: Array<Channel>;
-  friends: Array<User>;
-  galleries: Array<Gallery>;
 };
 
 
-export type QueryUsersArgs = {
-  user?: Maybe<UserQueryInput>;
-  includeUser?: Maybe<Scalars['Boolean']>;
-  filter?: Maybe<Scalars['Boolean']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['String']>;
-  after?: Maybe<Scalars['String']>;
+export type QueryGalleriesArgs = {
+  userId: Scalars['String'];
 };
 
 
@@ -364,17 +341,23 @@ export type QueryUserArgs = {
 };
 
 
-export type QueryGalleriesArgs = {
-  userId: Scalars['String'];
+export type QueryUsersArgs = {
+  after?: Maybe<Scalars['String']>;
+  before?: Maybe<Scalars['String']>;
+  filter?: Maybe<Scalars['Boolean']>;
+  first?: Maybe<Scalars['Int']>;
+  includeUser?: Maybe<Scalars['Boolean']>;
+  last?: Maybe<Scalars['Int']>;
+  user?: Maybe<UserQueryInput>;
 };
 
 export type Reaction = {
   __typename?: 'Reaction';
+  createdAt?: Maybe<Scalars['DateTime']>;
+  deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   type?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-  deletedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type Reply = {
@@ -391,23 +374,28 @@ export type Reply = {
 };
 
 export type SocialUserInput = {
-  socialId: Scalars['String'];
   authType: AuthType;
+  birthday?: Maybe<Scalars['Date']>;
   email?: Maybe<Scalars['String']>;
-  photoURL?: Maybe<Scalars['String']>;
-  thumbURL?: Maybe<Scalars['String']>;
+  gender?: Maybe<Gender>;
   name?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
-  birthday?: Maybe<Scalars['Date']>;
-  gender?: Maybe<Gender>;
   phone?: Maybe<Scalars['String']>;
+  photoURL?: Maybe<Scalars['String']>;
+  socialId: Scalars['String'];
+  thumbURL?: Maybe<Scalars['String']>;
 };
 
 export type Subscription = {
   __typename?: 'Subscription';
+  friendChanged?: Maybe<FriendSub>;
   userSignedIn?: Maybe<User>;
   userUpdated?: Maybe<User>;
-  friendChanged?: Maybe<FriendSub>;
+};
+
+
+export type SubscriptionFriendChangedArgs = {
+  userId: Scalars['ID'];
 };
 
 
@@ -421,32 +409,27 @@ export type SubscriptionUserUpdatedArgs = {
 };
 
 
-export type SubscriptionFriendChangedArgs = {
-  userId: Scalars['ID'];
-};
-
-
 export type User = {
   __typename?: 'User';
-  id: Scalars['ID'];
-  email?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  nickname?: Maybe<Scalars['String']>;
-  thumbURL?: Maybe<Scalars['String']>;
-  photoURL?: Maybe<Scalars['String']>;
-  birthday?: Maybe<Scalars['Date']>;
-  gender?: Maybe<Gender>;
-  socialId?: Maybe<Scalars['String']>;
   authType?: Maybe<AuthType>;
-  phone?: Maybe<Scalars['String']>;
-  verified?: Maybe<Scalars['Boolean']>;
-  statusMessage?: Maybe<Scalars['String']>;
+  birthday?: Maybe<Scalars['Date']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  email?: Maybe<Scalars['String']>;
+  gender?: Maybe<Gender>;
+  id: Scalars['ID'];
   isOnline?: Maybe<Scalars['Boolean']>;
   lastSignedIn?: Maybe<Scalars['DateTime']>;
+  name?: Maybe<Scalars['String']>;
+  nickname?: Maybe<Scalars['String']>;
   notifications?: Maybe<Array<Maybe<Notification>>>;
-  createdAt?: Maybe<Scalars['DateTime']>;
+  phone?: Maybe<Scalars['String']>;
+  photoURL?: Maybe<Scalars['String']>;
+  socialId?: Maybe<Scalars['String']>;
+  statusMessage?: Maybe<Scalars['String']>;
+  thumbURL?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-  deletedAt?: Maybe<Scalars['DateTime']>;
+  verified?: Maybe<Scalars['Boolean']>;
 };
 
 export type UserEdge = {
@@ -456,12 +439,12 @@ export type UserEdge = {
 };
 
 export type UserInput = {
+  birthday?: Maybe<Scalars['Date']>;
   email: Scalars['String'];
-  password: Scalars['String'];
+  gender?: Maybe<Gender>;
   name?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
-  birthday?: Maybe<Scalars['Date']>;
-  gender?: Maybe<Gender>;
+  password: Scalars['String'];
   phone?: Maybe<Scalars['String']>;
   statusMessage?: Maybe<Scalars['String']>;
 };
@@ -473,22 +456,22 @@ export enum UserModeType {
 }
 
 export type UserProfileInput = {
-  name?: Maybe<Scalars['String']>;
-  nickname?: Maybe<Scalars['String']>;
   birthday?: Maybe<Scalars['Date']>;
   gender?: Maybe<Gender>;
+  name?: Maybe<Scalars['String']>;
+  nickname?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
-  thumbURL?: Maybe<Scalars['String']>;
   photoURL?: Maybe<Scalars['String']>;
   statusMessage?: Maybe<Scalars['String']>;
+  thumbURL?: Maybe<Scalars['String']>;
 };
 
 export type UserQueryInput = {
+  birthday?: Maybe<Scalars['Date']>;
   email?: Maybe<Scalars['String']>;
+  gender?: Maybe<Gender>;
   name?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
-  birthday?: Maybe<Scalars['Date']>;
-  gender?: Maybe<Gender>;
   phone?: Maybe<Scalars['String']>;
 };
 
@@ -499,9 +482,9 @@ export type UserQueryInput = {
  */
 export type UsersConnection = {
   __typename?: 'UsersConnection';
-  totalCount?: Maybe<Scalars['Int']>;
   edges?: Maybe<Array<Maybe<UserEdge>>>;
   pageInfo?: Maybe<PageInfo>;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
 
@@ -583,83 +566,79 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  UserQueryInput: UserQueryInput;
-  String: ResolverTypeWrapper<Scalars['String']>;
+  Channel: ResolverTypeWrapper<Channel>;
+  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
+  Membership: ResolverTypeWrapper<Membership>;
+  User: ResolverTypeWrapper<User>;
+  AuthType: AuthType;
   Date: ResolverTypeWrapper<Scalars['Date']>;
+  String: ResolverTypeWrapper<Scalars['String']>;
   Gender: Gender;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
-  UsersConnection: ResolverTypeWrapper<UsersConnection>;
-  UserEdge: ResolverTypeWrapper<UserEdge>;
-  User: ResolverTypeWrapper<User>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
-  AuthType: AuthType;
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Notification: ResolverTypeWrapper<Notification>;
-  PageInfo: ResolverTypeWrapper<PageInfo>;
-  Message: ResolverTypeWrapper<Message>;
-  Channel: ResolverTypeWrapper<Channel>;
-  ChannelType: ChannelType;
-  Membership: ResolverTypeWrapper<Membership>;
   MemberType: MemberType;
   UserModeType: UserModeType;
+  Message: ResolverTypeWrapper<Message>;
   Photo: ResolverTypeWrapper<Photo>;
-  Reply: ResolverTypeWrapper<Reply>;
   Reaction: ResolverTypeWrapper<Reaction>;
+  Reply: ResolverTypeWrapper<Reply>;
+  ChannelType: ChannelType;
   Gallery: ResolverTypeWrapper<Gallery>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
+  UserQueryInput: UserQueryInput;
+  UsersConnection: ResolverTypeWrapper<UsersConnection>;
+  UserEdge: ResolverTypeWrapper<UserEdge>;
+  PageInfo: ResolverTypeWrapper<PageInfo>;
   Mutation: ResolverTypeWrapper<{}>;
+  FriendPayload: ResolverTypeWrapper<FriendPayload>;
+  NotificationCreateInput: NotificationCreateInput;
+  ChannelInput: ChannelInput;
+  MessagePayload: ResolverTypeWrapper<MessagePayload>;
   AuthPayload: ResolverTypeWrapper<AuthPayload>;
   SocialUserInput: SocialUserInput;
   UserInput: UserInput;
-  NotificationCreateInput: NotificationCreateInput;
-  UserProfileInput: UserProfileInput;
-  FriendPayload: ResolverTypeWrapper<FriendPayload>;
-  ChannelInput: ChannelInput;
-  MessagePayload: ResolverTypeWrapper<MessagePayload>;
   Upload: ResolverTypeWrapper<Scalars['Upload']>;
+  UserProfileInput: UserProfileInput;
   Subscription: ResolverTypeWrapper<{}>;
   FriendSub: ResolverTypeWrapper<FriendSub>;
   FriendSubAction: FriendSubAction;
-  Friend: ResolverTypeWrapper<Friend>;
-  File: ResolverTypeWrapper<File>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  UserQueryInput: UserQueryInput;
-  String: Scalars['String'];
+  Channel: Channel;
+  DateTime: Scalars['DateTime'];
+  ID: Scalars['ID'];
+  Membership: Membership;
+  User: User;
   Date: Scalars['Date'];
+  String: Scalars['String'];
   Boolean: Scalars['Boolean'];
+  Notification: Notification;
+  Message: Message;
+  Photo: Photo;
+  Reaction: Reaction;
+  Reply: Reply;
+  Gallery: Gallery;
   Int: Scalars['Int'];
+  UserQueryInput: UserQueryInput;
   UsersConnection: UsersConnection;
   UserEdge: UserEdge;
-  User: User;
-  ID: Scalars['ID'];
-  DateTime: Scalars['DateTime'];
-  Notification: Notification;
   PageInfo: PageInfo;
-  Message: Message;
-  Channel: Channel;
-  Membership: Membership;
-  Photo: Photo;
-  Reply: Reply;
-  Reaction: Reaction;
-  Gallery: Gallery;
   Mutation: {};
+  FriendPayload: FriendPayload;
+  NotificationCreateInput: NotificationCreateInput;
+  ChannelInput: ChannelInput;
+  MessagePayload: MessagePayload;
   AuthPayload: AuthPayload;
   SocialUserInput: SocialUserInput;
   UserInput: UserInput;
-  NotificationCreateInput: NotificationCreateInput;
-  UserProfileInput: UserProfileInput;
-  FriendPayload: FriendPayload;
-  ChannelInput: ChannelInput;
-  MessagePayload: MessagePayload;
   Upload: Scalars['Upload'];
+  UserProfileInput: UserProfileInput;
   Subscription: {};
   FriendSub: FriendSub;
-  Friend: Friend;
-  File: File;
 };
 
 export type AuthPayloadResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = {
@@ -669,15 +648,15 @@ export type AuthPayloadResolvers<ContextType = MyContext, ParentType extends Res
 };
 
 export type ChannelResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Channel'] = ResolversParentTypes['Channel']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  type?: Resolver<Maybe<ResolversTypes['ChannelType']>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  messages?: Resolver<Maybe<Array<Maybe<ResolversTypes['Message']>>>, ParentType, ContextType>;
-  memberships?: Resolver<Maybe<Array<Maybe<ResolversTypes['Membership']>>>, ParentType, ContextType>;
-  myMembership?: Resolver<Maybe<ResolversTypes['Membership']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  memberships?: Resolver<Maybe<Array<Maybe<ResolversTypes['Membership']>>>, ParentType, ContextType>;
+  messages?: Resolver<Maybe<Array<Maybe<ResolversTypes['Message']>>>, ParentType, ContextType>;
+  myMembership?: Resolver<Maybe<ResolversTypes['Membership']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['ChannelType']>, ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -689,42 +668,25 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
-export type FileResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = {
-  filename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  mimetype?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  encoding?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
-};
-
-export type FriendResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Friend'] = ResolversParentTypes['Friend']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  friend?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
-};
-
 export type FriendPayloadResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['FriendPayload'] = ResolversParentTypes['FriendPayload']> = {
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   added?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   deleted?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
 export type FriendSubResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['FriendSub'] = ResolversParentTypes['FriendSub']> = {
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   action?: Resolver<Maybe<ResolversTypes['FriendSubAction']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
 export type GalleryResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Gallery'] = ResolversParentTypes['Gallery']> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   photoURL?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -742,18 +704,18 @@ export type MembershipResolvers<ContextType = MyContext, ParentType extends Reso
 };
 
 export type MessageResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   channel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType>;
-  sender?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  picture?: Resolver<Maybe<Array<Maybe<ResolversTypes['Photo']>>>, ParentType, ContextType>;
-  filePath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  replies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reply']>>>, ParentType, ContextType>;
-  reactions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reaction']>>>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  filePath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  picture?: Resolver<Maybe<Array<Maybe<ResolversTypes['Photo']>>>, ParentType, ContextType>;
+  reactions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reaction']>>>, ParentType, ContextType>;
+  replies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Reply']>>>, ParentType, ContextType>;
+  sender?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -764,37 +726,37 @@ export type MessagePayloadResolvers<ContextType = MyContext, ParentType extends 
 };
 
 export type MutationResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInEmailArgs, 'email' | 'password'>>;
-  signInWithSocialAccount?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInWithSocialAccountArgs, 'socialUser'>>;
-  signInWithFacebook?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInWithFacebookArgs, 'accessToken'>>;
-  signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>;
-  findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationFindPasswordArgs, 'email'>>;
-  sendVerification?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSendVerificationArgs, 'email'>>;
-  addNotificationToken?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<MutationAddNotificationTokenArgs, 'notification'>>;
-  removeNotificationToken?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationRemoveNotificationTokenArgs, 'token'>>;
-  updateProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'user'>>;
   addFriend?: Resolver<Maybe<ResolversTypes['FriendPayload']>, ParentType, ContextType, RequireFields<MutationAddFriendArgs, 'friendId'>>;
-  deleteFriend?: Resolver<Maybe<ResolversTypes['FriendPayload']>, ParentType, ContextType, RequireFields<MutationDeleteFriendArgs, 'friendId'>>;
+  addNotificationToken?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<MutationAddNotificationTokenArgs, 'notification'>>;
+  changeEmailPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationChangeEmailPasswordArgs, 'newPassword' | 'password'>>;
   createChannel?: Resolver<Maybe<ResolversTypes['Channel']>, ParentType, ContextType, RequireFields<MutationCreateChannelArgs, never>>;
-  updateChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationUpdateChannelArgs, never>>;
-  deleteChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>;
-  createMessage?: Resolver<Maybe<ResolversTypes['MessagePayload']>, ParentType, ContextType, RequireFields<MutationCreateMessageArgs, 'message' | 'channelId'>>;
-  setOnlineStatus?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationSetOnlineStatusArgs, never>>;
-  changeEmailPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationChangeEmailPasswordArgs, 'password' | 'newPassword'>>;
   createGallery?: Resolver<Maybe<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<MutationCreateGalleryArgs, 'photoURL'>>;
-  updateGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationUpdateGalleryArgs, 'galleryId' | 'photoURL'>>;
-  deleteGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteGalleryArgs, 'galleryId'>>;
-  singleUpload?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSingleUploadArgs, 'file'>>;
+  createMessage?: Resolver<Maybe<ResolversTypes['MessagePayload']>, ParentType, ContextType, RequireFields<MutationCreateMessageArgs, 'channelId' | 'message'>>;
   createReaction?: Resolver<Maybe<ResolversTypes['Reaction']>, ParentType, ContextType, RequireFields<MutationCreateReactionArgs, 'messageId' | 'type'>>;
+  deleteChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteChannelArgs, 'channelId'>>;
+  deleteFriend?: Resolver<Maybe<ResolversTypes['FriendPayload']>, ParentType, ContextType, RequireFields<MutationDeleteFriendArgs, 'friendId'>>;
+  deleteGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteGalleryArgs, 'galleryId'>>;
   deleteReaction?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationDeleteReactionArgs, 'reactionId'>>;
+  findPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationFindPasswordArgs, 'email'>>;
+  removeNotificationToken?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationRemoveNotificationTokenArgs, 'token'>>;
+  sendVerification?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationSendVerificationArgs, 'email'>>;
+  setOnlineStatus?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationSetOnlineStatusArgs, never>>;
+  signInEmail?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInEmailArgs, 'email' | 'password'>>;
+  signInWithFacebook?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInWithFacebookArgs, 'accessToken'>>;
+  signInWithSocialAccount?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignInWithSocialAccountArgs, 'socialUser'>>;
+  signUp?: Resolver<ResolversTypes['AuthPayload'], ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>;
+  singleUpload?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSingleUploadArgs, 'file'>>;
+  updateChannel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationUpdateChannelArgs, never>>;
+  updateGallery?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<MutationUpdateGalleryArgs, 'galleryId' | 'photoURL'>>;
+  updateProfile?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateProfileArgs, 'user'>>;
 };
 
 export type NotificationResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  device?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  os?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  device?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  os?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
@@ -818,21 +780,21 @@ export type PhotoResolvers<ContextType = MyContext, ParentType extends Resolvers
 };
 
 export type QueryResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, RequireFields<QueryUsersArgs, never>>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>;
   channels?: Resolver<Array<ResolversTypes['Channel']>, ParentType, ContextType>;
   friends?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   galleries?: Resolver<Array<ResolversTypes['Gallery']>, ParentType, ContextType, RequireFields<QueryGalleriesArgs, 'userId'>>;
+  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
+  users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, RequireFields<QueryUsersArgs, never>>;
 };
 
 export type ReactionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Reaction'] = ResolversParentTypes['Reaction']> = {
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -850,9 +812,9 @@ export type ReplyResolvers<ContextType = MyContext, ParentType extends Resolvers
 };
 
 export type SubscriptionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+  friendChanged?: SubscriptionResolver<Maybe<ResolversTypes['FriendSub']>, "friendChanged", ParentType, ContextType, RequireFields<SubscriptionFriendChangedArgs, 'userId'>>;
   userSignedIn?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "userSignedIn", ParentType, ContextType, RequireFields<SubscriptionUserSignedInArgs, 'userId'>>;
   userUpdated?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "userUpdated", ParentType, ContextType, RequireFields<SubscriptionUserUpdatedArgs, 'userId'>>;
-  friendChanged?: SubscriptionResolver<Maybe<ResolversTypes['FriendSub']>, "friendChanged", ParentType, ContextType, RequireFields<SubscriptionFriendChangedArgs, 'userId'>>;
 };
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
@@ -860,25 +822,25 @@ export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
 }
 
 export type UserResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  nickname?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  thumbURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  photoURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  birthday?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  gender?: Resolver<Maybe<ResolversTypes['Gender']>, ParentType, ContextType>;
-  socialId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   authType?: Resolver<Maybe<ResolversTypes['AuthType']>, ParentType, ContextType>;
-  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  verified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  statusMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  birthday?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  gender?: Resolver<Maybe<ResolversTypes['Gender']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isOnline?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   lastSignedIn?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nickname?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   notifications?: Resolver<Maybe<Array<Maybe<ResolversTypes['Notification']>>>, ParentType, ContextType>;
-  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  photoURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  socialId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  statusMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  thumbURL?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  deletedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  verified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -889,9 +851,9 @@ export type UserEdgeResolvers<ContextType = MyContext, ParentType extends Resolv
 };
 
 export type UsersConnectionResolvers<ContextType = MyContext, ParentType extends ResolversParentTypes['UsersConnection'] = ResolversParentTypes['UsersConnection']> = {
-  totalCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   edges?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserEdge']>>>, ParentType, ContextType>;
   pageInfo?: Resolver<Maybe<ResolversTypes['PageInfo']>, ParentType, ContextType>;
+  totalCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
@@ -900,8 +862,6 @@ export type Resolvers<ContextType = MyContext> = {
   Channel?: ChannelResolvers<ContextType>;
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
-  File?: FileResolvers<ContextType>;
-  Friend?: FriendResolvers<ContextType>;
   FriendPayload?: FriendPayloadResolvers<ContextType>;
   FriendSub?: FriendSubResolvers<ContextType>;
   Gallery?: GalleryResolvers<ContextType>;

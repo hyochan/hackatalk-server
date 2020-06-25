@@ -1,3 +1,6 @@
+# import User from "user.graphql"
+# import Channel from "channel.graphql"
+
 scalar DateTime
 
 enum MemberType {

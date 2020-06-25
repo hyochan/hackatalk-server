@@ -1,6 +1,5 @@
 # import Notification from "notification.graphql"
-# import Channel from "channel.graphql"
-# import Pagination from "pagination.graphql"
+# import PageInfo from "pagination.graphql"
 
 scalar Date
 scalar DateTime

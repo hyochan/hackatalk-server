@@ -26,6 +26,12 @@ jobs:
             yarn
 
       - run:
+          name: Generate codegen
+          working_directory: .
+          command: |
+            yarn generate
+
+      - run:
           name: ESLint
           working_directory: .
           command: |
