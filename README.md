@@ -1,4 +1,6 @@
-# HackaTalk Server
+> No longer maintained and is transferred to [hackatalk server repo](https://github.com/dooboolab/hackatalk/tree/master/server).
+
+# HackaTalk Server (Deprecated)
 
 [![CircleCI](https://circleci.com/gh/dooboolab/hackatalk-server.svg?style=shield)](https://circleci.com/gh/dooboolab/hackatalk-server)
 [![codecov](https://codecov.io/gh/dooboolab/hackatalk-server/branch/master/graph/badge.svg)](https://codecov.io/gh/dooboolab/hackatalk-server)
